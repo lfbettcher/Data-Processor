@@ -28,12 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
+            this.progressTextBox = new System.Windows.Forms.TextBox();
+            this.SuspendLayout();
+            // 
+            // textBox1
+            // 
+            this.progressTextBox.Location = new System.Drawing.Point(58, 27);
+            this.progressTextBox.Multiline = true;
+            this.progressTextBox.Name = "textBox1";
+            this.progressTextBox.Size = new System.Drawing.Size(658, 289);
+            this.progressTextBox.TabIndex = 0;
+            this.progressTextBox.TextChanged += new System.EventHandler(this.progressTextBox_TextChanged);
+            // 
+            // Form2
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.progressTextBox);
+            this.Name = "Form2";
             this.Text = "Form2";
+            this.ResumeLayout(false);
+            this.PerformLayout();
+
         }
 
         #endregion
+
+        private System.Windows.Forms.TextBox progressTextBox;
     }
 }

@@ -14,5 +14,10 @@ namespace WindowsFormCore
         {
             InitializeComponent();
         }
+
+        public void progressTextBox_TextChanged(object sender, EventArgs e)
+        {
+            progressTextBox.Text = "processing...";
+        }
     }
 }

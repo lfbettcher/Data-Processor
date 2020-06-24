@@ -7,6 +7,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using OfficeOpenXml;
 
 namespace WindowsFormCore
 {
@@ -18,26 +20,36 @@ namespace WindowsFormCore
         }
 
         OpenFileDialog openFileDialog = new OpenFileDialog();
+        String filePath = string.Empty;
+        String fileName = string.Empty;
 
         private void openFileButton_Click(object sender, EventArgs e)
         {
+            
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             openFileDialog.Filter = "Excel files (*.xlsx;*.xls;*.csv)|*.xlsx;*.xls;*.csv|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
             openFileDialog.RestoreDirectory = true;
-            var filePath = string.Empty;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK) {
-                textBox1.Text = openFileDialog.FileName;
-                textBox2.Text = openFileDialog.SafeFileName;
 
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
                 // Get path of selectd file
                 filePath = openFileDialog.FileName;
+                fileName = openFileDialog.SafeFileName;
 
-                // Read contents of file into stream
-                var fileStream = openFileDialog.OpenFile();
+                filePathBox.Text = filePath;
+                fileNameBox.Text = fileName;
+            }
+        }
 
-
+        private void submitButton_Click(object sender, EventArgs e)
+        {
+            if (filePath != string.Empty)
+            {
+                Form2 form2 = new Form2();
+                form2.Show();
+                ProcessSkyline.run(fileName);
             }
         }
     }
