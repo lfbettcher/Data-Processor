@@ -20,8 +20,9 @@ namespace WindowsFormCore
         }
 
         OpenFileDialog openFileDialog = new OpenFileDialog();
-        String filePath = string.Empty;
-        String fileName = string.Empty;
+        //string filePath = string.Empty;
+        string filePath = "C:\\Users\\Lisa\\OneDrive\\Desktop\\input.xlsx";
+        string fileName = string.Empty;
 
         private void openFileButton_Click(object sender, EventArgs e)
         {
@@ -49,7 +50,7 @@ namespace WindowsFormCore
             {
                 Form2 form2 = new Form2();
                 form2.Show();
-                ProcessSkyline.run(fileName);
+                ProcessSkyline.run(filePath);
             }
         }
     }
