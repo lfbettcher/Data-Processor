@@ -17,10 +17,10 @@ namespace WindowsFormCore
             FileInfo inputFile = new FileInfo(filePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
-            using (ExcelPackage xl = new ExcelPackage(inputFile))
+            using (ExcelPackage ExcelPkg = new ExcelPackage(inputFile))
             {
                 // Get first worksheet
-                ExcelWorksheet worksheet = xl.Workbook.Worksheets.FirstOrDefault();
+                ExcelWorksheet worksheet = ExcelPkg.Workbook.Worksheets.FirstOrDefault();
                 int totalRows = worksheet.Dimension.Rows;
 
                 // Get set of compounds
@@ -49,8 +49,21 @@ namespace WindowsFormCore
                     }
                 }
 
+                List<string> compoundList = new List<string>(dataMap.Keys);
                 int numCompounds = dataMap.Count - 1;
+                int numSamples = dataMap[compoundList[1]].Count;
                 System.Diagnostics.Debug.WriteLine(numCompounds);
+                System.Diagnostics.Debug.WriteLine(numSamples);
+                System.Diagnostics.Debug.WriteLine(compoundList[1]);
+
+                // Write data to new sheet
+                ExcelWorksheet outputSheet = ExcelPkg.Workbook.Worksheets.Add("Formatted Data");
+                using (ExcelRange range = outputSheet.Cells[1, 1, numSamples + 1, numCompounds + 1])
+                {
+                    range.Value = 0;
+
+                    ExcelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
+                }
 
                 /*
                 string peptideColContent = string.Empty;
