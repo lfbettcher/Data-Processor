@@ -33,7 +33,8 @@ namespace WindowsFormCore
                     string sample = worksheet.Cells[i, 3].Value.ToString();
                     string area = worksheet.Cells[i, 10].Value.ToString();
 
-                    KeyValuePair<string, string> pair = new KeyValuePair<string, string>(sample, area);
+                    KeyValuePair<string, string> pair = 
+                        new KeyValuePair<string, string>(sample, area);
 
                     if (dataMap.ContainsKey(compound))
                     {
@@ -43,8 +44,8 @@ namespace WindowsFormCore
                     }
                     else
                     {
-                        List<KeyValuePair<string, string>> pairList = new List<KeyValuePair<string, string>>();
-                        pairList.Add(pair);
+                        List<KeyValuePair<string, string>> pairList = 
+                            new List<KeyValuePair<string, string>>() { pair };
                         dataMap.Add(compound, pairList);
                     }
                 }
@@ -59,9 +60,6 @@ namespace WindowsFormCore
                 // Write data to new sheet
                 ExcelWorksheet outputSheet = ExcelPkg.Workbook.Worksheets.Add("Formatted Data");
 
-                //ExcelRange areaRange = outputSheet.Cells[2, 2, numSamples + 1, numCompounds + 1];
-                //areaRange.Style.Numberformat.Format = "0";
-
                 // Populate first row with compounds
                 outputSheet.Cells[1, 1].Value = "Sample";
                 for (int col = 2; col <= numCompounds + 1; col++)
@@ -69,7 +67,7 @@ namespace WindowsFormCore
                     outputSheet.Cells[1, col].Value = compoundList[col - 1];
                 }
 
-                // For each sample (row)
+                // Write each sample (row)
                 for (int i = 2; i <= numSamples + 1; i++)
                 {
                     // Write sample number in first column
@@ -93,37 +91,31 @@ namespace WindowsFormCore
                                 outputSheet.Cells[i, j].Value = peakArea;
                             }                            
                         }
-                        //System.Diagnostics.Debug.WriteLine(outputSheet.Cells[i, 1].Value.ToString());
-                        //System.Diagnostics.Debug.WriteLine(dataMap[compoundList[j - 1]][i - 2].Key);
-                        //System.Diagnostics.Debug.WriteLine("");
-
-
                     }
-
                 }
-
-                //ExcelRange range = outputSheet.Cells[1, 1, numSamples + 1, numCompounds + 1];
-                //range.Style.Numberformat.Format = "0";
-
+                ExcelRange range = outputSheet.Cells[2, 2, numSamples + 1, numCompounds + 1];
+                range.Style.Numberformat.Format = "0";
 
                 ExcelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
-                //}
 
-                /*
-                string peptideColContent = string.Empty;
-                string replicateColContent = string.Empty;
-                string areaColContent = string.Empty;
-                
-                for (int i = 1; i <= totalRows; i++)
+                // Make copy of sheet and remove #NA
+                ExcelWorksheet detectedSheet = Copy(ExcelPkg, "Formatted Data", "Compounds Detected");
+
+                for (int col = 1; col <= numCompounds + 1; col++)
                 {
-                    // Get all content from peptide, replicate, area columns
-                    peptideColContent += worksheet.Cells[i, 1].Value.ToString();
-                    replicateColContent += worksheet.Cells[i, 3].Value.ToString();
-                    areaColContent += worksheet.Cells[i, 11].Value.ToString();
+                    // TODO: fix sum formula
+                    detectedSheet.Cells[numSamples + 2, col].Formula = String.Format("=COUNT(C2:C{0})", numSamples + 1);
+                }
 
-                }*/
+                ExcelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
             }
-               
+        }
+
+        /* COPY EXCEL SHEET */
+        public static ExcelWorksheet Copy(ExcelPackage excelPackage, string existingWorksheetName, string newWorksheetName)
+        {
+            ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Copy(existingWorksheetName, newWorksheetName);
+            return worksheet;
         }
     }
 }

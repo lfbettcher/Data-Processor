@@ -20,17 +20,15 @@ namespace WindowsFormCore
         }
 
         OpenFileDialog openFileDialog = new OpenFileDialog();
-        String filePath = "C:\\Users\\Lisa\\OneDrive\\Desktop\\input.xlsx";
-        String fileName = string.Empty;
+        string filePath = "C:\\Users\\Lisa\\OneDrive\\Desktop\\input.xlsx";
+        string fileName = string.Empty;
 
         private void openFileButton_Click(object sender, EventArgs e)
         {
-            
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            openFileDialog.Filter = "Excel files (*.xlsx;*.xls;*.csv)|*.xlsx;*.xls;*.csv|All files (*.*)|*.*";
+            openFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
             openFileDialog.RestoreDirectory = true;
-
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {

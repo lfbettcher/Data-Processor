@@ -28,23 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
+            this.openFileButton = new System.Windows.Forms.Button();
             this.filePathBox = new System.Windows.Forms.TextBox();
             this.fileNameBox = new System.Windows.Forms.TextBox();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
-            this.button2 = new System.Windows.Forms.Button();
+            this.submitButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(261, 322);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(90, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Open file";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.openFileButton_Click);
+            this.openFileButton.Location = new System.Drawing.Point(261, 322);
+            this.openFileButton.Name = "button1";
+            this.openFileButton.Size = new System.Drawing.Size(90, 23);
+            this.openFileButton.TabIndex = 0;
+            this.openFileButton.Text = "Open file";
+            this.openFileButton.UseVisualStyleBackColor = true;
+            this.openFileButton.Click += new System.EventHandler(this.openFileButton_Click);
             // 
             // filePathBox
             // 
@@ -82,25 +82,25 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(357, 322);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(90, 24);
-            this.button2.TabIndex = 5;
-            this.button2.Text = "Submit";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.submitButton_Click);
+            this.submitButton.Location = new System.Drawing.Point(357, 322);
+            this.submitButton.Name = "button2";
+            this.submitButton.Size = new System.Drawing.Size(90, 24);
+            this.submitButton.TabIndex = 5;
+            this.submitButton.Text = "Submit";
+            this.submitButton.UseVisualStyleBackColor = true;
+            this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
             // 
             // OpenFileDialogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.button2);
+            this.Controls.Add(this.submitButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.radioButton1);
             this.Controls.Add(this.fileNameBox);
             this.Controls.Add(this.filePathBox);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.openFileButton);
             this.Name = "OpenFileDialogForm";
             this.Text = "Open file";
             this.ResumeLayout(false);
@@ -110,12 +110,12 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button openFileButton;
         private System.Windows.Forms.TextBox filePathBox;
         private System.Windows.Forms.TextBox fileNameBox;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button submitButton;
     }
 }
 
