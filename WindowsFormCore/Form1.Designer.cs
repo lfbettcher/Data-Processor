@@ -38,7 +38,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(274, 116);
+            this.button1.Location = new System.Drawing.Point(261, 322);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(90, 23);
             this.button1.TabIndex = 0;
@@ -48,14 +48,14 @@
             // 
             // filePathBox
             // 
-            this.filePathBox.Location = new System.Drawing.Point(49, 145);
+            this.filePathBox.Location = new System.Drawing.Point(36, 351);
             this.filePathBox.Name = "filePathBox";
             this.filePathBox.Size = new System.Drawing.Size(411, 23);
             this.filePathBox.TabIndex = 1;
             // 
             // fileNameBox
             // 
-            this.fileNameBox.Location = new System.Drawing.Point(49, 116);
+            this.fileNameBox.Location = new System.Drawing.Point(36, 322);
             this.fileNameBox.Name = "fileNameBox";
             this.fileNameBox.Size = new System.Drawing.Size(219, 23);
             this.fileNameBox.TabIndex = 2;
@@ -82,7 +82,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(370, 116);
+            this.button2.Location = new System.Drawing.Point(357, 322);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(90, 24);
             this.button2.TabIndex = 5;
