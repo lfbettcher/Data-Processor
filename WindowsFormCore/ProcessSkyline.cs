@@ -23,7 +23,7 @@ namespace WindowsFormCore
                 ExcelWorksheet worksheet = ExcelPkg.Workbook.Worksheets.FirstOrDefault();
                 int totalRows = worksheet.Dimension.Rows;
 
-                // Get set of compounds
+                // Read spreadsheet data into a map
                 Dictionary<string, List<KeyValuePair<string, string>>> dataMap = 
                     new Dictionary<string, List<KeyValuePair<string, string>>>();
 
@@ -80,16 +80,15 @@ namespace WindowsFormCore
                         {
                             // Write peak area
                             var peakArea = dataMap[compoundList[j - 1]][i - 2].Value;
-                            var peakAreaNum = 0.00;
 
-                            if (double.TryParse(peakArea, out peakAreaNum))
+                            if (double.TryParse(peakArea, out double peakAreaNum))
                             {
                                 outputSheet.Cells[i, j].Value = peakAreaNum;
                             }
                             else
                             {
                                 outputSheet.Cells[i, j].Value = peakArea;
-                            }                            
+                            }
                         }
                     }
                 }
@@ -101,10 +100,12 @@ namespace WindowsFormCore
                 // Make copy of sheet and remove #NA
                 ExcelWorksheet detectedSheet = Copy(ExcelPkg, "Formatted Data", "Compounds Detected");
 
-                for (int col = 1; col <= numCompounds + 1; col++)
+                for (int col = 2; col <= numCompounds + 1; col++)
                 {
-                    // TODO: fix sum formula
-                    detectedSheet.Cells[numSamples + 2, col].Formula = String.Format("=COUNT(C2:C{0})", numSamples + 1);
+                    // Count of samples the compound is detected in
+                    var colLetter = GetColumnLetter(col);
+                    detectedSheet.Cells[numSamples + 2, col].Formula = 
+                        $"=COUNT({colLetter}2:{colLetter}{numSamples + 1})";
                 }
 
                 ExcelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
@@ -112,10 +113,27 @@ namespace WindowsFormCore
         }
 
         /* COPY EXCEL SHEET */
-        public static ExcelWorksheet Copy(ExcelPackage excelPackage, string existingWorksheetName, string newWorksheetName)
+        public static ExcelWorksheet Copy(ExcelPackage excelPackage, string copyFrom, string copyTo)
         {
-            ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Copy(existingWorksheetName, newWorksheetName);
+            ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Copy(copyFrom, copyTo);
             return worksheet;
+        }
+
+        /* GET COLUMN LETTER */
+        public static string GetColumnLetter(int columnNumber)
+        {
+            int dividend = columnNumber;
+            string columnLetter = string.Empty;
+            int modulo;
+
+            while (dividend > 0)
+            {
+                modulo = (dividend - 1) % 26;
+                columnLetter = Convert.ToChar(65 + modulo).ToString() + columnLetter;
+                dividend = (int)((dividend - modulo) / 26);
+            }
+
+            return columnLetter;
         }
     }
 }
