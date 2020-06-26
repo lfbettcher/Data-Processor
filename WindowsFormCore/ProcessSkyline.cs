@@ -16,36 +16,33 @@ namespace WindowsFormCore
             progressWindow.progressTextBox.SetText("Opening file...");
 
             // Get first worksheet
-            FileInfo inputFile = new FileInfo(filePath);
+            var inputFile = new FileInfo(filePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // EPPlus license
-            ExcelPackage ExcelPkg = new ExcelPackage(inputFile);
+            var ExcelPkg = new ExcelPackage(inputFile);
             ExcelWorksheet worksheet = ExcelPkg.Workbook.Worksheets.FirstOrDefault();
 
             // Read spreadsheet data into a map
-            Dictionary<string, List<KeyValuePair<string, string>>> dataMap =
-                new Dictionary<string, List<KeyValuePair<string, string>>>();
+            var dataMap = new Dictionary<string, List<KeyValuePair<string, string>>>();
 
             int totalRows = worksheet.Dimension.Rows;
 
             for (int i = 1; i <= totalRows; i++)
             {
-                string compound = worksheet.Cells[i, compoundCol].Value.ToString();
-                string sample = worksheet.Cells[i, sampleCol].Value.ToString();
-                string area = worksheet.Cells[i, areaCol].Value.ToString();
+                var compound = worksheet.Cells[i, compoundCol].Value.ToString();
+                var sample = worksheet.Cells[i, sampleCol].Value.ToString();
+                var area = worksheet.Cells[i, areaCol].Value.ToString();
 
-                KeyValuePair<string, string> pair =
-                    new KeyValuePair<string, string>(sample, area);
+                var pair = new KeyValuePair<string, string>(sample, area);
 
                 if (dataMap.ContainsKey(compound))
                 {
-                    List<KeyValuePair<string, string>> pairList = dataMap[compound];
+                    var pairList = dataMap[compound];
                     pairList.Add(pair);
                     dataMap[compound] = pairList;
                 }
                 else
                 {
-                    List<KeyValuePair<string, string>> pairList =
-                        new List<KeyValuePair<string, string>>() { pair };
+                    var pairList = new List<KeyValuePair<string, string>>() { pair };
                     dataMap.Add(compound, pairList);
                 }
             }

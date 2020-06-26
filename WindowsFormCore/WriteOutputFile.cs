@@ -11,7 +11,7 @@ namespace WindowsFormCore
         public static void FormatToColumns(ExcelPackage ExcelPkg,
             Dictionary<string, List<KeyValuePair<string, string>>> dataMap)
         {
-            List<string> compoundList = new List<string>(dataMap.Keys);
+            var compoundList = new List<string>(dataMap.Keys);
             int numCompounds = dataMap.Count - 1;
             int numSamples = dataMap[compoundList[1]].Count;
 

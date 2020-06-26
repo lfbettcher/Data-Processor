@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Windows.Forms.VisualStyles;
 
 namespace WindowsFormCore
 {
@@ -31,7 +32,7 @@ namespace WindowsFormCore
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                // Get path of selectd file
+                // Get path of selected file
                 filePath = openFileDialog.FileName;
                 fileName = openFileDialog.SafeFileName;
 
@@ -42,23 +43,22 @@ namespace WindowsFormCore
 
         private void submitButton_Click(object sender, EventArgs e)
         {
-            if (filePath != string.Empty)
-            {
-                ProgressWindow form2 = new ProgressWindow();
-                form2.Show();
+            if (filePath == string.Empty) return;
 
-                if (skylineRadioButton.Checked)
-                {
-                    ProcessSkyline.Run(filePath, 1, 3, 10);
-                }
-                else if (radioButton1.Checked)
-                {
-                    // placeholder
-                }
-                else if (radioButton2.Checked)
-                {
-                    // placeholder
-                }
+            var progressWindow = new ProgressWindow();
+            progressWindow.Show();
+
+            if (skylineRadioButton.Checked)
+            {
+                ProcessSkyline.Run(filePath, 1, 3, 10);
+            }
+            else if (radioButton1.Checked)
+            {
+                // placeholder
+            }
+            else if (radioButton2.Checked)
+            {
+                // placeholder
             }
         }
 
