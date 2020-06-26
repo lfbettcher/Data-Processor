@@ -10,13 +10,9 @@ namespace WindowsFormCore
 {
     class ProcessSkyline
     {
-        public int COL_CMPD;
-        public int COL_SAMPLE;
-        public int COL_AREA;
-
-        public static void run(string filePath)
+        public static void run(string filePath, int compoundCol, int sampleCol, int areaCol)
         {
-            ProgressWindow form2 = (ProgressWindow)Application.OpenForms["Form2"];
+            Form2 form2 = (Form2)Application.OpenForms["Form2"];
             form2.progressTextBox.SetText("Opening file...");
 
             FileInfo inputFile = new FileInfo(filePath);
@@ -34,9 +30,9 @@ namespace WindowsFormCore
 
                 for (int i = 1; i <= totalRows; i++)
                 {
-                    string compound = worksheet.Cells[i, 1].Value.ToString();
-                    string sample = worksheet.Cells[i, 3].Value.ToString();
-                    string area = worksheet.Cells[i, 10].Value.ToString();
+                    string compound = worksheet.Cells[i, compoundCol].Value.ToString();
+                    string sample = worksheet.Cells[i, sampleCol].Value.ToString();
+                    string area = worksheet.Cells[i, areaCol].Value.ToString();
 
                     KeyValuePair<string, string> pair = 
                         new KeyValuePair<string, string>(sample, area);

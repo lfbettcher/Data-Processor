@@ -32,8 +32,11 @@
             this.filePathBox = new System.Windows.Forms.TextBox();
             this.fileNameBox = new System.Windows.Forms.TextBox();
             this.skylineRadioButton = new System.Windows.Forms.RadioButton();
-            this.label1 = new System.Windows.Forms.Label();
             this.submitButton = new System.Windows.Forms.Button();
+            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.inputTypeGroupBox = new System.Windows.Forms.GroupBox();
+            this.inputTypeGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileButton
@@ -64,22 +67,13 @@
             // 
             this.skylineRadioButton.AutoSize = true;
             this.skylineRadioButton.Checked = true;
-            this.skylineRadioButton.Location = new System.Drawing.Point(50, 90);
-            this.skylineRadioButton.Name = "radioButton1";
+            this.skylineRadioButton.Location = new System.Drawing.Point(19, 22);
+            this.skylineRadioButton.Name = "skylineRadioButton";
             this.skylineRadioButton.Size = new System.Drawing.Size(133, 19);
             this.skylineRadioButton.TabIndex = 3;
             this.skylineRadioButton.TabStop = true;
             this.skylineRadioButton.Text = "Skyline export (.xlsx)";
             this.skylineRadioButton.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(49, 57);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(83, 15);
-            this.label1.TabIndex = 4;
-            this.label1.Text = "Input file type:";
             // 
             // submitButton
             // 
@@ -91,19 +85,54 @@
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
             // 
+            // radioButton1
+            // 
+            this.radioButton1.AutoSize = true;
+            this.radioButton1.Location = new System.Drawing.Point(181, 22);
+            this.radioButton1.Name = "radioButton1";
+            this.radioButton1.Size = new System.Drawing.Size(94, 19);
+            this.radioButton1.TabIndex = 6;
+            this.radioButton1.TabStop = true;
+            this.radioButton1.Text = "radioButton1";
+            this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(311, 22);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(94, 19);
+            this.radioButton2.TabIndex = 7;
+            this.radioButton2.TabStop = true;
+            this.radioButton2.Text = "radioButton2";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.inputTypeGroupBox.Controls.Add(this.radioButton2);
+            this.inputTypeGroupBox.Controls.Add(this.radioButton1);
+            this.inputTypeGroupBox.Controls.Add(this.skylineRadioButton);
+            this.inputTypeGroupBox.Location = new System.Drawing.Point(36, 57);
+            this.inputTypeGroupBox.Name = "groupBox1";
+            this.inputTypeGroupBox.Size = new System.Drawing.Size(411, 61);
+            this.inputTypeGroupBox.TabIndex = 8;
+            this.inputTypeGroupBox.TabStop = false;
+            this.inputTypeGroupBox.Text = "Input type:";
+            // 
             // OpenFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.inputTypeGroupBox);
             this.Controls.Add(this.submitButton);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.skylineRadioButton);
             this.Controls.Add(this.fileNameBox);
             this.Controls.Add(this.filePathBox);
             this.Controls.Add(this.openFileButton);
             this.Name = "OpenFileForm";
             this.Text = "Open file";
+            this.inputTypeGroupBox.ResumeLayout(false);
+            this.inputTypeGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -115,8 +144,10 @@
         private System.Windows.Forms.TextBox filePathBox;
         private System.Windows.Forms.TextBox fileNameBox;
         private System.Windows.Forms.RadioButton skylineRadioButton;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button submitButton;
+        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.GroupBox inputTypeGroupBox;
     }
 }
 

@@ -8,18 +8,19 @@ using System.Windows.Forms;
 
 namespace WindowsFormCore
 {
-    public partial class ProgressWindow : Form
+    public partial class Form2 : Form
     {
-        public ProgressWindow()
+        public Form2()
         {
             InitializeComponent();
         }
 
-        public void progressTextBox_TextChanged(object sender, EventArgs e)
+        private void progressBar1_Click(object sender, EventArgs e)
         {
+
         }
     }
-    
+
     public static class WinFormsExtensions
     {
         public static void SetText(this TextBox source, string text)

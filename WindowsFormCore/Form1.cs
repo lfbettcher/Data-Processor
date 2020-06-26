@@ -44,12 +44,23 @@ namespace WindowsFormCore
         {
             if (filePath != string.Empty)
             {
-                ProgressWindow form2 = new ProgressWindow();
+                Form2 form2 = new Form2();
                 form2.Show();
 
-                string inputType = "";
-                ProcessSkyline.run(filePath);
+                if (skylineRadioButton.Checked)
+                {
+                    ProcessSkyline.run(filePath, 1, 3, 10);
+                } 
+                else if (radioButton1.Checked)
+                {
+                    // placeholder
+                }
+                else if (radioButton2.Checked)
+                {
+                    // placeholder
+                }
             }
+                    
         }
     }
 }

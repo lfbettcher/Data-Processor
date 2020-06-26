@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormCore
 {
-    partial class ProgressWindow
+    partial class Form2
     {
         /// <summary>
         /// Required designer variable.
@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.progressTextBox = new System.Windows.Forms.TextBox();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // progressTextBox
@@ -40,15 +41,23 @@
             this.progressTextBox.Size = new System.Drawing.Size(600, 300);
             this.progressTextBox.TabIndex = 0;
             this.progressTextBox.UseWaitCursor = true;
-            this.progressTextBox.TextChanged += new System.EventHandler(this.progressTextBox_TextChanged);
             // 
-            // Form2
+            // progressBar1
+            // 
+            this.progressBar1.Location = new System.Drawing.Point(100, 370);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(600, 23);
+            this.progressBar1.TabIndex = 1;
+            this.progressBar1.Click += new System.EventHandler(this.progressBar1_Click);
+            // 
+            // ProgressWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.progressTextBox);
-            this.Name = "Form2";
+            this.Name = "ProgressWindow";
             this.Text = "Processing data...";
             this.UseWaitCursor = true;
             this.ResumeLayout(false);
@@ -59,5 +68,6 @@
         #endregion
 
         public System.Windows.Forms.TextBox progressTextBox;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
