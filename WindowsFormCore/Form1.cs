@@ -44,7 +44,7 @@ namespace WindowsFormCore
         {
             if (filePath != string.Empty)
             {
-                Form2 form2 = new Form2();
+                ProgressWindow form2 = new ProgressWindow();
                 form2.Show();
 
                 if (skylineRadioButton.Checked)

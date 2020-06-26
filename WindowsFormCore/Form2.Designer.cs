@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormCore
 {
-    partial class Form2
+    partial class ProgressWindow
     {
         /// <summary>
         /// Required designer variable.

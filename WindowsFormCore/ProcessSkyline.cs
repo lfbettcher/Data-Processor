@@ -12,20 +12,20 @@ namespace WindowsFormCore
     {
         public static void Run(string filePath, int compoundCol, int sampleCol, int areaCol)
         {
-            Form2 form2 = (Form2)Application.OpenForms["Form2"];
-            form2.progressTextBox.SetText("Opening file...");
-
-            FileInfo inputFile = new FileInfo(filePath);
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            ProgressWindow progressWindow = (ProgressWindow)Application.OpenForms["Form2"];
+            progressWindow.progressTextBox.SetText("Opening file...");
 
             // Get first worksheet
+            FileInfo inputFile = new FileInfo(filePath);
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // EPPlus license
             ExcelPackage ExcelPkg = new ExcelPackage(inputFile);
             ExcelWorksheet worksheet = ExcelPkg.Workbook.Worksheets.FirstOrDefault();
-            int totalRows = worksheet.Dimension.Rows;
 
             // Read spreadsheet data into a map
             Dictionary<string, List<KeyValuePair<string, string>>> dataMap =
                 new Dictionary<string, List<KeyValuePair<string, string>>>();
+
+            int totalRows = worksheet.Dimension.Rows;
 
             for (int i = 1; i <= totalRows; i++)
             {
@@ -50,7 +50,7 @@ namespace WindowsFormCore
                 }
             }
 
-            form2.progressTextBox.AppendLine("Finished reading data.\r\nWriting data...");
+            progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data...");
 
             List<string> compoundList = new List<string>(dataMap.Keys);
             int numCompounds = dataMap.Count - 1;
@@ -112,8 +112,8 @@ namespace WindowsFormCore
 
             ExcelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
 
-            form2.progressTextBox.AppendLine("Done");
-            form2.UseWaitCursor = false;
+            progressWindow.progressTextBox.AppendLine("Done");
+            progressWindow.UseWaitCursor = false;
         }
 
         /* COPY EXCEL SHEET */

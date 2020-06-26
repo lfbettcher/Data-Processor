@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace WindowsFormCore
 {
-    public partial class Form2 : Form
+    public partial class ProgressWindow : Form
     {
-        public Form2()
+        public ProgressWindow()
         {
             InitializeComponent();
         }
