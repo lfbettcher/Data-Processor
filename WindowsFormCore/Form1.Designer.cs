@@ -1,6 +1,6 @@
 ﻿namespace WindowsFormCore
 {
-    partial class OpenFileDialogForm
+    partial class OpenFileForm
     {
         /// <summary>
         ///  Required designer variable.
@@ -31,15 +31,15 @@
             this.openFileButton = new System.Windows.Forms.Button();
             this.filePathBox = new System.Windows.Forms.TextBox();
             this.fileNameBox = new System.Windows.Forms.TextBox();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.skylineRadioButton = new System.Windows.Forms.RadioButton();
             this.label1 = new System.Windows.Forms.Label();
             this.submitButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // openFileButton
             // 
             this.openFileButton.Location = new System.Drawing.Point(261, 322);
-            this.openFileButton.Name = "button1";
+            this.openFileButton.Name = "openFileButton";
             this.openFileButton.Size = new System.Drawing.Size(90, 23);
             this.openFileButton.TabIndex = 0;
             this.openFileButton.Text = "Open file";
@@ -60,16 +60,17 @@
             this.fileNameBox.Size = new System.Drawing.Size(219, 23);
             this.fileNameBox.TabIndex = 2;
             // 
-            // radioButton1
+            // skylineRadioButton
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(49, 86);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(133, 19);
-            this.radioButton1.TabIndex = 3;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Skyline export (.xlsx)";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.skylineRadioButton.AutoSize = true;
+            this.skylineRadioButton.Checked = true;
+            this.skylineRadioButton.Location = new System.Drawing.Point(50, 90);
+            this.skylineRadioButton.Name = "radioButton1";
+            this.skylineRadioButton.Size = new System.Drawing.Size(133, 19);
+            this.skylineRadioButton.TabIndex = 3;
+            this.skylineRadioButton.TabStop = true;
+            this.skylineRadioButton.Text = "Skyline export (.xlsx)";
+            this.skylineRadioButton.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -80,28 +81,28 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "Input file type:";
             // 
-            // button2
+            // submitButton
             // 
             this.submitButton.Location = new System.Drawing.Point(357, 322);
-            this.submitButton.Name = "button2";
+            this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(90, 24);
             this.submitButton.TabIndex = 5;
             this.submitButton.Text = "Submit";
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
             // 
-            // OpenFileDialogForm
+            // OpenFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.submitButton);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.radioButton1);
+            this.Controls.Add(this.skylineRadioButton);
             this.Controls.Add(this.fileNameBox);
             this.Controls.Add(this.filePathBox);
             this.Controls.Add(this.openFileButton);
-            this.Name = "OpenFileDialogForm";
+            this.Name = "OpenFileForm";
             this.Text = "Open file";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -113,7 +114,7 @@
         private System.Windows.Forms.Button openFileButton;
         private System.Windows.Forms.TextBox filePathBox;
         private System.Windows.Forms.TextBox fileNameBox;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton skylineRadioButton;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button submitButton;
     }

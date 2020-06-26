@@ -8,16 +8,29 @@ using System.Windows.Forms;
 
 namespace WindowsFormCore
 {
-    public partial class Form2 : Form
+    public partial class ProgressWindow : Form
     {
-        public Form2()
+        public ProgressWindow()
         {
             InitializeComponent();
         }
 
         public void progressTextBox_TextChanged(object sender, EventArgs e)
         {
-            progressTextBox.Text = "processing...";
+        }
+    }
+    
+    public static class WinFormsExtensions
+    {
+        public static void SetText(this TextBox source, string text)
+        {
+            source.Text = text;
+        }
+
+        public static void AppendLine(this TextBox source, string text)
+        {
+            if (source.Text.Length == 0) source.Text = text;
+            else source.AppendText("\r\n" + text);
         }
     }
 }

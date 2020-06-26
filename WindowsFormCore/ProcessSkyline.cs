@@ -4,16 +4,21 @@ using System.Text;
 using System.IO;
 using OfficeOpenXml;
 using System.Linq;
+using System.Windows.Forms;
 
 namespace WindowsFormCore
 {
     class ProcessSkyline
     {
-        //public int NUM_CPNDS = 59;
-        //public int NUM_SAMPLES = 150;
+        public int COL_CMPD;
+        public int COL_SAMPLE;
+        public int COL_AREA;
 
         public static void run(string filePath)
         {
+            ProgressWindow form2 = (ProgressWindow)Application.OpenForms["Form2"];
+            form2.progressTextBox.SetText("Opening file...");
+
             FileInfo inputFile = new FileInfo(filePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
 
@@ -49,6 +54,8 @@ namespace WindowsFormCore
                         dataMap.Add(compound, pairList);
                     }
                 }
+
+                form2.progressTextBox.AppendLine("Finished reading data.\r\nWriting data...");
 
                 List<string> compoundList = new List<string>(dataMap.Keys);
                 int numCompounds = dataMap.Count - 1;
@@ -109,6 +116,9 @@ namespace WindowsFormCore
                 }
 
                 ExcelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
+
+                form2.progressTextBox.AppendLine("Done");
+                form2.UseWaitCursor = false;
             }
         }
 

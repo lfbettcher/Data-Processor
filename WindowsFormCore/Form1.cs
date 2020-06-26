@@ -8,13 +8,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
-using OfficeOpenXml;
 
 namespace WindowsFormCore
 {
-    public partial class OpenFileDialogForm : Form
+    public partial class OpenFileForm : Form
     {
-        public OpenFileDialogForm()
+        public OpenFileForm()
         {
             InitializeComponent();
         }
@@ -45,8 +44,10 @@ namespace WindowsFormCore
         {
             if (filePath != string.Empty)
             {
-                Form2 form2 = new Form2();
+                ProgressWindow form2 = new ProgressWindow();
                 form2.Show();
+
+                string inputType = "";
                 ProcessSkyline.run(filePath);
             }
         }
