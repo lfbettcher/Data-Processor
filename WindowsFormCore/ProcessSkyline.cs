@@ -12,14 +12,14 @@ namespace WindowsFormCore
     {
         public static void Run(string filePath, int compoundCol, int sampleCol, int areaCol)
         {
-            ProgressWindow progressWindow = (ProgressWindow)Application.OpenForms["Form2"];
+            var progressWindow = (ProgressWindow)Application.OpenForms["Form2"];
             progressWindow.progressTextBox.SetText("Opening file...");
 
             // Get first worksheet
             var inputFile = new FileInfo(filePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // EPPlus license
-            var ExcelPkg = new ExcelPackage(inputFile);
-            ExcelWorksheet worksheet = ExcelPkg.Workbook.Worksheets.FirstOrDefault();
+            var excelPkg = new ExcelPackage(inputFile);
+            ExcelWorksheet worksheet = excelPkg.Workbook.Worksheets.FirstOrDefault();
 
             // Read spreadsheet data into a map
             var dataMap = new Dictionary<string, List<KeyValuePair<string, string>>>();
@@ -48,9 +48,11 @@ namespace WindowsFormCore
             }
 
             progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data...");
-            WriteOutputFile.FormatToColumns(ExcelPkg, dataMap);
+            WriteOutputFile.FormatToColumns(excelPkg, dataMap);
             progressWindow.progressTextBox.AppendLine("Removing NA...");
-            WriteOutputFile.RemoveNA(ExcelPkg);
+            WriteOutputFile.RemoveNA(excelPkg);
+            progressWindow.progressTextBox.AppendLine("Calculating ratios...");
+            WriteOutputFile.CalculateRatios(excelPkg);
             // More WriteOutputFile....
             progressWindow.progressTextBox.AppendLine("Done");
             progressWindow.UseWaitCursor = false;

@@ -8,7 +8,7 @@ namespace WindowsFormCore
 {
     class WriteOutputFile
     {
-        public static void FormatToColumns(ExcelPackage ExcelPkg,
+        public static void FormatToColumns(ExcelPackage excelPkg,
             Dictionary<string, List<KeyValuePair<string, string>>> dataMap)
         {
             var compoundList = new List<string>(dataMap.Keys);
@@ -16,7 +16,7 @@ namespace WindowsFormCore
             int numSamples = dataMap[compoundList[1]].Count;
 
             // Write data to new sheet
-            ExcelWorksheet outputSheet = ExcelPkg.Workbook.Worksheets.Add("Formatted Data");
+            ExcelWorksheet outputSheet = excelPkg.Workbook.Worksheets.Add("Formatted Data");
 
             // Populate first row with compounds
             outputSheet.Cells[1, 1].Value = "Sample";
@@ -53,13 +53,13 @@ namespace WindowsFormCore
             ExcelRange range = outputSheet.Cells[2, 2, numSamples + 1, numCompounds + 1];
             range.Style.Numberformat.Format = "0";
 
-            ExcelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
+            excelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
         }
 
-        public static void RemoveNA(ExcelPackage ExcelPkg)
+        public static void RemoveNA(ExcelPackage excelPkg)
         {
             // Make copy of sheet and remove #NA
-            ExcelWorksheet detectedSheet = Copy(ExcelPkg, "Formatted Data", "Compounds Detected");
+            ExcelWorksheet detectedSheet = Copy(excelPkg, "Formatted Data", "Compounds Detected");
 
             int cols = detectedSheet.Dimension.Columns;
             int rows = detectedSheet.Dimension.Rows;
@@ -80,7 +80,12 @@ namespace WindowsFormCore
             }
             detectedSheet.DeleteRow(rows + 1);
 
-            ExcelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
+            excelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
+        }
+
+        public static void CalculateRatios(ExcelPackage excelPackage)
+        {
+
         }
 
         /* COPY EXCEL SHEET */
@@ -101,7 +106,7 @@ namespace WindowsFormCore
             {
                 modulo = (dividend - 1) % 26;
                 columnLetter = Convert.ToChar(65 + modulo).ToString() + columnLetter;
-                dividend = (int)((dividend - modulo) / 26);
+                dividend = (dividend - modulo) / 26;
             }
             return columnLetter;
         }
