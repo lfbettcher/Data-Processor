@@ -49,7 +49,7 @@ namespace WindowsFormCore
             var progressWindow = new ProgressWindow();
             progressWindow.Show();
 
-            Dictionary<string, List<KeyValuePair<string, string>>> dataMap = null;
+            Dictionary<string, Dictionary<string, string>> dataMap = null;
 
             if (skylineRadioButton.Checked)
             {

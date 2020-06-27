@@ -10,7 +10,7 @@ namespace WindowsFormCore
     class WriteOutputFile
     {
         public static void Main(bool removeNA, bool replaceNA, string missingValPercent, string missingValReplace, 
-            ProgressWindow progressWindow, Dictionary<string, List<KeyValuePair<string, string>>> dataMap)
+            ProgressWindow progressWindow, Dictionary<string, Dictionary<string, string>> dataMap)
         {
             var excelPkg = new ExcelPackage();
 
@@ -38,7 +38,7 @@ namespace WindowsFormCore
         }
 
         public static void FormatToColumns(ExcelPackage excelPkg,
-            Dictionary<string, List<KeyValuePair<string, string>>> dataMap)
+            Dictionary<string, Dictionary<string, string>> dataMap)
         {
             var compoundList = new List<string>(dataMap.Keys);
             int numCompounds = dataMap.Count - 1;
@@ -61,23 +61,11 @@ namespace WindowsFormCore
                 outputSheet.Cells[i, 1].Value = i - 1;
 
                 for (int j = 2; j <= numCompounds + 1; j++)
-                {
-                    // Check if sample name in first column matches Key and compound name in first row matches Value
-                    if (string.Equals(outputSheet.Cells[i, 1].Value.ToString(), dataMap[compoundList[j - 1]][i - 2].Key) &&
-                        string.Equals(outputSheet.Cells[1, j].Value, compoundList[j - 1]))
-                    {
-                        // Write peak area
-                        var peakArea = dataMap[compoundList[j - 1]][i - 2].Value;
-
-                        if (double.TryParse(peakArea, out double peakAreaNum))
-                        {
-                            outputSheet.Cells[i, j].Value = peakAreaNum;
-                        }
-                        else
-                        {
-                            outputSheet.Cells[i, j].Value = peakArea;
-                        }
-                    }
+                { 
+                    // Write peak area
+                    dataMap[outputSheet.Cells[1, j].Value.ToString()].TryGetValue(outputSheet.Cells[i, 1].Value.ToString(), out var peakArea);
+                    if (double.TryParse(peakArea, out double peakAreaNum)) outputSheet.Cells[i, j].Value = peakAreaNum;
+                    else outputSheet.Cells[i, j].Value = peakArea;
                 }
             }
             outputSheet.Cells[2, 2, numSamples + 1, numCompounds + 1].Style.Numberformat.Format = "0";

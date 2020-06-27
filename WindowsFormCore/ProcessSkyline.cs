@@ -10,7 +10,7 @@ namespace WindowsFormCore
 {
     class ProcessSkyline
     {
-        public static Dictionary<string, List<KeyValuePair<string, string>>> 
+        public static Dictionary<string, Dictionary<string, string>> 
             Run(string filePath, int compoundCol, int sampleCol, int areaCol)
         {
             var progressWindow = (ProgressWindow)Application.OpenForms["Form2"];
@@ -20,10 +20,10 @@ namespace WindowsFormCore
             var inputFile = new FileInfo(filePath);
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // EPPlus license
             var excelPkg = new ExcelPackage(inputFile);
-            ExcelWorksheet worksheet = excelPkg.Workbook.Worksheets.FirstOrDefault();
+            var worksheet = excelPkg.Workbook.Worksheets.FirstOrDefault();
 
             // Read spreadsheet data into a map
-            var dataMap = new Dictionary<string, List<KeyValuePair<string, string>>>();
+            var dataMap = new Dictionary<string, Dictionary<string, string>>();
 
             int totalRows = worksheet.Dimension.Rows;
 
@@ -33,19 +33,15 @@ namespace WindowsFormCore
                 var sample = worksheet.Cells[i, sampleCol].Value.ToString();
                 var area = worksheet.Cells[i, areaCol].Value.ToString();
 
-                var pair = new KeyValuePair<string, string>(sample, area);
-
-                if (dataMap.ContainsKey(compound))
+                if (dataMap.ContainsKey(compound)) dataMap[compound].Add(sample, area);
+                /*
                 {
-                    var pairList = dataMap[compound];
-                    pairList.Add(pair);
-                    dataMap[compound] = pairList;
+                    var sampleAreaMap = dataMap[compound];
+                    sampleAreaMap.Add(sample, area);
+                    dataMap[compound] = sampleAreaMap;
                 }
-                else
-                {
-                    var pairList = new List<KeyValuePair<string, string>>() { pair };
-                    dataMap.Add(compound, pairList);
-                }
+                */
+                else dataMap.Add(compound, new Dictionary<string, string> {{sample, area}});
             }
             return dataMap;
         }
