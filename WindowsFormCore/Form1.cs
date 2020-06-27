@@ -49,9 +49,11 @@ namespace WindowsFormCore
             var progressWindow = new ProgressWindow();
             progressWindow.Show();
 
+            Dictionary<string, List<KeyValuePair<string, string>>> dataMap = null;
+
             if (skylineRadioButton.Checked)
             {
-                ProcessSkyline.Run(filePath, 1, 3, 10);
+                dataMap = ProcessSkyline.Run(filePath, 1, 3, 10);
             }
             else if (radioButton1.Checked)
             {
@@ -61,7 +63,23 @@ namespace WindowsFormCore
             {
                 // placeholder
             }
+
+            if (dataMap == null)
+            {
+                progressWindow.progressTextBox.AppendLine("Error reading file.");
+                return;
+            }
+
+            progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data...");
+            
+            bool removeNA = removeMissingCheckBox.Checked;
+            var missingValPercent = missingValueBox.Text ?? missingValueBox.PlaceholderText;
+            var missingValReplace = replaceMissingValueTextBox.Text ?? replaceMissingValueTextBox.PlaceholderText;
+
+            WriteOutputFile.Main(removeNA, missingValPercent, missingValReplace, progressWindow, dataMap);
+
         }
 
     }
+
 }

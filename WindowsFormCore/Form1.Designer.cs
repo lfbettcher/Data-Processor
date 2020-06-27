@@ -178,6 +178,8 @@
             // removeMissingCheckBox
             // 
             this.removeMissingCheckBox.AutoSize = true;
+            this.removeMissingCheckBox.Checked = true;
+            this.removeMissingCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.removeMissingCheckBox.Location = new System.Drawing.Point(17, 23);
             this.removeMissingCheckBox.Name = "removeMissingCheckBox";
             this.removeMissingCheckBox.Size = new System.Drawing.Size(151, 19);

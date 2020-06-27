@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using OfficeOpenXml;
 
@@ -8,8 +9,28 @@ namespace WindowsFormCore
 {
     class WriteOutputFile
     {
-        private double percentMissing = 20.0;
-        private string missingValueReplacement = "0";
+        public static void Main(bool removeNA, string missingValPercent, string missingValReplace, 
+            ProgressWindow progressWindow, Dictionary<string, List<KeyValuePair<string, string>>> dataMap)
+        {
+            //var progressWindow = new ProgressWindow();
+            var excelPkg = new ExcelPackage();
+
+            FormatToColumns(excelPkg, dataMap);
+
+            if (removeNA)
+            {
+                progressWindow.progressTextBox.AppendLine("Removing NA...");
+                RemoveNA(excelPkg, missingValPercent, missingValReplace);
+            }
+
+            /*
+            progressWindow.progressTextBox.AppendLine("Calculating ratios...");
+            CalculateRatios(excelPkg);
+            */
+            // More WriteOutputFile....
+            progressWindow.progressTextBox.AppendLine("Done");
+            progressWindow.UseWaitCursor = false;
+        }
 
         public static void FormatToColumns(ExcelPackage excelPkg,
             Dictionary<string, List<KeyValuePair<string, string>>> dataMap)
@@ -59,32 +80,30 @@ namespace WindowsFormCore
             excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\out.xlsx"));
         }
 
-        public static void RemoveNA(ExcelPackage excelPkg)
+        public static void RemoveNA(ExcelPackage excelPkg, string missingValPercent, string missingValReplace)
         {
             // Make copy of sheet and remove #NA
             ExcelWorksheet detectedSheet = Copy(excelPkg, "Formatted Data", "Compounds Detected");
 
             int cols = detectedSheet.Dimension.Columns;
             int rows = detectedSheet.Dimension.Rows;
-            for (int col = 2; col <= cols; col++)
-            {
-                // Count of samples the compound is detected in
-                var colLetter = GetColumnLetter(col);
-                detectedSheet.Cells[rows + 1, col].Formula = $"COUNT({colLetter}2:{colLetter}{rows})";
-            }
-            detectedSheet.Cells[rows + 1, 2, rows + 1, cols].Calculate();
 
+            var cutoffCount = 1.0;
+
+            if (double.TryParse(missingValPercent, out var cutoffPercent))
+            {
+                cutoffCount = (100 - cutoffPercent) / 100 * (rows - 1);
+                System.Diagnostics.Debug.WriteLine(cutoffCount);
+            }
+
+            // Delete columns below cutoff count
             for (int col = cols; col > 1; col--)
             {
-                if (string.Equals(detectedSheet.Cells[rows + 1, col].Value.ToString(), "0"))
-                {
-                    detectedSheet.DeleteColumn(col);
-                }
+                var count = detectedSheet.Cells[2, col, rows, col].Count(n => double.TryParse(n.Text, out var num));
+                if (count < cutoffCount) detectedSheet.DeleteColumn(col);
             }
-            detectedSheet.DeleteRow(rows + 1);
 
             excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\out.xlsx"));
-
         }
 
         public static void CalculateRatios(ExcelPackage excelPackage)
@@ -114,5 +133,6 @@ namespace WindowsFormCore
             }
             return columnLetter;
         }
+
     }
 }

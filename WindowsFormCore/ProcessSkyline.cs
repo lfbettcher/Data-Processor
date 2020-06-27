@@ -10,7 +10,8 @@ namespace WindowsFormCore
 {
     class ProcessSkyline
     {
-        public static void Run(string filePath, int compoundCol, int sampleCol, int areaCol)
+        public static Dictionary<string, List<KeyValuePair<string, string>>> 
+            Run(string filePath, int compoundCol, int sampleCol, int areaCol)
         {
             var progressWindow = (ProgressWindow)Application.OpenForms["Form2"];
             progressWindow.progressTextBox.SetText("Opening file...");
@@ -46,16 +47,7 @@ namespace WindowsFormCore
                     dataMap.Add(compound, pairList);
                 }
             }
-
-            progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data...");
-            WriteOutputFile.FormatToColumns(excelPkg, dataMap);
-            progressWindow.progressTextBox.AppendLine("Removing NA...");
-            WriteOutputFile.RemoveNA(excelPkg);
-            progressWindow.progressTextBox.AppendLine("Calculating ratios...");
-            WriteOutputFile.CalculateRatios(excelPkg);
-            // More WriteOutputFile....
-            progressWindow.progressTextBox.AppendLine("Done");
-            progressWindow.UseWaitCursor = false;
+            return dataMap;
         }
     }
 }
