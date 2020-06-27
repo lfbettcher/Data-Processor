@@ -73,10 +73,16 @@ namespace WindowsFormCore
             progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data...");
             
             bool removeNA = removeMissingCheckBox.Checked;
-            var missingValPercent = missingValueBox.Text ?? missingValueBox.PlaceholderText;
-            var missingValReplace = replaceMissingValueTextBox.Text ?? replaceMissingValueTextBox.PlaceholderText;
+            var missingValPercent = string.IsNullOrEmpty(missingValueBox.Text)
+                ? missingValueBox.PlaceholderText
+                : missingValueBox.Text;
 
-            WriteOutputFile.Main(removeNA, missingValPercent, missingValReplace, progressWindow, dataMap);
+            bool replaceNA = replaceMissingValueCheckBox.Checked;
+            var missingValReplace = string.IsNullOrEmpty(replaceMissingValueTextBox.Text)
+                ? replaceMissingValueTextBox.PlaceholderText
+                : replaceMissingValueTextBox.Text;
+
+            WriteOutputFile.Main(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap);
 
         }
 

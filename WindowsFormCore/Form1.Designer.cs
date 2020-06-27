@@ -38,10 +38,10 @@
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.replaceMissingValueTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.missingValueBox = new System.Windows.Forms.TextBox();
             this.removeMissingCheckBox = new System.Windows.Forms.CheckBox();
+            this.replaceMissingValueCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -128,8 +128,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.replaceMissingValueCheckBox);
             this.groupBox2.Controls.Add(this.replaceMissingValueTextBox);
-            this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.label1);
             this.groupBox2.Controls.Add(this.missingValueBox);
             this.groupBox2.Controls.Add(this.removeMissingCheckBox);
@@ -142,20 +142,11 @@
             // 
             // replaceMissingValueTextBox
             // 
-            this.replaceMissingValueTextBox.Location = new System.Drawing.Point(234, 48);
+            this.replaceMissingValueTextBox.Location = new System.Drawing.Point(253, 48);
             this.replaceMissingValueTextBox.Name = "replaceMissingValueTextBox";
             this.replaceMissingValueTextBox.PlaceholderText = "0";
-            this.replaceMissingValueTextBox.Size = new System.Drawing.Size(69, 23);
+            this.replaceMissingValueTextBox.Size = new System.Drawing.Size(50, 23);
             this.replaceMissingValueTextBox.TabIndex = 4;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(17, 51);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(211, 15);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "Replace remaining missing values with";
             // 
             // label1
             // 
@@ -186,6 +177,16 @@
             this.removeMissingCheckBox.TabIndex = 0;
             this.removeMissingCheckBox.Text = "Remove features with >";
             this.removeMissingCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // replaceMissingValueCheckBox
+            // 
+            this.replaceMissingValueCheckBox.AutoSize = true;
+            this.replaceMissingValueCheckBox.Location = new System.Drawing.Point(17, 50);
+            this.replaceMissingValueCheckBox.Name = "replaceMissingValueCheckBox";
+            this.replaceMissingValueCheckBox.Size = new System.Drawing.Size(230, 19);
+            this.replaceMissingValueCheckBox.TabIndex = 5;
+            this.replaceMissingValueCheckBox.Text = "Replace remaining missing values with";
+            this.replaceMissingValueCheckBox.UseVisualStyleBackColor = true;
             // 
             // OpenFileForm
             // 
@@ -221,10 +222,10 @@
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox replaceMissingValueTextBox;
-        private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox missingValueBox;
         private System.Windows.Forms.CheckBox removeMissingCheckBox;
+        private System.Windows.Forms.CheckBox replaceMissingValueCheckBox;
     }
 }
 

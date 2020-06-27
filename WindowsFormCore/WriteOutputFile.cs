@@ -9,10 +9,9 @@ namespace WindowsFormCore
 {
     class WriteOutputFile
     {
-        public static void Main(bool removeNA, string missingValPercent, string missingValReplace, 
+        public static void Main(bool removeNA, bool replaceNA, string missingValPercent, string missingValReplace, 
             ProgressWindow progressWindow, Dictionary<string, List<KeyValuePair<string, string>>> dataMap)
         {
-            //var progressWindow = new ProgressWindow();
             var excelPkg = new ExcelPackage();
 
             FormatToColumns(excelPkg, dataMap);
@@ -20,7 +19,13 @@ namespace WindowsFormCore
             if (removeNA)
             {
                 progressWindow.progressTextBox.AppendLine("Removing NA...");
-                RemoveNA(excelPkg, missingValPercent, missingValReplace);
+                RemoveNA(excelPkg, missingValPercent);
+            }
+
+            if (replaceNA)
+            {
+                progressWindow.progressTextBox.AppendLine($"Replacing NA with {missingValReplace}...");
+                ReplaceNA(excelPkg, "Compounds Detected", missingValReplace);
             }
 
             /*
@@ -54,6 +59,7 @@ namespace WindowsFormCore
             {
                 // Write sample number in first column
                 outputSheet.Cells[i, 1].Value = i - 1;
+
                 for (int j = 2; j <= numCompounds + 1; j++)
                 {
                     // Check if sample name in first column matches Key and compound name in first row matches Value
@@ -74,16 +80,15 @@ namespace WindowsFormCore
                     }
                 }
             }
-            ExcelRange range = outputSheet.Cells[2, 2, numSamples + 1, numCompounds + 1];
-            range.Style.Numberformat.Format = "0";
+            outputSheet.Cells[2, 2, numSamples + 1, numCompounds + 1].Style.Numberformat.Format = "0";
 
-            excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\out.xlsx"));
+            SaveFile(excelPkg, "out");
         }
 
-        public static void RemoveNA(ExcelPackage excelPkg, string missingValPercent, string missingValReplace)
+        public static void RemoveNA(ExcelPackage excelPkg, string missingValPercent)
         {
             // Make copy of sheet and remove #NA
-            ExcelWorksheet detectedSheet = Copy(excelPkg, "Formatted Data", "Compounds Detected");
+            var detectedSheet = excelPkg.Workbook.Worksheets.Copy("Formatted Data", "Compounds Detected");
 
             int cols = detectedSheet.Dimension.Columns;
             int rows = detectedSheet.Dimension.Rows;
@@ -102,8 +107,37 @@ namespace WindowsFormCore
                 var count = detectedSheet.Cells[2, col, rows, col].Count(n => double.TryParse(n.Text, out var num));
                 if (count < cutoffCount) detectedSheet.DeleteColumn(col);
             }
+            SaveFile(excelPkg, "out");
+        }
 
-            excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\out.xlsx"));
+        public static void ReplaceNA(ExcelPackage excelPkg, string sheetName, string missingValReplace)
+        {
+            var worksheet = excelPkg.Workbook.Worksheets[sheetName];
+            int cols = worksheet.Dimension.Columns;
+            int rows = worksheet.Dimension.Rows;
+
+            // Replace with number
+            if (double.TryParse(missingValReplace, out var replaceNum))
+            {
+                foreach (var cell in worksheet.Cells[2, 2, rows, cols])
+                {
+                    var value = cell.Value.ToString();
+                    if (!double.TryParse(value, out _)) cell.Value = replaceNum;
+                }
+
+            }
+            // Replace with string
+            else
+            {
+                foreach (var cell in worksheet.Cells[2, 2, rows, cols])
+                {
+                    var value = cell.Value.ToString();
+                    if (!double.TryParse(value, out _)) cell.Value = missingValReplace;
+                }
+            }
+
+            worksheet.Cells[2, 2, rows, cols].Style.Numberformat.Format = "0";
+            SaveFile(excelPkg, "out");
         }
 
         public static void CalculateRatios(ExcelPackage excelPackage)
@@ -111,11 +145,10 @@ namespace WindowsFormCore
 
         }
 
-        /* COPY EXCEL SHEET */
-        public static ExcelWorksheet Copy(ExcelPackage excelPackage, string copyFrom, string copyTo)
+        /* SAVE FILE */
+        public static void SaveFile(ExcelPackage excelPkg, string filename)
         {
-            ExcelWorksheet worksheet = excelPackage.Workbook.Worksheets.Copy(copyFrom, copyTo);
-            return worksheet;
+            excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{filename}.xlsx"));
         }
 
         /* GET COLUMN LETTER */
