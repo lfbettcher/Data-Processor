@@ -8,6 +8,9 @@ namespace WindowsFormCore
 {
     class WriteOutputFile
     {
+        private double percentMissing = 20.0;
+        private string missingValueReplacement = "0";
+
         public static void FormatToColumns(ExcelPackage excelPkg,
             Dictionary<string, List<KeyValuePair<string, string>>> dataMap)
         {
@@ -53,7 +56,7 @@ namespace WindowsFormCore
             ExcelRange range = outputSheet.Cells[2, 2, numSamples + 1, numCompounds + 1];
             range.Style.Numberformat.Format = "0";
 
-            excelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
+            excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\out.xlsx"));
         }
 
         public static void RemoveNA(ExcelPackage excelPkg)
@@ -80,7 +83,8 @@ namespace WindowsFormCore
             }
             detectedSheet.DeleteRow(rows + 1);
 
-            excelPkg.SaveAs(new FileInfo("C:\\Users\\Lisa\\OneDrive\\Desktop\\out.xlsx"));
+            excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\out.xlsx"));
+
         }
 
         public static void CalculateRatios(ExcelPackage excelPackage)

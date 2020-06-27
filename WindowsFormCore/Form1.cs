@@ -20,7 +20,8 @@ namespace WindowsFormCore
         }
 
         OpenFileDialog openFileDialog = new OpenFileDialog();
-        string filePath = "C:\\Users\\Lisa\\OneDrive\\Desktop\\input.xlsx";
+
+        string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\input.xlsx"; // for testing
         string fileName = string.Empty;
 
         private void openFileButton_Click(object sender, EventArgs e)
