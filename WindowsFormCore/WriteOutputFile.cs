@@ -143,7 +143,6 @@ namespace WindowsFormCore
         {
             var compoundList = new List<string>(detectedMap.Keys);
             var sampleList = new List<string>(detectedMap[compoundList[0]].Keys);
-            int numCompounds = compoundList.Count;
             int numSamples = sampleList.Count;
 
             // Write data to new excel worksheet
@@ -159,36 +158,29 @@ namespace WindowsFormCore
             int col = 2;
             foreach (var isotope in isotopeMap.Keys)
             {
-                foreach (var compound in isotopeMap[isotope])
+                foreach (var compound in isotopeMap[isotope].Where(compound => compoundList.Contains(compound)))
                 {
-                    if (compoundList.Contains(compound))
+                    isotopeRatioSheet.Cells[1, col].Value = compound; // Put compound name in first row
+                    for (int row = 2; row <= numSamples + 1; row++) // Fill in sample ratios
                     {
-                        isotopeRatioSheet.Cells[1, col].Value = compound; // First row compound name
-                        for (int row = 2; row <= numSamples + 1; row++) // Fill in sample ratios
+                        // Get area value from map with compound/sample match
+                        var sampleName = isotopeRatioSheet.Cells[row, 1].Value.ToString();
+                        detectedMap[compound].TryGetValue(sampleName, out var compoundArea);
+                        if (double.TryParse(compoundArea, out var compoundAreaNum))
                         {
-                            // Get area value from from map with compound/sample match
-                            detectedMap[compound].TryGetValue(isotopeRatioSheet.Cells[row, 1].Value.ToString(), out var compoundArea);
-                            if (double.TryParse(compoundArea, out var compoundAreaNum))
+                            detectedMap[isotope].TryGetValue(sampleName, out var isotopeArea);
+                            if (double.TryParse(isotopeArea, out var isotopeAreaNum))
                             {
-                                detectedMap[isotope].TryGetValue(isotopeRatioSheet.Cells[row, 1].Value.ToString(), out var isotopeArea);
-                                if (double.TryParse(isotopeArea, out var isotopeAreaNum))
-                                {
-                                    isotopeRatioSheet.Cells[row, col].Value = compoundAreaNum / isotopeAreaNum;
-                                }
-                                else
-                                {
-                                    isotopeRatioSheet.Cells[row, col].Value = "No Isotope";
-                                }
+                                isotopeRatioSheet.Cells[row, col].Value = compoundAreaNum / isotopeAreaNum;
                             }
-                            else
-                            {
-                                isotopeRatioSheet.Cells[row, col].Value = 0.0;
-                            }
+                            else isotopeRatioSheet.Cells[row, col].Value = "No Isotope";
                         }
-                        col++;
+                        else isotopeRatioSheet.Cells[row, col].Value = 0.0;
                     }
+                    col++;
                 }
             }
+
             //isotopeRatioSheet.Cells[2, 2, numSamples + 1, numCompounds + 1].Style.Numberformat.Format = "0.000000";
             isotopeRatioSheet.Cells.AutoFitColumns();
             SaveFile(excelPkg, outputFileName);
