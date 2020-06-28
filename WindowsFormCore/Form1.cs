@@ -49,11 +49,15 @@ namespace WindowsFormCore
             var progressWindow = new ProgressWindow();
             progressWindow.Show();
 
-            Dictionary<string, Dictionary<string, string>> dataMap = null;
+            // Create isotope map
+            Dictionary<string, List<string>> isotopeMap = null;
+            isotopeMap = IsotopeCalc.IsotopeMap(filePath);
 
+            // Read data to map
+            Dictionary<string, Dictionary<string, string>> dataMap = null;
             if (skylineRadioButton.Checked)
             {
-                dataMap = ProcessSkyline.Run(filePath);
+                dataMap = ProcessSkyline.ReadDataToMap(filePath);
                 if (dataMap.Count == 0) return;
             }
             else if (radioButton1.Checked)
@@ -71,7 +75,7 @@ namespace WindowsFormCore
                 return;
             }
 
-            progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data...");
+            progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data");
             
             bool removeNA = removeMissingCheckBox.Checked;
             var missingValPercent = string.IsNullOrEmpty(missingValueBox.Text)
@@ -83,8 +87,7 @@ namespace WindowsFormCore
                 ? replaceMissingValueTextBox.PlaceholderText
                 : replaceMissingValueTextBox.Text;
 
-            WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap);
-
+            WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeMap);
         }
 
     }

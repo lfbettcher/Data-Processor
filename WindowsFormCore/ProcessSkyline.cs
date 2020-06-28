@@ -11,10 +11,10 @@ namespace WindowsFormCore
     class ProcessSkyline
     {
         public static Dictionary<string, Dictionary<string, string>> 
-            Run(string filePath)
+            ReadDataToMap(string filePath)
         {
             var progressWindow = (ProgressWindow)Application.OpenForms["Form2"];
-            progressWindow.progressTextBox.SetText("Opening file...");
+            progressWindow.progressTextBox.AppendLine("Opening data file");
 
             var dataMap = new Dictionary<string, Dictionary<string, string>>();
 
@@ -43,7 +43,7 @@ namespace WindowsFormCore
             }
 
             // Read spreadsheet data into a map
-            for (int i = 1; i <= rows; i++)
+            for (int i = 2; i <= rows; i++)
             {
                 var compound = worksheet.Cells[i, compoundCol].Value.ToString();
                 var sample = worksheet.Cells[i, sampleCol].Value.ToString();

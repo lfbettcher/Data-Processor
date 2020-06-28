@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using OfficeOpenXml;
-using OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers;
 
 namespace WindowsFormCore
 {
@@ -13,7 +12,8 @@ namespace WindowsFormCore
         private static string outputFileName = "out";
 
         public static void Run(bool removeNA, bool replaceNA, string missingValPercent, string missingValReplace,
-                               ProgressWindow progressWindow, Dictionary<string, Dictionary<string, string>> dataMap)
+                               ProgressWindow progressWindow, Dictionary<string, Dictionary<string, string>> dataMap,
+                               Dictionary<string, List<string>> isotopeMap)
         {
             var excelPkg = new ExcelPackage();
 
@@ -21,8 +21,8 @@ namespace WindowsFormCore
 
             if (removeNA)
             {
-                progressWindow.progressTextBox.AppendLine("Removing NA...");
-                RemoveNA(excelPkg, missingValPercent);
+                progressWindow.progressTextBox.AppendLine("Removing NA");
+                RemoveNA(excelPkg, missingValPercent, dataMap);
             }
 
             if (replaceNA)
@@ -31,10 +31,12 @@ namespace WindowsFormCore
                 ReplaceNA(excelPkg, "Compounds Detected", missingValReplace);
             }
 
-            /*
-            progressWindow.progressTextBox.AppendLine("Calculating ratios...");
-            CalculateRatios(excelPkg);
-            */
+            if (isotopeMap.Count > 0)
+            {
+                progressWindow.progressTextBox.AppendLine("Calculating ratios");
+                CalculateRatios(excelPkg, isotopeMap, dataMap);
+            }
+
             // More WriteOutputFile....
             progressWindow.progressTextBox.AppendLine("Done");
             progressWindow.UseWaitCursor = false;
@@ -44,28 +46,29 @@ namespace WindowsFormCore
                                            Dictionary<string, Dictionary<string, string>> dataMap)
         {
             var compoundList = new List<string>(dataMap.Keys);
-            int numCompounds = dataMap.Count - 1;
-            int numSamples = dataMap[compoundList[1]].Count;
+            var sampleList = new List<string>(dataMap[compoundList[0]].Keys);
+            int numCompounds = compoundList.Count;
+            int numSamples = sampleList.Count;
 
-            // Write data to new sheet
-            ExcelWorksheet outputSheet = excelPkg.Workbook.Worksheets.Add("Formatted Data");
+            // Write data to new excel worksheet
+            var outputSheet = excelPkg.Workbook.Worksheets.Add("Formatted Data");
 
             // Populate first row with compounds
             outputSheet.Cells[1, 1].Value = "Sample";
             for (int col = 2; col <= numCompounds + 1; col++)
             {
-                outputSheet.Cells[1, col].Value = compoundList[col - 1];
+                outputSheet.Cells[1, col].Value = compoundList[col - 2];
             }
 
             // Write each sample (row)
             for (int i = 2; i <= numSamples + 1; i++)
             {
-                // Write sample number in first column
-                outputSheet.Cells[i, 1].Value = i - 1;
+                // Write sample name in first column
+                outputSheet.Cells[i, 1].Value = sampleList[i - 2];
 
                 for (int j = 2; j <= numCompounds + 1; j++)
-                { 
-                    // Write peak area
+                {
+                    // Write peak area corresponding to compound and sample name
                     dataMap[outputSheet.Cells[1, j].Value.ToString()].TryGetValue(outputSheet.Cells[i, 1].Value.ToString(), out var peakArea);
                     if (double.TryParse(peakArea, out double peakAreaNum)) outputSheet.Cells[i, j].Value = peakAreaNum;
                     else outputSheet.Cells[i, j].Value = peakArea;
@@ -76,7 +79,7 @@ namespace WindowsFormCore
             SaveFile(excelPkg, outputFileName);
         }
 
-        public static void RemoveNA(ExcelPackage excelPkg, string missingValPercent)
+        public static void RemoveNA(ExcelPackage excelPkg, string missingValPercent, Dictionary<string, Dictionary<string, string>> dataMap)
         {
             // Make copy of sheet and remove #NA
             var detectedSheet = excelPkg.Workbook.Worksheets.Copy("Formatted Data", "Compounds Detected");
@@ -96,7 +99,11 @@ namespace WindowsFormCore
             for (int col = cols; col > 1; col--)
             {
                 var count = detectedSheet.Cells[2, col, rows, col].Count(n => double.TryParse(n.Text, out var num));
-                if (count < cutoffCount) detectedSheet.DeleteColumn(col);
+                if (count < cutoffCount)
+                {
+                    dataMap.Remove(detectedSheet.Cells[1, col].Value.ToString());
+                    detectedSheet.DeleteColumn(col);
+                }
             }
             SaveFile(excelPkg, outputFileName);
         }
@@ -131,31 +138,66 @@ namespace WindowsFormCore
             SaveFile(excelPkg, outputFileName);
         }
 
-        public static void CalculateRatios(ExcelPackage excelPackage)
+        public static void CalculateRatios(ExcelPackage excelPkg, Dictionary<string, List<string>> isotopeMap,
+                                           Dictionary<string, Dictionary<string, string>> detectedMap)
         {
+            var compoundList = new List<string>(detectedMap.Keys);
+            var sampleList = new List<string>(detectedMap[compoundList[0]].Keys);
+            int numCompounds = compoundList.Count;
+            int numSamples = sampleList.Count;
 
+            // Write data to new excel worksheet
+            var isotopeRatioSheet = excelPkg.Workbook.Worksheets.Add("Isotope Ratio");
+            isotopeRatioSheet.Cells[1, 1].Value = "Sample";
+
+            // Fill in sample names
+            for (int r = 2; r <= numSamples + 1; r++)
+            {
+                isotopeRatioSheet.Cells[r, 1].Value = sampleList[r - 2]; // Write sample name in first column
+            }
+
+            int col = 2;
+            foreach (var isotope in isotopeMap.Keys)
+            {
+                foreach (var compound in isotopeMap[isotope])
+                {
+                    if (compoundList.Contains(compound))
+                    {
+                        isotopeRatioSheet.Cells[1, col].Value = compound; // First row compound name
+                        for (int row = 2; row <= numSamples + 1; row++) // Fill in sample ratios
+                        {
+                            // Get area value from from map with compound/sample match
+                            detectedMap[compound].TryGetValue(isotopeRatioSheet.Cells[row, 1].Value.ToString(), out var compoundArea);
+                            if (double.TryParse(compoundArea, out var compoundAreaNum))
+                            {
+                                detectedMap[isotope].TryGetValue(isotopeRatioSheet.Cells[row, 1].Value.ToString(), out var isotopeArea);
+                                if (double.TryParse(isotopeArea, out var isotopeAreaNum))
+                                {
+                                    isotopeRatioSheet.Cells[row, col].Value = compoundAreaNum / isotopeAreaNum;
+                                }
+                                else
+                                {
+                                    isotopeRatioSheet.Cells[row, col].Value = "No Isotope";
+                                }
+                            }
+                            else
+                            {
+                                isotopeRatioSheet.Cells[row, col].Value = 0.0;
+                            }
+                        }
+                        col++;
+                    }
+                }
+            }
+            //isotopeRatioSheet.Cells[2, 2, numSamples + 1, numCompounds + 1].Style.Numberformat.Format = "0.000000";
+            isotopeRatioSheet.Cells.AutoFitColumns();
+            SaveFile(excelPkg, outputFileName);
         }
 
         /* SAVE FILE */
         public static void SaveFile(ExcelPackage excelPkg, string filename)
         {
             excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{filename}.xlsx"));
-        }
-
-        /* GET COLUMN LETTER */
-        public static string GetColumnLetter(int columnNumber)
-        {
-            int dividend = columnNumber;
-            string columnLetter = string.Empty;
-            int modulo;
-
-            while (dividend > 0)
-            {
-                modulo = (dividend - 1) % 26;
-                columnLetter = Convert.ToChar(65 + modulo).ToString() + columnLetter;
-                dividend = (dividend - modulo) / 26;
-            }
-            return columnLetter;
         }
 
     }
