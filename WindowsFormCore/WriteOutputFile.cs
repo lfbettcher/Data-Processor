@@ -4,13 +4,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using OfficeOpenXml;
+using OfficeOpenXml.FormulaParsing.ExpressionGraph.FunctionCompilers;
 
 namespace WindowsFormCore
 {
     class WriteOutputFile
     {
-        public static void Main(bool removeNA, bool replaceNA, string missingValPercent, string missingValReplace, 
-            ProgressWindow progressWindow, Dictionary<string, Dictionary<string, string>> dataMap)
+        private static string outputFileName = "out";
+
+        public static void Run(bool removeNA, bool replaceNA, string missingValPercent, string missingValReplace,
+                               ProgressWindow progressWindow, Dictionary<string, Dictionary<string, string>> dataMap)
         {
             var excelPkg = new ExcelPackage();
 
@@ -38,7 +41,7 @@ namespace WindowsFormCore
         }
 
         public static void FormatToColumns(ExcelPackage excelPkg,
-            Dictionary<string, Dictionary<string, string>> dataMap)
+                                           Dictionary<string, Dictionary<string, string>> dataMap)
         {
             var compoundList = new List<string>(dataMap.Keys);
             int numCompounds = dataMap.Count - 1;
@@ -70,7 +73,7 @@ namespace WindowsFormCore
             }
             outputSheet.Cells[2, 2, numSamples + 1, numCompounds + 1].Style.Numberformat.Format = "0";
 
-            SaveFile(excelPkg, "out");
+            SaveFile(excelPkg, outputFileName);
         }
 
         public static void RemoveNA(ExcelPackage excelPkg, string missingValPercent)
@@ -95,7 +98,7 @@ namespace WindowsFormCore
                 var count = detectedSheet.Cells[2, col, rows, col].Count(n => double.TryParse(n.Text, out var num));
                 if (count < cutoffCount) detectedSheet.DeleteColumn(col);
             }
-            SaveFile(excelPkg, "out");
+            SaveFile(excelPkg, outputFileName);
         }
 
         public static void ReplaceNA(ExcelPackage excelPkg, string sheetName, string missingValReplace)
@@ -125,7 +128,7 @@ namespace WindowsFormCore
             }
 
             worksheet.Cells[2, 2, rows, cols].Style.Numberformat.Format = "0";
-            SaveFile(excelPkg, "out");
+            SaveFile(excelPkg, outputFileName);
         }
 
         public static void CalculateRatios(ExcelPackage excelPackage)

@@ -53,7 +53,8 @@ namespace WindowsFormCore
 
             if (skylineRadioButton.Checked)
             {
-                dataMap = ProcessSkyline.Run(filePath, 1, 3, 10);
+                dataMap = ProcessSkyline.Run(filePath);
+                if (dataMap.Count == 0) return;
             }
             else if (radioButton1.Checked)
             {
@@ -82,7 +83,7 @@ namespace WindowsFormCore
                 ? replaceMissingValueTextBox.PlaceholderText
                 : replaceMissingValueTextBox.Text;
 
-            WriteOutputFile.Main(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap);
+            WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap);
 
         }
 
