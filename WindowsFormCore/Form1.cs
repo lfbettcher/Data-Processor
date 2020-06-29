@@ -51,7 +51,8 @@ namespace WindowsFormCore
 
             // Create isotope map
             Dictionary<string, List<string>> isotopeMap = null;
-            isotopeMap = IsotopeCalc.IsotopeMap(filePath);
+            IsotopeCalc isotopeCalc = new IsotopeCalc();
+            isotopeMap = isotopeCalc.IsotopeMap(filePath);
 
             // Read data to map
             Dictionary<string, Dictionary<string, string>> dataMap = null;
@@ -87,7 +88,7 @@ namespace WindowsFormCore
                 ? replaceMissingValueTextBox.PlaceholderText
                 : replaceMissingValueTextBox.Text;
 
-            WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeMap);
+            WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeCalc);
         }
 
     }

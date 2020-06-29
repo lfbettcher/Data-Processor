@@ -13,7 +13,7 @@ namespace WindowsFormCore
 
         public static void Run(bool removeNA, bool replaceNA, string missingValPercent, string missingValReplace,
                                ProgressWindow progressWindow, Dictionary<string, Dictionary<string, string>> dataMap,
-                               Dictionary<string, List<string>> isotopeMap)
+                               IsotopeCalc isotopeCalc)
         {
             var excelPkg = new ExcelPackage();
 
@@ -31,12 +31,14 @@ namespace WindowsFormCore
                 ReplaceNA(excelPkg, "Compounds Detected", missingValReplace);
             }
 
-            if (isotopeMap.Count > 0)
+            if (isotopeCalc.isotopeToCompound.Count > 0)
             {
                 progressWindow.progressTextBox.AppendLine("Calculating ratios");
-                CalculateRatios(excelPkg, isotopeMap, dataMap);
+                CalculateRatios(excelPkg, isotopeCalc, dataMap);
             }
 
+            progressWindow.progressTextBox.AppendLine("Calculating concentrations");
+            Concentration(excelPkg, isotopeCalc);
             // More WriteOutputFile....
             progressWindow.progressTextBox.AppendLine("Done");
             progressWindow.UseWaitCursor = false;
@@ -138,7 +140,7 @@ namespace WindowsFormCore
             SaveFile(excelPkg, outputFileName);
         }
 
-        public static void CalculateRatios(ExcelPackage excelPkg, Dictionary<string, List<string>> isotopeMap,
+        public static void CalculateRatios(ExcelPackage excelPkg, IsotopeCalc isotopeCalc,
                                            Dictionary<string, Dictionary<string, string>> detectedMap)
         {
             var compoundList = new List<string>(detectedMap.Keys);
@@ -156,9 +158,9 @@ namespace WindowsFormCore
             }
 
             int col = 2;
-            foreach (var isotope in isotopeMap.Keys)
+            foreach (var isotope in isotopeCalc.isotopeToCompound.Keys)
             {
-                foreach (var compound in isotopeMap[isotope].Where(compound => compoundList.Contains(compound)))
+                foreach (var compound in isotopeCalc.isotopeToCompound[isotope].Where(compound => compoundList.Contains(compound)))
                 {
                     isotopeRatioSheet.Cells[1, col].Value = compound; // Put compound name in first row
                     for (int row = 2; row <= numSamples + 1; row++) // Fill in sample ratios
@@ -181,8 +183,39 @@ namespace WindowsFormCore
                 }
             }
 
-            //isotopeRatioSheet.Cells[2, 2, numSamples + 1, numCompounds + 1].Style.Numberformat.Format = "0.000000";
+            isotopeRatioSheet.Cells[2, 2, numSamples + 1, col - 1].Style.Numberformat.Format = "0.000000";
             isotopeRatioSheet.Cells.AutoFitColumns();
+            SaveFile(excelPkg, outputFileName);
+        }
+
+        public static void Concentration(ExcelPackage excelPkg, IsotopeCalc isotopeCalc)
+        {
+            // Copy ratios data to new sheet to do calculation
+            var concentrationSheet = excelPkg.Workbook.Worksheets.Copy("Isotope Ratio", "Concentrations");
+            var rows = concentrationSheet.Dimension.Rows;
+            var cols = concentrationSheet.Dimension.Columns;
+
+            // Iterate through compounds
+            int col = 2;
+            for (int c = 2; c <= cols; c++)
+            {
+                var compound = concentrationSheet.Cells[1, c].Text;
+                // Get slope and intercept for compound
+                var slopeIntercept = isotopeCalc.SlopeIntercept("filePath", compound);
+
+                // Calculate for each sample
+                for (int r = 2; r <= rows; r++)
+                {
+                    var ratio = concentrationSheet.Cells[r, c].Text;
+                    if (double.TryParse(ratio, out var ratioNum))
+                    {
+                        concentrationSheet.Cells[r, c].Value = (ratioNum - slopeIntercept[1]) / slopeIntercept[0];
+                    }
+                }
+            }
+
+            //isotopeRatioSheet.Cells[2, 2, numSamples + 1, numCompounds + 1].Style.Numberformat.Format = "0.000000";
+            concentrationSheet.Cells.AutoFitColumns();
             SaveFile(excelPkg, outputFileName);
         }
 
