@@ -50,9 +50,9 @@ namespace WindowsFormCore
             progressWindow.Show();
 
             // Create isotope map
-            Dictionary<string, List<string>> isotopeMap = null;
-            IsotopeCalc isotopeCalc = new IsotopeCalc();
-            isotopeMap = isotopeCalc.IsotopeMap(filePath);
+            //Dictionary<string, List<string>> isotopeMap = null;
+            //IsotopeCalc isotopeCalc = new IsotopeCalc();
+            //isotopeMap = isotopeCalc.IsotopeMap(filePath);
 
             // Read data to map
             Dictionary<string, Dictionary<string, string>> dataMap = null;
@@ -61,13 +61,15 @@ namespace WindowsFormCore
                 dataMap = ProcessSkyline.ReadDataToMap(filePath);
                 if (dataMap.Count == 0) return;
             }
-            else if (radioButton1.Checked)
+            else if (sciexRadioButton.Checked)
             {
-                // placeholder
+                dataMap = ProcessSciex.ReadDataToMap(filePath);
+                if (dataMap.Count == 0) return;
             }
-            else if (radioButton2.Checked)
+            else if (NormQcRadioButton.Checked)
             {
-                // placeholder
+                dataMap = ProcessSciex.ReadDataToMap(filePath);
+                //Normalize.NormalizeToQC(filePath, dataMap);
             }
 
             if (dataMap == null)
@@ -77,7 +79,7 @@ namespace WindowsFormCore
             }
 
             progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data");
-            
+
             bool removeNA = removeMissingCheckBox.Checked;
             var missingValPercent = string.IsNullOrEmpty(missingValueBox.Text)
                 ? missingValueBox.PlaceholderText
@@ -88,9 +90,10 @@ namespace WindowsFormCore
                 ? replaceMissingValueTextBox.PlaceholderText
                 : replaceMissingValueTextBox.Text;
 
-            WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeCalc);
-        }
+            WriteOutputFile.WriteSciex(replaceNA, missingValReplace, progressWindow, dataMap, filePath);
 
+            //WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeCalc);
+        }
     }
 
 }

@@ -34,14 +34,14 @@
             this.skylineRadioButton = new System.Windows.Forms.RadioButton();
             this.submitButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.NormQcRadioButton = new System.Windows.Forms.RadioButton();
+            this.sciexRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.replaceMissingValueCheckBox = new System.Windows.Forms.CheckBox();
             this.replaceMissingValueTextBox = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.missingValueBox = new System.Windows.Forms.TextBox();
             this.removeMissingCheckBox = new System.Windows.Forms.CheckBox();
-            this.replaceMissingValueCheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +76,7 @@
             this.skylineRadioButton.Checked = true;
             this.skylineRadioButton.Location = new System.Drawing.Point(17, 22);
             this.skylineRadioButton.Name = "skylineRadioButton";
-            this.skylineRadioButton.Size = new System.Drawing.Size(130, 19);
+            this.skylineRadioButton.Size = new System.Drawing.Size(133, 19);
             this.skylineRadioButton.TabIndex = 3;
             this.skylineRadioButton.TabStop = true;
             this.skylineRadioButton.Text = "Skyline export (.xlsx)";
@@ -94,8 +94,8 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.radioButton2);
-            this.groupBox1.Controls.Add(this.radioButton1);
+            this.groupBox1.Controls.Add(this.NormQcRadioButton);
+            this.groupBox1.Controls.Add(this.sciexRadioButton);
             this.groupBox1.Controls.Add(this.skylineRadioButton);
             this.groupBox1.Location = new System.Drawing.Point(36, 52);
             this.groupBox1.Name = "groupBox1";
@@ -104,27 +104,27 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Input type:";
             // 
-            // radioButton2
+            // NormQcRadioButton
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(299, 22);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(94, 19);
-            this.radioButton2.TabIndex = 5;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "radioButton2";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.NormQcRadioButton.AutoSize = true;
+            this.NormQcRadioButton.Location = new System.Drawing.Point(293, 22);
+            this.NormQcRadioButton.Name = "NormQcRadioButton";
+            this.NormQcRadioButton.Size = new System.Drawing.Size(113, 19);
+            this.NormQcRadioButton.TabIndex = 5;
+            this.NormQcRadioButton.TabStop = true;
+            this.NormQcRadioButton.Text = "Normalize to QC";
+            this.NormQcRadioButton.UseVisualStyleBackColor = true;
             // 
-            // radioButton1
+            // sciexRadioButton
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(169, 22);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(94, 19);
-            this.radioButton1.TabIndex = 4;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "radioButton1";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.sciexRadioButton.AutoSize = true;
+            this.sciexRadioButton.Location = new System.Drawing.Point(159, 22);
+            this.sciexRadioButton.Name = "sciexRadioButton";
+            this.sciexRadioButton.Size = new System.Drawing.Size(121, 19);
+            this.sciexRadioButton.TabIndex = 4;
+            this.sciexRadioButton.TabStop = true;
+            this.sciexRadioButton.Text = "Sciex 6500+ (.xlsx)";
+            this.sciexRadioButton.UseVisualStyleBackColor = true;
             // 
             // groupBox2
             // 
@@ -139,6 +139,16 @@
             this.groupBox2.TabIndex = 7;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Missing values";
+            // 
+            // replaceMissingValueCheckBox
+            // 
+            this.replaceMissingValueCheckBox.AutoSize = true;
+            this.replaceMissingValueCheckBox.Location = new System.Drawing.Point(17, 50);
+            this.replaceMissingValueCheckBox.Name = "replaceMissingValueCheckBox";
+            this.replaceMissingValueCheckBox.Size = new System.Drawing.Size(230, 19);
+            this.replaceMissingValueCheckBox.TabIndex = 5;
+            this.replaceMissingValueCheckBox.Text = "Replace remaining missing values with";
+            this.replaceMissingValueCheckBox.UseVisualStyleBackColor = true;
             // 
             // replaceMissingValueTextBox
             // 
@@ -178,16 +188,6 @@
             this.removeMissingCheckBox.Text = "Remove features with >";
             this.removeMissingCheckBox.UseVisualStyleBackColor = true;
             // 
-            // replaceMissingValueCheckBox
-            // 
-            this.replaceMissingValueCheckBox.AutoSize = true;
-            this.replaceMissingValueCheckBox.Location = new System.Drawing.Point(17, 50);
-            this.replaceMissingValueCheckBox.Name = "replaceMissingValueCheckBox";
-            this.replaceMissingValueCheckBox.Size = new System.Drawing.Size(230, 19);
-            this.replaceMissingValueCheckBox.TabIndex = 5;
-            this.replaceMissingValueCheckBox.Text = "Replace remaining missing values with";
-            this.replaceMissingValueCheckBox.UseVisualStyleBackColor = true;
-            // 
             // OpenFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -218,8 +218,8 @@
         private System.Windows.Forms.RadioButton skylineRadioButton;
         private System.Windows.Forms.Button submitButton;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton NormQcRadioButton;
+        private System.Windows.Forms.RadioButton sciexRadioButton;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.TextBox replaceMissingValueTextBox;
         private System.Windows.Forms.Label label1;

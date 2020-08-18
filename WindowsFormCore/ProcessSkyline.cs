@@ -43,11 +43,11 @@ namespace WindowsFormCore
             }
 
             // Read spreadsheet data into a map
-            for (int i = 2; i <= rows; i++)
+            for (int r = 2; r <= rows; r++)
             {
-                var compound = worksheet.Cells[i, compoundCol].Value.ToString();
-                var sample = worksheet.Cells[i, sampleCol].Value.ToString();
-                var area = worksheet.Cells[i, areaCol].Value.ToString();
+                var compound = worksheet.Cells[r, compoundCol].Value.ToString();
+                var sample = worksheet.Cells[r, sampleCol].Value.ToString();
+                var area = worksheet.Cells[r, areaCol].Value.ToString();
 
                 if (dataMap.ContainsKey(compound)) dataMap[compound].Add(sample, area);
                 else dataMap.Add(compound, new Dictionary<string, string> {{sample, area}});
