@@ -67,16 +67,20 @@ namespace WindowsFormCore
             progressWindow.Show();
 
             // Create isotope map
-            //Dictionary<string, List<string>> isotopeMap = null;
-            //IsotopeCalc isotopeCalc = new IsotopeCalc();
+            Dictionary<string, List<string>> isotopeMap = null;
+            IsotopeCalc isotopeCalc = new IsotopeCalc();
             //isotopeMap = isotopeCalc.IsotopeMap(filePath);
 
             // Read data to map
             Dictionary<string, Dictionary<string, string>> dataMap = null;
+
             if (skylineRadioButton.Checked)
             {
                 dataMap = ProcessSkyline.ReadDataToMap(filePath);
                 if (dataMap.Count == 0) return;
+
+                // Create isotope map
+                isotopeMap = isotopeCalc.IsotopeMap(filePath);
             }
             else if (sciexRadioButton.Checked)
             {
@@ -91,6 +95,10 @@ namespace WindowsFormCore
             else if (multiquantTxtRadioButton.Checked)
             {
                 dataMap = ReadInput.ReadMultiQuantTxt(filePaths);
+                var templatePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) +
+                                   $"\\DataProcessor\\targeted_300_template-serum-mrm.xlsx";
+                WriteOutputFile.WriteMapToSheetCompoundsInRows(progressWindow, dataMap, templatePath, "Relative Quant Data", 1);
+                //WriteOutputFile.WriteMapToSheetCompoundsInRows(progressWindow, dataMap, templatePath, "Data Reproducibility", 2);
             }
             if (dataMap == null)
             {
@@ -110,9 +118,9 @@ namespace WindowsFormCore
                 ? replaceMissingValueTextBox.PlaceholderText
                 : replaceMissingValueTextBox.Text;
 
-            //WriteOutputFile.WriteSciex(replaceNA, missingValReplace, progressWindow, dataMap, filePath);
+            //WriteOutputFile.WriteSciex(replaceNA, missingValReplace, progressWindow, dataMap, Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\DataProcessor\\targeted_300_template-tissue.xlsx");
 
-            //WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeCalc);
+            WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeCalc);
         }
     }
 

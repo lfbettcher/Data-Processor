@@ -1,6 +1,7 @@
 ﻿using System;
 using OfficeOpenXml;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
@@ -87,7 +88,7 @@ namespace WindowsFormCore
         public enum CalcSheet {blank, sample, weight, concStandard, ratio, x, y, xy, xx, n, slope, intercept}
 
         /// <summary>
-        /// Calculates the slope and intercept for a compound curve
+        /// Calculates the slope and intercept for a compound curve.
         /// </summary>
         /// <param name="filePath">File with worksheet that calculates curve</param>
         /// <param name="compound">Compound to get the curve of</param>
@@ -101,8 +102,8 @@ namespace WindowsFormCore
 
             // Get isotope calculation worksheet
             //var excelPkg = new ExcelPackage(new FileInfo(filePath));
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // EPPlus license
-            string filePath_ = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\calculation.xlsx"; // for testing
+            //ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // EPPlus license
+            string filePath_ = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\DataProcessor\\calculation.xlsx"; // for testing
             var excelPkg = new ExcelPackage(new FileInfo(filePath_));
             var worksheet = excelPkg.Workbook.Worksheets[compoundToIsotope[compound]];
             worksheet.Cells.Style.Numberformat.Format = "0.000000";
@@ -113,20 +114,22 @@ namespace WindowsFormCore
                 worksheet.Cells[c + 1, 4].Value = curveRatios[compound].GetValue(c - 1);
             }
 
-            var slope = worksheet.Cells[2, (int) CalcSheet.slope].Value.ToString();
-            var intercept = worksheet.Cells[2, (int) CalcSheet.intercept].Value.ToString();
+            worksheet.Cells[2, (int)CalcSheet.slope].Calculate();
+            worksheet.Cells[2, (int)CalcSheet.intercept].Calculate();
+
+            var slope = worksheet.Cells[2, (int)CalcSheet.slope].Value.ToString();
+            var intercept = worksheet.Cells[2, (int)CalcSheet.intercept].Value.ToString();
 
             slopeIntercept[0] = double.Parse(slope);
             slopeIntercept[1] = double.Parse(intercept);
 
-            SaveFile(excelPkg, "calculation");
             return slopeIntercept;
         }
 
         /* SAVE FILE */
         public static void SaveFile(ExcelPackage excelPkg, string filename)
         {
-            excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\{filename}.xlsx"));
+            excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\DataProcessor\\{filename}.xlsx"));
         }
     }
 }

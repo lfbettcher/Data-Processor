@@ -72,7 +72,7 @@ namespace WindowsFormCore
                 }
 
                 // Read data into dataMap (compound, (sample name, data))
-                var currMap = CompoundsInRowsToMap(excelPkg, "Import2", namesRow);
+                var currMap = CompoundsInRowsToMap(excelPkg, "Import", namesRow);
                 // Merge map with dataMap
                 dataMap = MergeMaps(dataMap, currMap);
 
@@ -84,35 +84,26 @@ namespace WindowsFormCore
             excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) +
                                          $"\\DataProcessor\\output.xlsx"));
 
-            CompoundsInRowsToMap(excelPkg, "Import", namesRow);
+            //CompoundsInRowsToMap(excelPkg, "Import", namesRow);
 
-            //excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + 
-                                         //$"\\DataProcessor\\output.xlsx"));
             return dataMap;
         }
 
         public static Dictionary<string, Dictionary<string, string>> MergeMaps(
             Dictionary<string, Dictionary<string, string>> destMap, Dictionary<string, Dictionary<string, string>> srcMap)
         {
+            
             foreach (var compound in srcMap.Keys)
             {
-                // Add compounds in srcMap to destMap
+                // Copy compounds from srcMap to destMap
                 if (!destMap.TryAdd(compound, srcMap[compound]))
                 {
-                    // If cannot add, compound is already in destMap
-                    // Merge Dictionary<sample name, data>
-                    foreach (var sampleName in destMap[compound].Keys)
-                    {
-                        if (destMap[compound].ContainsKey(sampleName))
-                        {
-                            // Overwrite sample's data with new value from source map
-                            destMap[compound].Union(srcMap[compound]
-                                    .Where(k => !destMap.ContainsKey(k.Key)))
-                                    .ToDictionary(k => k.Key, v => v.Value);
-
-                        }
-                    }
-                
+                    // If can't copy, compound is already in destMap, merge Dictionary<sample name, data>
+                    // If sample name already has data, overwrite data for that sample
+                    // *** Test if this actually works with duplicated sample data ***
+                    destMap[compound].Union(srcMap[compound]
+                            .Where(k => !destMap.ContainsKey(k.Key)))
+                            .ToDictionary(k => k.Key, v => v.Value);
                 }
             }
             

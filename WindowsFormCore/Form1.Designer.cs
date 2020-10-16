@@ -34,6 +34,7 @@
             this.skylineRadioButton = new System.Windows.Forms.RadioButton();
             this.submitButton = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.multiquantTxtRadioButton = new System.Windows.Forms.RadioButton();
             this.NormQcRadioButton = new System.Windows.Forms.RadioButton();
             this.sciexRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -42,14 +43,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.missingValueBox = new System.Windows.Forms.TextBox();
             this.removeMissingCheckBox = new System.Windows.Forms.CheckBox();
-            this.multiquantTxtRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // openFileButton
             // 
-            this.openFileButton.Location = new System.Drawing.Point(261, 322);
+            this.openFileButton.Location = new System.Drawing.Point(379, 323);
             this.openFileButton.Name = "openFileButton";
             this.openFileButton.Size = new System.Drawing.Size(90, 23);
             this.openFileButton.TabIndex = 0;
@@ -61,14 +61,14 @@
             // 
             this.filePathBox.Location = new System.Drawing.Point(36, 351);
             this.filePathBox.Name = "filePathBox";
-            this.filePathBox.Size = new System.Drawing.Size(411, 23);
+            this.filePathBox.Size = new System.Drawing.Size(529, 23);
             this.filePathBox.TabIndex = 1;
             // 
             // fileNameBox
             // 
             this.fileNameBox.Location = new System.Drawing.Point(36, 322);
             this.fileNameBox.Name = "fileNameBox";
-            this.fileNameBox.Size = new System.Drawing.Size(219, 23);
+            this.fileNameBox.Size = new System.Drawing.Size(337, 23);
             this.fileNameBox.TabIndex = 2;
             // 
             // skylineRadioButton
@@ -85,7 +85,7 @@
             // 
             // submitButton
             // 
-            this.submitButton.Location = new System.Drawing.Point(357, 322);
+            this.submitButton.Location = new System.Drawing.Point(475, 322);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(90, 24);
             this.submitButton.TabIndex = 5;
@@ -105,6 +105,17 @@
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Input type:";
+            // 
+            // multiquantTxtRadioButton
+            // 
+            this.multiquantTxtRadioButton.AutoSize = true;
+            this.multiquantTxtRadioButton.Location = new System.Drawing.Point(283, 22);
+            this.multiquantTxtRadioButton.Name = "multiquantTxtRadioButton";
+            this.multiquantTxtRadioButton.Size = new System.Drawing.Size(114, 19);
+            this.multiquantTxtRadioButton.TabIndex = 8;
+            this.multiquantTxtRadioButton.TabStop = true;
+            this.multiquantTxtRadioButton.Text = "MultiQuant (.txt)";
+            this.multiquantTxtRadioButton.UseVisualStyleBackColor = true;
             // 
             // NormQcRadioButton
             // 
@@ -189,17 +200,6 @@
             this.removeMissingCheckBox.TabIndex = 0;
             this.removeMissingCheckBox.Text = "Remove features with >";
             this.removeMissingCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // multiquantTxtRadioButton
-            // 
-            this.multiquantTxtRadioButton.AutoSize = true;
-            this.multiquantTxtRadioButton.Location = new System.Drawing.Point(283, 22);
-            this.multiquantTxtRadioButton.Name = "multiquantTxtRadioButton";
-            this.multiquantTxtRadioButton.Size = new System.Drawing.Size(114, 19);
-            this.multiquantTxtRadioButton.TabIndex = 8;
-            this.multiquantTxtRadioButton.TabStop = true;
-            this.multiquantTxtRadioButton.Text = "MultiQuant (.txt)";
-            this.multiquantTxtRadioButton.UseVisualStyleBackColor = true;
             // 
             // OpenFileForm
             // 

@@ -6,12 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 namespace WindowsFormCore
 {
     class WriteOutputFile
     {
-        private static string outputFileName = "out";
+        private static string outputFileName = "DataProcessor\\bile-acid_out";
 
         public static void Run(bool removeNA, bool replaceNA, string missingValPercent, string missingValReplace,
                                ProgressWindow progressWindow, Dictionary<string, Dictionary<string, string>> dataMap,
@@ -45,6 +46,70 @@ namespace WindowsFormCore
             progressWindow.progressTextBox.AppendLine("Done");
             progressWindow.UseWaitCursor = false;
         }
+
+        /// <summary>
+        /// Writes dataMap to excel spreadsheet.
+        /// Compounds are in the first or second column, sample names are in the nameRow.
+        /// Column 1 are compound names without MRM, column 2 has MRM
+        /// </summary>
+        /// <param name="progressWindow"></param>
+        /// <param name="dataMap"></param>
+        /// <param name="filePath"></param>
+        public static void WriteMapToSheetCompoundsInRows(ProgressWindow progressWindow,
+            Dictionary<string, Dictionary<string, string>> dataMap, string filePath, string tabName, int nameRow)
+        {
+            // Open workbook and specified tab
+            var excelPkg = new ExcelPackage(new FileInfo(filePath));
+            var outputSheet = excelPkg.Workbook.Worksheets[tabName];
+
+            // Info to write
+            var compoundList = new List<string>(dataMap.Keys);
+            var sampleList = new List<string>(dataMap[compoundList[0]].Keys);
+            int numSamples = sampleList.Count;
+
+            int rows = outputSheet.Dimension.Rows;
+
+            // Write sample names in nameRow, starting from col 5
+            for (int col = 5; col < numSamples + 5; ++col)
+            {
+                outputSheet.Cells[nameRow, col].Value = sampleList[col - 5];
+            }
+
+            // Write each compound (row)
+            for (int row = nameRow + 1; row <= rows; ++row)
+            {
+                for (int col = 5; col < numSamples + 5; col++)
+                {
+                    // Write peak area corresponding to compound and sample name
+                    // Compounds in col 1 or col 2 depending on MRM
+                    var compound = outputSheet.Cells[row, 1].Value.ToString();
+                    if (compound != null && dataMap.ContainsKey(compound))
+                    {
+                        // dataMap[compound] get value of sample name in row 1 which is data
+                        dataMap[compound].TryGetValue(outputSheet.Cells[1, col].Value.ToString(), out var data);
+                        if (double.TryParse(data, out double dataNum)) outputSheet.Cells[row, col].Value = dataNum;
+                        else outputSheet.Cells[row, col].Value = data;
+                    }
+                    // Compound names with MRM are in col 2
+                    var compoundMRM = outputSheet.Cells[row, 2].Value.ToString();
+                    if (compoundMRM != null && dataMap.ContainsKey(compoundMRM))
+                    {
+                        // dataMap[compoundMRM] get value of sample name in row 1 which is data
+                        dataMap[compoundMRM].TryGetValue(outputSheet.Cells[1, col].Value.ToString(), out var data);
+                        if (double.TryParse(data, out double dataNum)) outputSheet.Cells[row, col].Value = dataNum;
+                        else outputSheet.Cells[row, col].Value = data;
+                    }
+                }
+            }
+            outputSheet.Cells[2, 5, rows, numSamples].Style.Numberformat.Format = "0";
+            outputSheet.Cells[2, 5, rows, numSamples].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+
+            excelPkg.SaveAs(new FileInfo(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) +
+                                         $"\\DataProcessor\\sciex6500_output.xlsx"));
+
+            //SaveFile(excelPkg, outputFileName);
+        }
+    
 
         public static void WriteSciex(bool replaceNA, string missingValReplace, ProgressWindow progressWindow,
             Dictionary<string, Dictionary<string, string>> dataMap, string filePath)
@@ -145,7 +210,6 @@ namespace WindowsFormCore
             if (double.TryParse(missingValPercent, out var cutoffPercent))
             {
                 cutoffCount = (100 - cutoffPercent) / 100 * (rows - 1);
-                System.Diagnostics.Debug.WriteLine(cutoffCount);
             }
 
             // Delete columns below cutoff count
@@ -191,6 +255,12 @@ namespace WindowsFormCore
             SaveFile(excelPkg, outputFileName);
         }
 
+        /// <summary>
+        /// Calculates the ratio compound area / isotope area.
+        /// </summary>
+        /// <param name="excelPkg"></param>
+        /// <param name="isotopeCalc"></param>
+        /// <param name="detectedMap"></param>
         public static void CalculateRatios(ExcelPackage excelPkg, IsotopeCalc isotopeCalc,
                                            Dictionary<string, Dictionary<string, string>> detectedMap)
         {
@@ -260,7 +330,14 @@ namespace WindowsFormCore
                     var ratio = concentrationSheet.Cells[r, c].Text;
                     if (double.TryParse(ratio, out var ratioNum))
                     {
-                        concentrationSheet.Cells[r, c].Value = (ratioNum - slopeIntercept[1]) / slopeIntercept[0];
+                        if (ratioNum == 0.0)
+                        {
+                            concentrationSheet.Cells[r, c].Value = 0.0;
+                        }
+                        else
+                        {
+                            concentrationSheet.Cells[r, c].Value = (ratioNum - slopeIntercept[1]) / slopeIntercept[0];
+                        }
                     }
                 }
             }
@@ -318,10 +395,8 @@ namespace WindowsFormCore
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine(sampleQC.Count);
                 int rowStart = row - sampleQC.Count - 1;
                 int rowEnd = row - 1;
-                System.Diagnostics.Debug.WriteLine(rowStart + " " + rowEnd);
 
                 // Do correction for each compound (column)
                 for (int c = 2; c <= cols; c++)
