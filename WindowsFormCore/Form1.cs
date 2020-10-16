@@ -24,21 +24,38 @@ namespace WindowsFormCore
         string filePath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\input.xlsx"; // for testing
         string fileName = string.Empty;
 
+        List<string> filePaths = new List<string>();
+        List<string> fileNames = new List<string>();
+
         private void openFileButton_Click(object sender, EventArgs e)
         {
             openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            openFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
-            openFileDialog.FilterIndex = 1;
+            //openFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
+            //openFileDialog.FilterIndex = 1;
+            openFileDialog.Multiselect = true;
             openFileDialog.RestoreDirectory = true;
 
             if (openFileDialog.ShowDialog() == DialogResult.OK)
             {
-                // Get path of selected file
-                filePath = openFileDialog.FileName;
-                fileName = openFileDialog.SafeFileName;
+                // Get path(s) of selected file(s)
+                foreach (var file in openFileDialog.FileNames)
+                {
+                    filePath = file;
+                    filePaths.Add(filePath);
+                    filePathBox.AppendText(filePath);
+                }
+                // Get name(s) of selected file(s)
+                foreach (var file in openFileDialog.SafeFileNames)
+                {
+                    fileName = file;
+                    fileNames.Add(fileName);
+                    fileNameBox.AppendText(fileName);
+                }
+                //filePath = openFileDialog.FileNames;
+                //fileName = openFileDialog.SafeFileName;
 
-                filePathBox.Text = filePath;
-                fileNameBox.Text = fileName;
+                //filePathBox.Text = filePath;
+                //fileNameBox.Text = fileName;
             }
         }
 
@@ -71,7 +88,10 @@ namespace WindowsFormCore
                 dataMap = ProcessSciex.ReadDataToMap(filePath);
                 //Normalize.NormalizeToQC(filePath, dataMap);
             }
-
+            else if (multiquantTxtRadioButton.Checked)
+            {
+                dataMap = ReadInput.ReadMultiQuantTxt(filePaths);
+            }
             if (dataMap == null)
             {
                 progressWindow.progressTextBox.AppendLine("Error reading file.");
@@ -90,7 +110,7 @@ namespace WindowsFormCore
                 ? replaceMissingValueTextBox.PlaceholderText
                 : replaceMissingValueTextBox.Text;
 
-            WriteOutputFile.WriteSciex(replaceNA, missingValReplace, progressWindow, dataMap, filePath);
+            //WriteOutputFile.WriteSciex(replaceNA, missingValReplace, progressWindow, dataMap, filePath);
 
             //WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeCalc);
         }

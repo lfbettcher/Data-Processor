@@ -42,6 +42,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.missingValueBox = new System.Windows.Forms.TextBox();
             this.removeMissingCheckBox = new System.Windows.Forms.CheckBox();
+            this.multiquantTxtRadioButton = new System.Windows.Forms.RadioButton();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -94,12 +95,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.multiquantTxtRadioButton);
             this.groupBox1.Controls.Add(this.NormQcRadioButton);
             this.groupBox1.Controls.Add(this.sciexRadioButton);
             this.groupBox1.Controls.Add(this.skylineRadioButton);
             this.groupBox1.Location = new System.Drawing.Point(36, 52);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(411, 55);
+            this.groupBox1.Size = new System.Drawing.Size(529, 55);
             this.groupBox1.TabIndex = 6;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Input type:";
@@ -107,7 +109,7 @@
             // NormQcRadioButton
             // 
             this.NormQcRadioButton.AutoSize = true;
-            this.NormQcRadioButton.Location = new System.Drawing.Point(293, 22);
+            this.NormQcRadioButton.Location = new System.Drawing.Point(403, 22);
             this.NormQcRadioButton.Name = "NormQcRadioButton";
             this.NormQcRadioButton.Size = new System.Drawing.Size(113, 19);
             this.NormQcRadioButton.TabIndex = 5;
@@ -118,7 +120,7 @@
             // sciexRadioButton
             // 
             this.sciexRadioButton.AutoSize = true;
-            this.sciexRadioButton.Location = new System.Drawing.Point(159, 22);
+            this.sciexRadioButton.Location = new System.Drawing.Point(156, 22);
             this.sciexRadioButton.Name = "sciexRadioButton";
             this.sciexRadioButton.Size = new System.Drawing.Size(121, 19);
             this.sciexRadioButton.TabIndex = 4;
@@ -188,6 +190,17 @@
             this.removeMissingCheckBox.Text = "Remove features with >";
             this.removeMissingCheckBox.UseVisualStyleBackColor = true;
             // 
+            // multiquantTxtRadioButton
+            // 
+            this.multiquantTxtRadioButton.AutoSize = true;
+            this.multiquantTxtRadioButton.Location = new System.Drawing.Point(283, 22);
+            this.multiquantTxtRadioButton.Name = "multiquantTxtRadioButton";
+            this.multiquantTxtRadioButton.Size = new System.Drawing.Size(114, 19);
+            this.multiquantTxtRadioButton.TabIndex = 8;
+            this.multiquantTxtRadioButton.TabStop = true;
+            this.multiquantTxtRadioButton.Text = "MultiQuant (.txt)";
+            this.multiquantTxtRadioButton.UseVisualStyleBackColor = true;
+            // 
             // OpenFileForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -226,6 +239,7 @@
         private System.Windows.Forms.TextBox missingValueBox;
         private System.Windows.Forms.CheckBox removeMissingCheckBox;
         private System.Windows.Forms.CheckBox replaceMissingValueCheckBox;
+        private System.Windows.Forms.RadioButton multiquantTxtRadioButton;
     }
 }
 
