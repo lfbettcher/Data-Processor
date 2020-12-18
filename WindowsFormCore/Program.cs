@@ -17,7 +17,8 @@ namespace WindowsFormCore
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new OpenFileForm());
+            //Application.Run(new OpenFileForm());
+            Application.Run(new FormMainMenu());
         }
     }
 }
