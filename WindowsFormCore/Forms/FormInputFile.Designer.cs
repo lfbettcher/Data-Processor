@@ -1,6 +1,6 @@
-﻿namespace WindowsFormCore
+﻿namespace WindowsFormCore.Forms
 {
-    partial class FormInput
+    partial class FormInputFile
     {
         /// <summary>
         ///  Required designer variable.
@@ -33,6 +33,8 @@
             this.textBoxFileName = new System.Windows.Forms.TextBox();
             this.submitButton = new System.Windows.Forms.Button();
             this.groupBoxInputFile = new System.Windows.Forms.GroupBox();
+            this.listBoxFiles = new System.Windows.Forms.ListBox();
+            this.labelDataFile = new System.Windows.Forms.Label();
             this.panelSamplesIn = new System.Windows.Forms.Panel();
             this.labelSamplesIn = new System.Windows.Forms.Label();
             this.radioButtonColumnsIn = new System.Windows.Forms.RadioButton();
@@ -41,14 +43,6 @@
             this.labelFileType = new System.Windows.Forms.Label();
             this.radioButtonMultiQuant = new System.Windows.Forms.RadioButton();
             this.radioButtonExcel = new System.Windows.Forms.RadioButton();
-            this.listBoxFiles = new System.Windows.Forms.ListBox();
-            this.labelDataFile = new System.Windows.Forms.Label();
-            this.groupBoxMissingValues = new System.Windows.Forms.GroupBox();
-            this.replaceMissingValueCheckBox = new System.Windows.Forms.CheckBox();
-            this.replaceMissingValueTextBox = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.missingValueBox = new System.Windows.Forms.TextBox();
-            this.removeMissingCheckBox = new System.Windows.Forms.CheckBox();
             this.labelOutputFileName = new System.Windows.Forms.Label();
             this.textBoxOutputFileName = new System.Windows.Forms.TextBox();
             this.buttonSelectOutputFolder = new System.Windows.Forms.Button();
@@ -59,31 +53,32 @@
             this.radioButtonRowsOut = new System.Windows.Forms.RadioButton();
             this.labelOutputFolder = new System.Windows.Forms.Label();
             this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
+            this.panelInput = new System.Windows.Forms.Panel();
+            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.panelInputFileBox = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBoxInputFile.SuspendLayout();
             this.panelSamplesIn.SuspendLayout();
             this.panelFileType.SuspendLayout();
-            this.groupBoxMissingValues.SuspendLayout();
             this.groupBoxOutputFile.SuspendLayout();
             this.panelSamplesOut.SuspendLayout();
+            this.panelInput.SuspendLayout();
+            this.tableLayoutPanel1.SuspendLayout();
+            this.panelInputFileBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOpenFile
             // 
             this.buttonOpenFile.BackColor = System.Drawing.Color.Teal;
+            this.buttonOpenFile.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.buttonOpenFile.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonOpenFile.Font = new System.Drawing.Font("Segoe UI Semibold", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.buttonOpenFile.ForeColor = System.Drawing.Color.White;
-            this.buttonOpenFile.Location = new System.Drawing.Point(287, 88);
-            this.buttonOpenFile.Margin = new System.Windows.Forms.Padding(0);
+            this.buttonOpenFile.Location = new System.Drawing.Point(3, 3);
             this.buttonOpenFile.Name = "buttonOpenFile";
-            this.buttonOpenFile.Size = new System.Drawing.Size(82, 35);
+            this.buttonOpenFile.Size = new System.Drawing.Size(108, 30);
             this.buttonOpenFile.TabIndex = 0;
-            this.buttonOpenFile.Text = "Open File";
+            this.buttonOpenFile.Text = "Select File(s)";
             this.buttonOpenFile.UseVisualStyleBackColor = false;
             this.buttonOpenFile.Click += new System.EventHandler(this.openFileButton_Click);
             // 
@@ -96,16 +91,21 @@
             // 
             // textBoxFileName
             // 
-            this.textBoxFileName.BackColor = System.Drawing.Color.White;
+            this.textBoxFileName.AllowDrop = true;
+            this.textBoxFileName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxFileName.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.textBoxFileName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.textBoxFileName.Location = new System.Drawing.Point(72, 88);
+            this.textBoxFileName.Location = new System.Drawing.Point(9, 6);
             this.textBoxFileName.Name = "textBoxFileName";
-            this.textBoxFileName.Size = new System.Drawing.Size(221, 25);
+            this.textBoxFileName.ShortcutsEnabled = false;
+            this.textBoxFileName.Size = new System.Drawing.Size(253, 18);
             this.textBoxFileName.TabIndex = 2;
+            this.textBoxFileName.WordWrap = false;
             // 
             // submitButton
             // 
-            this.submitButton.Location = new System.Drawing.Point(682, 414);
+            this.submitButton.Location = new System.Drawing.Point(520, 427);
             this.submitButton.Name = "submitButton";
             this.submitButton.Size = new System.Drawing.Size(90, 24);
             this.submitButton.TabIndex = 5;
@@ -115,12 +115,8 @@
             // 
             // groupBoxInputFile
             // 
-            this.groupBoxInputFile.Controls.Add(this.panelSamplesIn);
-            this.groupBoxInputFile.Controls.Add(this.panelFileType);
             this.groupBoxInputFile.Controls.Add(this.listBoxFiles);
             this.groupBoxInputFile.Controls.Add(this.labelDataFile);
-            this.groupBoxInputFile.Controls.Add(this.textBoxFileName);
-            this.groupBoxInputFile.Controls.Add(this.buttonOpenFile);
             this.groupBoxInputFile.Location = new System.Drawing.Point(12, 12);
             this.groupBoxInputFile.Name = "groupBoxInputFile";
             this.groupBoxInputFile.Size = new System.Drawing.Size(375, 312);
@@ -128,95 +124,13 @@
             this.groupBoxInputFile.TabStop = false;
             this.groupBoxInputFile.Text = "Input Data";
             // 
-            // panelSamplesIn
-            // 
-            this.panelSamplesIn.Controls.Add(this.labelSamplesIn);
-            this.panelSamplesIn.Controls.Add(this.radioButtonColumnsIn);
-            this.panelSamplesIn.Controls.Add(this.radioButtonRowsIn);
-            this.panelSamplesIn.Location = new System.Drawing.Point(6, 52);
-            this.panelSamplesIn.Name = "panelSamplesIn";
-            this.panelSamplesIn.Size = new System.Drawing.Size(363, 30);
-            this.panelSamplesIn.TabIndex = 12;
-            // 
-            // labelSamplesIn
-            // 
-            this.labelSamplesIn.AutoSize = true;
-            this.labelSamplesIn.Location = new System.Drawing.Point(5, 8);
-            this.labelSamplesIn.Name = "labelSamplesIn";
-            this.labelSamplesIn.Size = new System.Drawing.Size(67, 15);
-            this.labelSamplesIn.TabIndex = 9;
-            this.labelSamplesIn.Text = "Samples in:";
-            // 
-            // radioButtonColumnsIn
-            // 
-            this.radioButtonColumnsIn.AutoSize = true;
-            this.radioButtonColumnsIn.Location = new System.Drawing.Point(171, 6);
-            this.radioButtonColumnsIn.Name = "radioButtonColumnsIn";
-            this.radioButtonColumnsIn.Size = new System.Drawing.Size(73, 19);
-            this.radioButtonColumnsIn.TabIndex = 8;
-            this.radioButtonColumnsIn.TabStop = true;
-            this.radioButtonColumnsIn.Text = "Columns";
-            this.radioButtonColumnsIn.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonRowsIn
-            // 
-            this.radioButtonRowsIn.AutoSize = true;
-            this.radioButtonRowsIn.Location = new System.Drawing.Point(79, 6);
-            this.radioButtonRowsIn.Name = "radioButtonRowsIn";
-            this.radioButtonRowsIn.Size = new System.Drawing.Size(53, 19);
-            this.radioButtonRowsIn.TabIndex = 4;
-            this.radioButtonRowsIn.TabStop = true;
-            this.radioButtonRowsIn.Text = "Rows";
-            this.radioButtonRowsIn.UseVisualStyleBackColor = true;
-            // 
-            // panelFileType
-            // 
-            this.panelFileType.Controls.Add(this.labelFileType);
-            this.panelFileType.Controls.Add(this.radioButtonMultiQuant);
-            this.panelFileType.Controls.Add(this.radioButtonExcel);
-            this.panelFileType.Location = new System.Drawing.Point(6, 21);
-            this.panelFileType.Name = "panelFileType";
-            this.panelFileType.Size = new System.Drawing.Size(363, 30);
-            this.panelFileType.TabIndex = 12;
-            // 
-            // labelFileType
-            // 
-            this.labelFileType.AutoSize = true;
-            this.labelFileType.Location = new System.Drawing.Point(5, 8);
-            this.labelFileType.Name = "labelFileType";
-            this.labelFileType.Size = new System.Drawing.Size(55, 15);
-            this.labelFileType.TabIndex = 9;
-            this.labelFileType.Text = "File Type:";
-            // 
-            // radioButtonMultiQuant
-            // 
-            this.radioButtonMultiQuant.AutoSize = true;
-            this.radioButtonMultiQuant.Location = new System.Drawing.Point(171, 6);
-            this.radioButtonMultiQuant.Name = "radioButtonMultiQuant";
-            this.radioButtonMultiQuant.Size = new System.Drawing.Size(172, 19);
-            this.radioButtonMultiQuant.TabIndex = 8;
-            this.radioButtonMultiQuant.TabStop = true;
-            this.radioButtonMultiQuant.Text = "MultiQuant Text File(s) (.txt)";
-            this.radioButtonMultiQuant.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonExcel
-            // 
-            this.radioButtonExcel.AutoSize = true;
-            this.radioButtonExcel.Location = new System.Drawing.Point(79, 6);
-            this.radioButtonExcel.Name = "radioButtonExcel";
-            this.radioButtonExcel.Size = new System.Drawing.Size(86, 19);
-            this.radioButtonExcel.TabIndex = 4;
-            this.radioButtonExcel.TabStop = true;
-            this.radioButtonExcel.Text = "Excel (.xlsx)";
-            this.radioButtonExcel.UseVisualStyleBackColor = true;
-            // 
             // listBoxFiles
             // 
             this.listBoxFiles.FormattingEnabled = true;
             this.listBoxFiles.ItemHeight = 15;
-            this.listBoxFiles.Location = new System.Drawing.Point(11, 153);
+            this.listBoxFiles.Location = new System.Drawing.Point(6, 153);
             this.listBoxFiles.Name = "listBoxFiles";
-            this.listBoxFiles.Size = new System.Drawing.Size(358, 154);
+            this.listBoxFiles.Size = new System.Drawing.Size(363, 154);
             this.listBoxFiles.TabIndex = 10;
             // 
             // labelDataFile
@@ -228,65 +142,90 @@
             this.labelDataFile.TabIndex = 9;
             this.labelDataFile.Text = "Data File:";
             // 
-            // groupBoxMissingValues
+            // panelSamplesIn
             // 
-            this.groupBoxMissingValues.Controls.Add(this.replaceMissingValueCheckBox);
-            this.groupBoxMissingValues.Controls.Add(this.replaceMissingValueTextBox);
-            this.groupBoxMissingValues.Controls.Add(this.label1);
-            this.groupBoxMissingValues.Controls.Add(this.missingValueBox);
-            this.groupBoxMissingValues.Controls.Add(this.removeMissingCheckBox);
-            this.groupBoxMissingValues.Location = new System.Drawing.Point(435, 12);
-            this.groupBoxMissingValues.Name = "groupBoxMissingValues";
-            this.groupBoxMissingValues.Size = new System.Drawing.Size(337, 82);
-            this.groupBoxMissingValues.TabIndex = 7;
-            this.groupBoxMissingValues.TabStop = false;
-            this.groupBoxMissingValues.Text = "Missing values";
+            this.panelSamplesIn.Controls.Add(this.labelSamplesIn);
+            this.panelSamplesIn.Controls.Add(this.radioButtonColumnsIn);
+            this.panelSamplesIn.Controls.Add(this.radioButtonRowsIn);
+            this.panelSamplesIn.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelSamplesIn.Location = new System.Drawing.Point(0, 56);
+            this.panelSamplesIn.Name = "panelSamplesIn";
+            this.panelSamplesIn.Size = new System.Drawing.Size(395, 36);
+            this.panelSamplesIn.TabIndex = 12;
             // 
-            // replaceMissingValueCheckBox
+            // labelSamplesIn
             // 
-            this.replaceMissingValueCheckBox.AutoSize = true;
-            this.replaceMissingValueCheckBox.Location = new System.Drawing.Point(17, 50);
-            this.replaceMissingValueCheckBox.Name = "replaceMissingValueCheckBox";
-            this.replaceMissingValueCheckBox.Size = new System.Drawing.Size(230, 19);
-            this.replaceMissingValueCheckBox.TabIndex = 5;
-            this.replaceMissingValueCheckBox.Text = "Replace remaining missing values with";
-            this.replaceMissingValueCheckBox.UseVisualStyleBackColor = true;
+            this.labelSamplesIn.AutoSize = true;
+            this.labelSamplesIn.Location = new System.Drawing.Point(5, 8);
+            this.labelSamplesIn.Name = "labelSamplesIn";
+            this.labelSamplesIn.Size = new System.Drawing.Size(77, 19);
+            this.labelSamplesIn.TabIndex = 9;
+            this.labelSamplesIn.Text = "Samples in:";
             // 
-            // replaceMissingValueTextBox
+            // radioButtonColumnsIn
             // 
-            this.replaceMissingValueTextBox.Location = new System.Drawing.Point(253, 48);
-            this.replaceMissingValueTextBox.Name = "replaceMissingValueTextBox";
-            this.replaceMissingValueTextBox.PlaceholderText = "0";
-            this.replaceMissingValueTextBox.Size = new System.Drawing.Size(50, 23);
-            this.replaceMissingValueTextBox.TabIndex = 4;
+            this.radioButtonColumnsIn.AutoSize = true;
+            this.radioButtonColumnsIn.Location = new System.Drawing.Point(177, 6);
+            this.radioButtonColumnsIn.Name = "radioButtonColumnsIn";
+            this.radioButtonColumnsIn.Size = new System.Drawing.Size(81, 23);
+            this.radioButtonColumnsIn.TabIndex = 8;
+            this.radioButtonColumnsIn.TabStop = true;
+            this.radioButtonColumnsIn.Text = "Columns";
+            this.radioButtonColumnsIn.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // radioButtonRowsIn
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(206, 24);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(97, 15);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "% missing values";
+            this.radioButtonRowsIn.AutoSize = true;
+            this.radioButtonRowsIn.Location = new System.Drawing.Point(85, 6);
+            this.radioButtonRowsIn.Name = "radioButtonRowsIn";
+            this.radioButtonRowsIn.Size = new System.Drawing.Size(59, 23);
+            this.radioButtonRowsIn.TabIndex = 4;
+            this.radioButtonRowsIn.TabStop = true;
+            this.radioButtonRowsIn.Text = "Rows";
+            this.radioButtonRowsIn.UseVisualStyleBackColor = true;
             // 
-            // missingValueBox
+            // panelFileType
             // 
-            this.missingValueBox.Location = new System.Drawing.Point(165, 21);
-            this.missingValueBox.Name = "missingValueBox";
-            this.missingValueBox.PlaceholderText = "20";
-            this.missingValueBox.Size = new System.Drawing.Size(35, 23);
-            this.missingValueBox.TabIndex = 1;
-            this.missingValueBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.panelFileType.Controls.Add(this.labelFileType);
+            this.panelFileType.Controls.Add(this.radioButtonMultiQuant);
+            this.panelFileType.Controls.Add(this.radioButtonExcel);
+            this.panelFileType.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panelFileType.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panelFileType.Location = new System.Drawing.Point(0, 20);
+            this.panelFileType.Name = "panelFileType";
+            this.panelFileType.Size = new System.Drawing.Size(395, 36);
+            this.panelFileType.TabIndex = 12;
             // 
-            // removeMissingCheckBox
+            // labelFileType
             // 
-            this.removeMissingCheckBox.AutoSize = true;
-            this.removeMissingCheckBox.Location = new System.Drawing.Point(17, 23);
-            this.removeMissingCheckBox.Name = "removeMissingCheckBox";
-            this.removeMissingCheckBox.Size = new System.Drawing.Size(151, 19);
-            this.removeMissingCheckBox.TabIndex = 0;
-            this.removeMissingCheckBox.Text = "Remove features with >";
-            this.removeMissingCheckBox.UseVisualStyleBackColor = true;
+            this.labelFileType.AutoSize = true;
+            this.labelFileType.Location = new System.Drawing.Point(5, 8);
+            this.labelFileType.Name = "labelFileType";
+            this.labelFileType.Size = new System.Drawing.Size(61, 17);
+            this.labelFileType.TabIndex = 9;
+            this.labelFileType.Text = "File Type:";
+            // 
+            // radioButtonMultiQuant
+            // 
+            this.radioButtonMultiQuant.AutoSize = true;
+            this.radioButtonMultiQuant.Location = new System.Drawing.Point(177, 6);
+            this.radioButtonMultiQuant.Name = "radioButtonMultiQuant";
+            this.radioButtonMultiQuant.Size = new System.Drawing.Size(183, 21);
+            this.radioButtonMultiQuant.TabIndex = 8;
+            this.radioButtonMultiQuant.TabStop = true;
+            this.radioButtonMultiQuant.Text = "MultiQuant Text File(s) (.txt)";
+            this.radioButtonMultiQuant.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonExcel
+            // 
+            this.radioButtonExcel.AutoSize = true;
+            this.radioButtonExcel.Location = new System.Drawing.Point(85, 6);
+            this.radioButtonExcel.Name = "radioButtonExcel";
+            this.radioButtonExcel.Size = new System.Drawing.Size(91, 21);
+            this.radioButtonExcel.TabIndex = 4;
+            this.radioButtonExcel.TabStop = true;
+            this.radioButtonExcel.Text = "Excel (.xlsx)";
+            this.radioButtonExcel.UseVisualStyleBackColor = true;
             // 
             // labelOutputFileName
             // 
@@ -385,76 +324,72 @@
             this.textBoxOutputFolder.Size = new System.Drawing.Size(289, 23);
             this.textBoxOutputFolder.TabIndex = 2;
             // 
-            // label2
+            // panelInput
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 8);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(67, 15);
-            this.label2.TabIndex = 9;
-            this.label2.Text = "Samples in:";
+            this.panelInput.Controls.Add(this.tableLayoutPanel1);
+            this.panelInput.Controls.Add(this.panelSamplesIn);
+            this.panelInput.Controls.Add(this.panelFileType);
+            this.panelInput.Controls.Add(this.label1);
+            this.panelInput.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panelInput.ForeColor = System.Drawing.Color.Black;
+            this.panelInput.Location = new System.Drawing.Point(393, 12);
+            this.panelInput.Name = "panelInput";
+            this.panelInput.Size = new System.Drawing.Size(395, 207);
+            this.panelInput.TabIndex = 7;
             // 
-            // radioButton1
+            // tableLayoutPanel1
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(79, 6);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(53, 19);
-            this.radioButton1.TabIndex = 4;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Rows";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.tableLayoutPanel1.ColumnCount = 2;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 29.11392F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 70.88608F));
+            this.tableLayoutPanel1.Controls.Add(this.buttonOpenFile, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.panelInputFileBox, 1, 0);
+            this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 92);
+            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+            this.tableLayoutPanel1.RowCount = 1;
+            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(395, 36);
+            this.tableLayoutPanel1.TabIndex = 14;
             // 
-            // radioButton2
+            // panelInputFileBox
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(171, 6);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(73, 19);
-            this.radioButton2.TabIndex = 8;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Columns";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.panelInputFileBox.BackColor = System.Drawing.Color.White;
+            this.panelInputFileBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelInputFileBox.Controls.Add(this.textBoxFileName);
+            this.panelInputFileBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelInputFileBox.ForeColor = System.Drawing.Color.Teal;
+            this.panelInputFileBox.Location = new System.Drawing.Point(117, 3);
+            this.panelInputFileBox.Name = "panelInputFileBox";
+            this.panelInputFileBox.Size = new System.Drawing.Size(275, 30);
+            this.panelInputFileBox.TabIndex = 1;
+            this.panelInputFileBox.Paint += new System.Windows.Forms.PaintEventHandler(this.panelInputFileBox_Paint);
             // 
-            // label3
+            // label1
             // 
-            this.label3.Location = new System.Drawing.Point(0, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(100, 23);
-            this.label3.TabIndex = 0;
+            this.label1.AutoSize = true;
+            this.label1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.label1.Font = new System.Drawing.Font("Segoe UI Semibold", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label1.Location = new System.Drawing.Point(0, 0);
+            this.label1.Margin = new System.Windows.Forms.Padding(0);
+            this.label1.Name = "label1";
+            this.label1.Padding = new System.Windows.Forms.Padding(1, 0, 0, 0);
+            this.label1.Size = new System.Drawing.Size(46, 20);
+            this.label1.TabIndex = 13;
+            this.label1.Text = "Input";
             // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(5, 8);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(67, 15);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Samples in:";
-            // 
-            // radioButton3
-            // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(79, 6);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(53, 19);
-            this.radioButton3.TabIndex = 4;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Rows";
-            this.radioButton3.UseVisualStyleBackColor = true;
-            // 
-            // FormInput
+            // FormInputFile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(844, 461);
+            this.ClientSize = new System.Drawing.Size(800, 472);
+            this.Controls.Add(this.panelInput);
             this.Controls.Add(this.groupBoxOutputFile);
-            this.Controls.Add(this.groupBoxMissingValues);
             this.Controls.Add(this.groupBoxInputFile);
             this.Controls.Add(this.submitButton);
             this.Controls.Add(this.filePathBox);
-            this.Name = "FormInput";
+            this.Name = "FormInputFile";
             this.Text = "Open file";
             this.groupBoxInputFile.ResumeLayout(false);
             this.groupBoxInputFile.PerformLayout();
@@ -462,12 +397,15 @@
             this.panelSamplesIn.PerformLayout();
             this.panelFileType.ResumeLayout(false);
             this.panelFileType.PerformLayout();
-            this.groupBoxMissingValues.ResumeLayout(false);
-            this.groupBoxMissingValues.PerformLayout();
             this.groupBoxOutputFile.ResumeLayout(false);
             this.groupBoxOutputFile.PerformLayout();
             this.panelSamplesOut.ResumeLayout(false);
             this.panelSamplesOut.PerformLayout();
+            this.panelInput.ResumeLayout(false);
+            this.panelInput.PerformLayout();
+            this.tableLayoutPanel1.ResumeLayout(false);
+            this.panelInputFileBox.ResumeLayout(false);
+            this.panelInputFileBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -481,12 +419,6 @@
         private System.Windows.Forms.Button submitButton;
         private System.Windows.Forms.GroupBox groupBoxInputFile;
         private System.Windows.Forms.RadioButton radioButtonExcel;
-        private System.Windows.Forms.GroupBox groupBoxMissingValues;
-        private System.Windows.Forms.TextBox replaceMissingValueTextBox;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox missingValueBox;
-        private System.Windows.Forms.CheckBox removeMissingCheckBox;
-        private System.Windows.Forms.CheckBox replaceMissingValueCheckBox;
         private System.Windows.Forms.RadioButton radioButtonMultiQuant;
         private System.Windows.Forms.ListBox listBoxFiles;
         private System.Windows.Forms.Label labelDataFile;
@@ -506,11 +438,9 @@
         private System.Windows.Forms.Label labelSamplesOut;
         private System.Windows.Forms.RadioButton radioButtonColumnsOut;
         private System.Windows.Forms.RadioButton radioButtonRowsOut;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.RadioButton radioButton1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.RadioButton radioButton3;
+        private System.Windows.Forms.Panel panelInput;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
+        private System.Windows.Forms.Panel panelInputFileBox;
     }
 }

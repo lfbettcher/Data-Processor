@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormCore
+namespace WindowsFormCore.Forms
 {
-    public partial class FormInput : Form
+    public partial class FormInputFile : Form
     {
-        public FormInput()
+        public FormInputFile()
         {
             InitializeComponent();
         }
@@ -100,19 +96,8 @@ namespace WindowsFormCore
 
             progressWindow.progressTextBox.AppendLine("Finished reading data.\r\nWriting data");
 
-            bool removeNA = removeMissingCheckBox.Checked;
-            var missingValPercent = string.IsNullOrEmpty(missingValueBox.Text)
-                ? missingValueBox.PlaceholderText
-                : missingValueBox.Text;
-
-            bool replaceNA = replaceMissingValueCheckBox.Checked;
-            var missingValReplace = string.IsNullOrEmpty(replaceMissingValueTextBox.Text)
-                ? replaceMissingValueTextBox.PlaceholderText
-                : replaceMissingValueTextBox.Text;
-
             //WriteOutputFile.WriteSciex(replaceNA, missingValReplace, progressWindow, dataMap, Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\DataProcessor\\targeted_300_template-tissue.xlsx");
 
-            WriteOutputFile.Run(removeNA, replaceNA, missingValPercent, missingValReplace, progressWindow, dataMap, isotopeCalc);
         }
 
         private void FormInput_Load(object sender, EventArgs e)
@@ -134,5 +119,9 @@ namespace WindowsFormCore
             }
         }
 
+        private void panelInputFileBox_Paint(object sender, PaintEventArgs e)
+        {
+            ControlPaint.DrawBorder(e.Graphics, this.panelInputFileBox.ClientRectangle, Color.Teal, ButtonBorderStyle.Solid);
+        }
     }
 }

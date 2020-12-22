@@ -10,4 +10,10 @@
     <PackageReference Include="EPPlus" Version="5.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Forms\FormInputFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

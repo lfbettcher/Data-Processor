@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using WindowsFormCore.Forms;
 
 namespace WindowsFormCore
 {
@@ -83,8 +84,8 @@ namespace WindowsFormCore
             childForm.TopLevel = false;
             childForm.FormBorderStyle = FormBorderStyle.None;
             childForm.Dock = DockStyle.Fill;
-            this.panelInput.Controls.Add(childForm);
-            this.panelInput.Tag = childForm;
+            this.panelInputForm.Controls.Add(childForm);
+            this.panelInputForm.Tag = childForm;
             childForm.BringToFront();
             childForm.Show();
             labelTitle.Text = childForm.Text;
@@ -113,17 +114,19 @@ namespace WindowsFormCore
             //btnCloseChildForm.Visible = false;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonSciex6500_Click(object sender, EventArgs e)
+        {
+            //var formInput = new FormInput();
+            //formInput.radioButtonMultiQuant.Checked = true;
+            OpenChildForm(new FormInputFile(), sender);
+        }
+
+        private void buttonSciexLipidyzer_Click(object sender, EventArgs e)
         {
             OpenChildForm(new FormInput(), sender);
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            OpenChildForm(new FormInput(), sender);
-        }
-
-        private void button3_Click(object sender, EventArgs e)
+        private void buttonWaters_Click(object sender, EventArgs e)
         {
             OpenChildForm(new FormInput(), sender);
         }

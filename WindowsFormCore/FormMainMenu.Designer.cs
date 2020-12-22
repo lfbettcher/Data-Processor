@@ -30,14 +30,14 @@
         {
             this.panelMenu = new System.Windows.Forms.Panel();
             this.button5 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonNormalize = new System.Windows.Forms.Button();
+            this.buttonWaters = new System.Windows.Forms.Button();
+            this.buttonSciexLipidyzer = new System.Windows.Forms.Button();
+            this.buttonSciex6500 = new System.Windows.Forms.Button();
             this.panelLogo = new System.Windows.Forms.Panel();
             this.panelTitleBar = new System.Windows.Forms.Panel();
             this.labelTitle = new System.Windows.Forms.Label();
-            this.panelInput = new System.Windows.Forms.Panel();
+            this.panelInputForm = new System.Windows.Forms.Panel();
             this.panelMenu.SuspendLayout();
             this.panelTitleBar.SuspendLayout();
             this.SuspendLayout();
@@ -46,10 +46,10 @@
             // 
             this.panelMenu.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(51)))), ((int)(((byte)(51)))), ((int)(((byte)(76)))));
             this.panelMenu.Controls.Add(this.button5);
-            this.panelMenu.Controls.Add(this.button4);
-            this.panelMenu.Controls.Add(this.button3);
-            this.panelMenu.Controls.Add(this.button2);
-            this.panelMenu.Controls.Add(this.button1);
+            this.panelMenu.Controls.Add(this.buttonNormalize);
+            this.panelMenu.Controls.Add(this.buttonWaters);
+            this.panelMenu.Controls.Add(this.buttonSciexLipidyzer);
+            this.panelMenu.Controls.Add(this.buttonSciex6500);
             this.panelMenu.Controls.Add(this.panelLogo);
             this.panelMenu.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelMenu.Location = new System.Drawing.Point(0, 0);
@@ -62,7 +62,7 @@
             this.button5.Dock = System.Windows.Forms.DockStyle.Top;
             this.button5.FlatAppearance.BorderSize = 0;
             this.button5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button5.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.button5.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.button5.ForeColor = System.Drawing.Color.Gainsboro;
             this.button5.Location = new System.Drawing.Point(0, 320);
             this.button5.Name = "button5";
@@ -72,65 +72,65 @@
             this.button5.UseVisualStyleBackColor = true;
             this.button5.Click += new System.EventHandler(this.button5_Click);
             // 
-            // button4
+            // buttonNormalize
             // 
-            this.button4.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button4.FlatAppearance.BorderSize = 0;
-            this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button4.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button4.ForeColor = System.Drawing.Color.Gainsboro;
-            this.button4.Location = new System.Drawing.Point(0, 260);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(220, 60);
-            this.button4.TabIndex = 1;
-            this.button4.Text = "button4";
-            this.button4.UseVisualStyleBackColor = true;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            this.buttonNormalize.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonNormalize.FlatAppearance.BorderSize = 0;
+            this.buttonNormalize.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonNormalize.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.buttonNormalize.ForeColor = System.Drawing.Color.Gainsboro;
+            this.buttonNormalize.Location = new System.Drawing.Point(0, 260);
+            this.buttonNormalize.Name = "buttonNormalize";
+            this.buttonNormalize.Size = new System.Drawing.Size(220, 60);
+            this.buttonNormalize.TabIndex = 1;
+            this.buttonNormalize.Text = "Normalize Data";
+            this.buttonNormalize.UseVisualStyleBackColor = true;
+            this.buttonNormalize.Click += new System.EventHandler(this.button4_Click);
             // 
-            // button3
+            // buttonWaters
             // 
-            this.button3.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button3.FlatAppearance.BorderSize = 0;
-            this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button3.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button3.ForeColor = System.Drawing.Color.Gainsboro;
-            this.button3.Location = new System.Drawing.Point(0, 200);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(220, 60);
-            this.button3.TabIndex = 1;
-            this.button3.Text = "button3";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            this.buttonWaters.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonWaters.FlatAppearance.BorderSize = 0;
+            this.buttonWaters.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonWaters.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.buttonWaters.ForeColor = System.Drawing.Color.Gainsboro;
+            this.buttonWaters.Location = new System.Drawing.Point(0, 200);
+            this.buttonWaters.Name = "buttonWaters";
+            this.buttonWaters.Size = new System.Drawing.Size(220, 60);
+            this.buttonWaters.TabIndex = 1;
+            this.buttonWaters.Text = "Waters";
+            this.buttonWaters.UseVisualStyleBackColor = true;
+            this.buttonWaters.Click += new System.EventHandler(this.buttonWaters_Click);
             // 
-            // button2
+            // buttonSciexLipidyzer
             // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button2.FlatAppearance.BorderSize = 0;
-            this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button2.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button2.ForeColor = System.Drawing.Color.Gainsboro;
-            this.button2.Location = new System.Drawing.Point(0, 140);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(220, 60);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "button2";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            this.buttonSciexLipidyzer.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonSciexLipidyzer.FlatAppearance.BorderSize = 0;
+            this.buttonSciexLipidyzer.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSciexLipidyzer.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.buttonSciexLipidyzer.ForeColor = System.Drawing.Color.Gainsboro;
+            this.buttonSciexLipidyzer.Location = new System.Drawing.Point(0, 140);
+            this.buttonSciexLipidyzer.Name = "buttonSciexLipidyzer";
+            this.buttonSciexLipidyzer.Size = new System.Drawing.Size(220, 60);
+            this.buttonSciexLipidyzer.TabIndex = 1;
+            this.buttonSciexLipidyzer.Text = "Sciex Lipidyzer";
+            this.buttonSciexLipidyzer.UseVisualStyleBackColor = true;
+            this.buttonSciexLipidyzer.Click += new System.EventHandler(this.buttonSciexLipidyzer_Click);
             // 
-            // button1
+            // buttonSciex6500
             // 
-            this.button1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.Font = new System.Drawing.Font("Segoe UI Semibold", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.button1.ForeColor = System.Drawing.Color.Gainsboro;
-            this.button1.Location = new System.Drawing.Point(0, 80);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(220, 60);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonSciex6500.Dock = System.Windows.Forms.DockStyle.Top;
+            this.buttonSciex6500.FlatAppearance.BorderSize = 0;
+            this.buttonSciex6500.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.buttonSciex6500.Font = new System.Drawing.Font("Segoe UI Semibold", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.buttonSciex6500.ForeColor = System.Drawing.Color.Gainsboro;
+            this.buttonSciex6500.Location = new System.Drawing.Point(0, 80);
+            this.buttonSciex6500.Name = "buttonSciex6500";
+            this.buttonSciex6500.Size = new System.Drawing.Size(220, 60);
+            this.buttonSciex6500.TabIndex = 1;
+            this.buttonSciex6500.Text = "Sciex 6500";
+            this.buttonSciex6500.UseVisualStyleBackColor = true;
+            this.buttonSciex6500.Click += new System.EventHandler(this.buttonSciex6500_Click);
             // 
             // panelLogo
             // 
@@ -164,20 +164,21 @@
             this.labelTitle.Text = "Title";
             this.labelTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panelInput
+            // panelInputForm
             // 
-            this.panelInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelInput.Location = new System.Drawing.Point(220, 80);
-            this.panelInput.Name = "panelInput";
-            this.panelInput.Size = new System.Drawing.Size(864, 501);
-            this.panelInput.TabIndex = 2;
+            this.panelInputForm.BackColor = System.Drawing.Color.White;
+            this.panelInputForm.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelInputForm.Location = new System.Drawing.Point(220, 80);
+            this.panelInputForm.Name = "panelInputForm";
+            this.panelInputForm.Size = new System.Drawing.Size(864, 501);
+            this.panelInputForm.TabIndex = 2;
             // 
             // FormMainMenu
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1084, 581);
-            this.Controls.Add(this.panelInput);
+            this.Controls.Add(this.panelInputForm);
             this.Controls.Add(this.panelTitleBar);
             this.Controls.Add(this.panelMenu);
             this.Name = "FormMainMenu";
@@ -193,13 +194,13 @@
 
         private System.Windows.Forms.Panel panelMenu;
         private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button4;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonNormalize;
+        private System.Windows.Forms.Button buttonWaters;
+        private System.Windows.Forms.Button buttonSciexLipidyzer;
+        private System.Windows.Forms.Button buttonSciex6500;
         private System.Windows.Forms.Panel panelLogo;
         private System.Windows.Forms.Panel panelTitleBar;
         private System.Windows.Forms.Label labelTitle;
-        private System.Windows.Forms.Panel panelInput;
+        private System.Windows.Forms.Panel panelInputForm;
     }
 }
