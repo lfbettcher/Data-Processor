@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:ModernWPFcore"
         xmlns:pages="clr-namespace:ModernWPFcore.Pages"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="980"
+        Title="MainWindow" Height="640" Width="1080"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
         WindowStartupLocation="CenterScreen">

@@ -1,18 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Microsoft.Win32;
 using System.IO;
 using System.Linq;
+using System.Windows.Navigation;
+using ModernWPFcore.ReadInput;
 using Path = System.IO.Path;
 
 namespace ModernWPFcore.Pages
@@ -22,33 +18,31 @@ namespace ModernWPFcore.Pages
     /// </summary>
     public partial class InputOutputPage : Page
     {
-        public InputOutputPage()
-        {
-            InitializeComponent();
-
-        }
-
-        public InputOutputPage(string menuItem)
-        {
-            InitializeComponent();
-            SetTemplateLocation(menuItem);
-        }
-
-        private void SetTemplateLocation(string menuItem)
-        {
-            TemplateLocationTextBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
-                                           + "\\sciex6500template.xlsx";
-        }
-
         OpenFileDialog openFileDialog = new OpenFileDialog();
+        string applicationPath = Environment.CurrentDirectory;
+
+        private string templateFilePath =
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\DataProcessor";
+        string outputFilePath = 
+            Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + $"\\DataProcessor";
 
         // fileNames used for display in list view, filePaths used in program
         List<KeyValuePair<string, string>> fileNamesPaths = new List<KeyValuePair<string, string>>();
 
+        public InputOutputPage()
+        {
+            InitializeComponent();
+        }
+
+        public InputOutputPage(string menuSelection)
+        {
+            InitializeComponent();
+            SetTemplateLocation(menuSelection);
+        }
+
         // Select and Add files to list
         private void AddFileButton_Click(object sender, RoutedEventArgs e)
         {
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             openFileDialog.Multiselect = true;
             openFileDialog.RestoreDirectory = true;
             openFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx|Text files (*.txt)|*.txt|All files (*.*)|*.*";
@@ -93,20 +87,77 @@ namespace ModernWPFcore.Pages
             }
         }
 
+        // Default template file
+        private void SetTemplateLocation(string menuSelection)
+        {
+            if (menuSelection == "Sciex6500")
+            {
+                templateFilePath = applicationPath + "\\Sciex6500_template.xlsx";
+            }
+            else if (menuSelection == "SciexLipidyzer")
+            {
+                templateFilePath = applicationPath + "\\SciexLipidyzer_template.xlsx";
+            }
+            TemplateLocationTextBox.Text = templateFilePath;
+        }
+
         // Select template file
         private void BrowseTemplateButton_Click(object sender, RoutedEventArgs e)
         {
-            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             openFileDialog.RestoreDirectory = true;
             openFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
 
             if (openFileDialog.ShowDialog() == true)
             {
-                var templatePath = openFileDialog.FileName;
-                TemplateLocationTextBox.Text = templatePath;
+                templateFilePath = openFileDialog.FileName;
+                TemplateLocationTextBox.Text = templateFilePath;
             }
+        }
+
+        private void BrowseOutputButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog folderBrowser = new OpenFileDialog();
+            folderBrowser.ValidateNames = false;
+            folderBrowser.CheckFileExists = false;
+            folderBrowser.CheckPathExists = true;
+            folderBrowser.FileName = "Select this folder";
+
+            if (folderBrowser.ShowDialog() == true)
+            {
+                outputFilePath = Path.GetDirectoryName(folderBrowser.FileName);
+                OutputLocationTextBox.Text = outputFilePath;
+                OutputFileNameTextBox.Text = "Sciex6500_output.xlsx";
+            }
+        }
+
+        // Summarizes all form options
+        private Dictionary<string, string> GetOptions()
+        {
+            Dictionary<string, string> options = new Dictionary<string, string>
+            {
+                { "SamplesIn", InputRows.IsChecked == true ? "rows" : "columns" },
+                { "SamplesOut", OutputRows.IsChecked == true ? "rows" : "columns" },
+                { "TemplatePath", templateFilePath },
+                { "OutputPath", outputFilePath },
+                { "OutputFileName", OutputFileNameTextBox.Text }
+            };
+            return options;
+        }
+
+        private List<string> GetFilePathList(List<KeyValuePair<string, string>> fileNamesPaths)
+        {
+            return fileNamesPaths.Select(item => item.Value).ToList();
+        }
+
+        private void SubmitButton_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService ns = NavigationService.GetNavigationService(this);
+            var progressPage = new ProgressPage();
+            ns.Navigate(progressPage);
+            var filePathList = GetFilePathList(fileNamesPaths);
+            var options = GetOptions();
+            var dataMap = ReadMultiQuantTextInput.ReadMultiQuantText(filePathList, options, progressPage);
         }
     }
 }
-

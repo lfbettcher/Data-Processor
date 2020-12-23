@@ -11,12 +11,20 @@ namespace ModernWPFcore
         public NavigationRootPage()
         {
             InitializeComponent();
+            RootFrame?.Navigate(new HomePage());
         }
 
         private void MenuList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ListBoxItem menuSelection = (sender as ListBox).SelectedItem as ListBoxItem;
-            RootFrame?.Navigate(new InputOutputPage(menuSelection.Name));
+            if (menuSelection == null || menuSelection.Name == "Home")
+            {
+                RootFrame?.Navigate(new HomePage());
+            }
+            else
+            { 
+                RootFrame?.Navigate(new InputOutputPage(menuSelection.Name));
+            }
         }
     }
 }

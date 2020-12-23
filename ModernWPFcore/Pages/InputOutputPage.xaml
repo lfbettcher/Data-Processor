@@ -8,23 +8,27 @@
       mc:Ignorable="d" 
       d:DesignHeight="580" d:DesignWidth="900"
       Title="InputOutputPage">
-    <ScrollViewer>
+    <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="b2v" />
+    </Page.Resources>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Auto">
         <Grid Background="White">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20" />
-                <ColumnDefinition Width="Auto" MaxWidth="280"/>
+                <ColumnDefinition Width="16" />
+                <ColumnDefinition Width="Auto" MaxWidth="280" />
                 <ColumnDefinition Width="*" MinWidth="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" MinWidth="20" />
                 <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="20" />
+                <ColumnDefinition Width="16" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="8" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" MaxHeight="20"/>
+                <RowDefinition Height="*" MaxHeight="20" />
                 <RowDefinition Height="*" />
-                <RowDefinition Height="20" />
+                <RowDefinition Height="16" />
             </Grid.RowDefinitions>
 
             <!-- Input Column -->
@@ -32,22 +36,42 @@
                 <TextBlock Text="Input" FontSize="24" Margin="0,0,0,10"/>
                 <StackPanel>
                     <ui:RadioButtons x:Name="InputFileTypeRadioButtons"
-                                     MaxColumns="2"
-                                     Header="Input file type:"
-                                     FontSize="16"
-                                     Margin="0,4">
+                                     MaxColumns="2" Margin="0,4" FontSize="16"
+                                     Header="Input file type:">
                         <RadioButton x:Name="InputExcel" Content="Excel (.xlsx)" />
-                        <RadioButton x:Name="InputText" Content="MultiQuant (.txt)" IsChecked="True"/>
+                        <RadioButton x:Name="InputText" Content="MultiQuant (.txt)" 
+                                     IsChecked="True">
+                            <RadioButton.ToolTip>
+                                <TextBlock>File -> Export -> Results Table - Metric...</TextBlock>
+                            </RadioButton.ToolTip>
+                        </RadioButton>
                     </ui:RadioButtons>
                 </StackPanel>
                 <StackPanel>
                     <ui:RadioButtons x:Name="InputSamplesInRadioButtons"
-                                     MaxColumns="2"
-                                     Header="Samples in:"
-                                     FontSize="16"
-                                     Margin="0,4">
-                        <RadioButton x:Name="InputRows" Content="Rows" />
-                        <RadioButton x:Name="InputColumns" Content="Columns" IsChecked="True"/>
+                                     MaxColumns="2" Margin="0,4" FontSize="16"
+                                     Header="Samples in:">
+                        <RadioButton x:Name="InputRows"
+                                     DataContext="{Binding ElementName=InputText}"
+                                     Content="Rows">
+                            <!-- ToolTips visible when "MultiQuant" is selected -->
+                            <RadioButton.ToolTip>
+                                <ToolTip x:Name="MultiQuantRowsToolTip"
+                                         Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource b2v}}">
+                                    MultiQuant export "Transpose" box not checked
+                                </ToolTip>
+                            </RadioButton.ToolTip>
+                        </RadioButton>
+                        <RadioButton x:Name="InputColumns"
+                                     DataContext="{Binding ElementName=InputText}"
+                                     Content="Columns" IsChecked="True" Margin="4,0,0,0">
+                            <RadioButton.ToolTip>
+                                <ToolTip x:Name="MultiQuantColumnsToolTip"
+                                         Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource b2v}}">
+                                    MultiQuant export "Transposed" box checked
+                                </ToolTip>
+                            </RadioButton.ToolTip>
+                        </RadioButton>
                     </ui:RadioButtons>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
@@ -57,12 +81,12 @@
                             Click="RemoveFileButton_Click"/>
                 </StackPanel>
                 <StackPanel Margin="0,4">
-                    <ui:ListView BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
-                              BorderThickness="1"
-                              SelectionMode="Extended"
-                              Height="200"
-                              AllowDrop="True" Drop="ListView_Drop"
-                              x:Name="FileNamesListView">
+                    <ui:ListView x:Name="FileNamesListView"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                 BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                                 BorderThickness="1" Height="200" MaxWidth="260"
+                                 SelectionMode="Extended"
+                                 AllowDrop="True" Drop="ListView_Drop">
                         <!-- ListItems are generated by AddFile Button method -->
                     </ui:ListView>
                 </StackPanel>
@@ -70,7 +94,7 @@
 
             <!-- Template location -->
             <ui:SimpleStackPanel Grid.Row="3" Grid.Column="1"  >
-                <TextBlock Text="Template location:" FontSize="16" Margin="0,4"/>
+                <TextBlock Text="Template file:" FontSize="16" Margin="0,4"/>
                 <StackPanel>
                     <Grid>
                         <Grid.ColumnDefinitions>
@@ -78,11 +102,11 @@
                             <ColumnDefinition Width="8" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-
-                        <Button Content="Browse" Grid.Column="0" Click="BrowseTemplateButton_Click"/>
+                        <Button Content="Browse" Grid.Column="0" 
+                                Click="BrowseTemplateButton_Click"/>
                         <TextBox x:Name="TemplateLocationTextBox"
                                  Grid.Column="2" MaxWidth="195"
-                                 Text="Desktop" TextWrapping="Wrap"/>
+                                 TextWrapping="Wrap"/>
                     </Grid>
                 </StackPanel>
             </ui:SimpleStackPanel>
@@ -93,6 +117,46 @@
                 <StackPanel>
                     <CheckBox Content="Run Order Tab" />
                     <CheckBox Content="Absolute Quantitation"/>
+                </StackPanel>
+                <StackPanel>
+                    <ui:RadioButtons x:Name="OutputSamplesInRadioButtons"
+                                     MaxColumns="2" Margin="0,4" FontSize="16"
+                                     Header="Samples in:">
+                        <RadioButton x:Name="OutputRows" Content="Rows">
+                        </RadioButton>
+                        <RadioButton x:Name="OutputColumns" Content="Columns" IsChecked="True" Margin="4,0,0,0">
+                        </RadioButton>
+                    </ui:RadioButtons>
+                </StackPanel>
+            </ui:SimpleStackPanel>
+
+            <!-- Output file location -->
+            <ui:SimpleStackPanel Grid.Row="3" Grid.Column="3"  >
+                <TextBlock Text="Output file location:" FontSize="16" Margin="0,4"/>
+                <StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="4" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="8" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Row="0" Grid.Column="0" 
+                                Content="Browse"
+                                Click="BrowseOutputButton_Click"/>
+                        <TextBox x:Name="OutputLocationTextBox"
+                                 Grid.Row="0" Grid.Column="2"
+                                 MaxWidth="195" TextWrapping="Wrap"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" 
+                               Content="File name:"/>
+                        <TextBox x:Name="OutputFileNameTextBox" Grid.Row="2" Grid.Column="2"
+                                 Text="Sciex6500_output.xlsx" />
+                    </Grid>
                 </StackPanel>
             </ui:SimpleStackPanel>
 
@@ -136,6 +200,14 @@
                 </Grid>
                 </StackPanel>
             </ui:SimpleStackPanel>
+
+            <!-- Submit Button -->
+            <Button x:Name="SubmitButton"
+                    Grid.Row="3" Grid.Column="5"
+                    HorizontalAlignment="Right" FontSize="16" 
+                    Background="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}"
+                    Content="Submit"
+                    Click="SubmitButton_Click"/>
         </Grid>
     </ScrollViewer>
 </Page>
