@@ -9,7 +9,7 @@
       d:DesignHeight="580" d:DesignWidth="900"
       Title="InputOutputPage">
     <Page.Resources>
-        <BooleanToVisibilityConverter x:Key="b2v" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
     </Page.Resources>
 
     <ScrollViewer HorizontalScrollBarVisibility="Auto">
@@ -39,8 +39,7 @@
                                      MaxColumns="2" Margin="0,4" FontSize="16"
                                      Header="Input file type:">
                         <RadioButton x:Name="InputExcel" Content="Excel (.xlsx)" />
-                        <RadioButton x:Name="InputText" Content="MultiQuant (.txt)" 
-                                     IsChecked="True">
+                        <RadioButton x:Name="InputText" Content="MultiQuant (.txt)">
                             <RadioButton.ToolTip>
                                 <TextBlock>File -> Export -> Results Table - Metric...</TextBlock>
                             </RadioButton.ToolTip>
@@ -57,17 +56,17 @@
                             <!-- ToolTips visible when "MultiQuant" is selected -->
                             <RadioButton.ToolTip>
                                 <ToolTip x:Name="MultiQuantRowsToolTip"
-                                         Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource b2v}}">
+                                         Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
                                     MultiQuant export "Transpose" box not checked
                                 </ToolTip>
                             </RadioButton.ToolTip>
                         </RadioButton>
                         <RadioButton x:Name="InputColumns"
                                      DataContext="{Binding ElementName=InputText}"
-                                     Content="Columns" IsChecked="True" Margin="4,0,0,0">
+                                     Content="Columns" Margin="4,0,0,0">
                             <RadioButton.ToolTip>
                                 <ToolTip x:Name="MultiQuantColumnsToolTip"
-                                         Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource b2v}}">
+                                         Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
                                     MultiQuant export "Transposed" box checked
                                 </ToolTip>
                             </RadioButton.ToolTip>
@@ -124,7 +123,7 @@
                                      Header="Samples in:">
                         <RadioButton x:Name="OutputRows" Content="Rows">
                         </RadioButton>
-                        <RadioButton x:Name="OutputColumns" Content="Columns" IsChecked="True" Margin="4,0,0,0">
+                        <RadioButton x:Name="OutputColumns" Content="Columns" Margin="4,0,0,0">
                         </RadioButton>
                     </ui:RadioButtons>
                 </StackPanel>

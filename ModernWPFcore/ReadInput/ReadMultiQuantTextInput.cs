@@ -6,28 +6,20 @@ using System.Linq;
 using System.Text;
 using ModernWPFcore.Pages;
 
-namespace ModernWPFcore.ReadInput
+namespace ModernWPFcore
 {
     class ReadMultiQuantTextInput
     {
 
-        /// <summary>
-        /// Reads MultiQuant exported txt file(s) into excel sheet and returns dataMap.
-        /// There are normally two files, POS and NEG.
-        /// </summary>
-        /// <param name="filePaths">List of string file paths</param>
-        /// <param name="options">Dictionary of options from form</param>
-        /// <returns>dataMap is a Dictionary with compound name as key and
-        ///   value is another dictionary with sample names as key and data as value
-        ///   (compound, (sample name, data))</returns>
-        public static Dictionary<string, Dictionary<string, string>> 
+        public static Dictionary<string, Dictionary<string, string>>
             ReadMultiQuantText(List<string> filePaths, Dictionary<string, string> options, ProgressPage progressPage)
         {
             // <compound, <sample name, data>>
             var dataMap = new Dictionary<string, Dictionary<string, string>>();
 
             /* Since text files can only be read row by row, first write the
-                data to an excel sheet and then read it into the data map. */
+                data to an excel sheet and then read it into the data map.
+            This cross references the sample ID and compound name when storing the data. */
 
             // Create "Import" tab in data template
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // EPPlus license
@@ -35,36 +27,53 @@ namespace ModernWPFcore.ReadInput
             var excelPkg = new ExcelPackage(templateFile);
             var worksheet = excelPkg.Workbook.Worksheets.Add("Import");
 
-            int row = 1, col = 1, namesRow = 1;
+            int row = 1, col = 1, namesRow = 1, fileCount = 1;
 
             // One file at a time. Descending order makes POS before NEG (doesn't really matter)
             foreach (var filePath in filePaths.OrderByDescending(i => i))
             {
-                progressPage.ProgressTextBox.AppendText("More progress\n");
+                progressPage.ProgressTextBox.AppendText($"Reading file {fileCount++}\n");
+
                 // Read data from txt file to worksheet
                 string[] lines = File.ReadAllLines(filePath);
 
-                // First line contains sample names with _POS
+                /* If samples in columns (MultiQuant export "Transposed" checked),
+                     first line contains sample names with _POS. */
+                /* If samples in rows (MultiQuant export "Transposed" not checked),
+                     first line contains compound names. */
                 string[] names = lines[0].Split("\t");
 
                 foreach (var name in names)
                 {
-                    // Write name to cell. Name is the part before the _POS or _NEG
-                    worksheet.Cells[namesRow, col++].Value = name.Split('_')[0];
+                    if (options["SamplesIn"] == "columns")
+                    {
+                        // Write sample name to cell. Name is the part before the _POS or _NEG
+                        worksheet.Cells[namesRow, col++].Value = name.Split('_')[0];
+                    }
+                    else
+                    {
+                        // Write compound name to cell.
+                        worksheet.Cells[namesRow, col++].Value = name;
+                    }
                 }
+
                 // Done with first line, increment row and reset column
                 ++row;
                 col = 1;
 
-                // Do remaining lines
+                // Write remaining lines
                 for (var i = 1; i < lines.Length; ++i)
                 {
                     var line = lines[i];
                     string[] words = line.Split("\t");
 
+                    // If samples in rows, first word is sample ID, remove _POS or _NEG
+                    if (options["SamplesIn"] == "rows") 
+                        words[0] = words[0].Split('_')[0];
+
+                    // Write to cell, increment column after writing
                     foreach (var word in words)
                     {
-                        // Write to cell, increment column after writing
                         worksheet.Cells[row, col++].Value = word;
                     }
 
@@ -73,45 +82,29 @@ namespace ModernWPFcore.ReadInput
                     col = 1;
                 }
 
-                // Read data into dataMap (compound, (sample name, data))
-                //var currMap = CompoundsInRowsToMap(excelPkg, "Import", namesRow);
-                // Merge map with dataMap
-                //dataMap = MergeMaps(dataMap, currMap);
+                var curMap = new Dictionary<string, Dictionary<string, string>>();
+
+                // Read data into current map <compound, <sample name, data>
+                curMap = options["SamplesIn"] == "rows"
+                    ? ExcelToMap.SamplesInRowsToMap(namesRow, 1, excelPkg, "Import")
+                    : ExcelToMap.SamplesInColumnsToMap(namesRow, 1, excelPkg, "Import");
+
+                // Merge current map with dataMap
+                dataMap = MergeMaps.MergeMapsReplaceDuplicates(dataMap, curMap);
 
                 /* At the end of each file, the next file's name row is the next row.
                     This is important to make sure the dataMap isn't affected by
                     mismatched sample order between the two files. */
                 namesRow = row;
             }
-            excelPkg.SaveAs(new FileInfo(options["OutputPath"] + "\\" +
-                                         options["OutputFileName"]));
 
-            progressPage.ProgressTextBox.AppendText("Done reading file\n");
+            excelPkg.SaveAs(new FileInfo(options["OutputPath"] + "\\" + options["OutputFileName"]));
 
-            //CompoundsInRowsToMap(excelPkg, "Import", namesRow);
+            progressPage.ProgressTextBox.AppendText("All input files have been read.\n");
 
             return dataMap;
         }
 
-        public static Dictionary<string, Dictionary<string, string>> MergeMaps(
-            Dictionary<string, Dictionary<string, string>> destMap, Dictionary<string, Dictionary<string, string>> srcMap)
-        {
-            foreach (var compound in srcMap.Keys)
-            {
-                // Copy compounds from srcMap to destMap
-                if (!destMap.TryAdd(compound, srcMap[compound]))
-                {
-                    // If can't copy, compound is already in destMap, merge Dictionary<sample name, data>
-                    // If sample name already has data, overwrite data for that sample
-                    // *** Test if this actually works with duplicated sample data ***
-                    destMap[compound].Union(srcMap[compound]
-                            .Where(k => !destMap.ContainsKey(k.Key)))
-                            .ToDictionary(k => k.Key, v => v.Value);
-                }
-            }
-
-            return destMap;
-        }
     }
 
 }
