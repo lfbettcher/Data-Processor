@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
 using System.Text;
 using ModernWPFcore.Pages;
+using OfficeOpenXml;
 
 namespace ModernWPFcore
 {
@@ -17,12 +20,14 @@ namespace ModernWPFcore
             // Perform data options
 
             // Write output
+            progressPage.ProgressTextBox.AppendText("Writing output file\n");
+            WriteOutput(menuSelection, dataMap, options, progressPage);
         }
 
-        public static Dictionary<string, Dictionary<string, string>> ReadInputs(string menuSelection, List<string> filePathList,
+        public static OrderedDictionary ReadInputs(string menuSelection, List<string> filePathList,
             Dictionary<string, string> options, ProgressPage progressPage)
         {
-            var dataMap = new Dictionary<string, Dictionary<string, string>>();
+            var dataMap = new OrderedDictionary();
 
             switch (menuSelection)
             {
@@ -38,6 +43,29 @@ namespace ModernWPFcore
             }
 
             return dataMap;
+        }
+
+        public static void WriteOutput(string menuSelection, OrderedDictionary dataMap, 
+            Dictionary<string, string> options, ProgressPage progressPage)
+        {
+            var templateFile = new FileInfo(options["TemplatePath"]);
+            var excelPkg = new ExcelPackage(templateFile);
+
+            // Write Raw Data tab
+            if (options["SamplesOut"] == "columns")
+                MapToExcel.WriteSamplesInColumns(dataMap, options, excelPkg, "Raw Data", progressPage);
+            else
+                MapToExcel.WriteSamplesInRows(dataMap, options, excelPkg, "Raw Data", progressPage);
+
+            switch (menuSelection)
+            {
+                case "Sciex6500":
+                    break;
+                case "SciexLipidyzer":
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

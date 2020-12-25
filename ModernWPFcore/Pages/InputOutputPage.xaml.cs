@@ -45,12 +45,9 @@ namespace ModernWPFcore.Pages
         // Set form options to default for workflow
         private void SetDefaultOptions()
         {
-            var checkedThings = new List<RadioButton>(){InputText, InputColumns, OutputColumns};
-
             switch (menuSelection)
             {
                 case "Sciex6500":
-
                     InputText.IsChecked = true;
                     InputColumns.IsChecked = true;
                     OutputColumns.IsChecked = true;
@@ -64,14 +61,16 @@ namespace ModernWPFcore.Pages
                     break;
             }
         }
+
         // Set default template and output files
         private void SetDefaultPaths()
         {
-            //templateFilePath = $"{applicationPath}\\{menuSelection}_template.xlsx";
             templateFilePath = $"{templateFilePath}\\{menuSelection}_template.xlsx";
-            TemplateLocationTextBox.Text = templateFilePath;
-            OutputLocationTextBox.Text = outputFilePath;
-            OutputFileNameTextBox.Text = menuSelection + "_output.xlsx";
+            outputFilePath = $"{outputFilePath}\\{menuSelection}_output.xlsx";
+            TemplateLocationTextBox.Text = Path.GetDirectoryName(templateFilePath) ?? string.Empty;
+            TemplateFileNameTextBox.Text = Path.GetFileName(templateFilePath) ?? string.Empty;
+            OutputLocationTextBox.Text = Path.GetDirectoryName(outputFilePath) ?? string.Empty;
+            OutputFileNameTextBox.Text = Path.GetFileName(outputFilePath) ?? string.Empty;
         }
 
         // Add files to list with Add button
@@ -131,31 +130,37 @@ namespace ModernWPFcore.Pages
             {
                 RestoreDirectory = true,
                 Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
-                FilterIndex = 1
+                FilterIndex = 1,
+                CheckPathExists = true,
+                CheckFileExists = true,
+                FileName = menuSelection + "_template.xlsx"
             };
 
             if (openFileDialog.ShowDialog() == true)
             {
                 templateFilePath = openFileDialog.FileName;
-                TemplateLocationTextBox.Text = templateFilePath;
+                TemplateLocationTextBox.Text = Path.GetDirectoryName(templateFilePath) ?? string.Empty;
+                TemplateFileNameTextBox.Text = Path.GetFileName(templateFilePath) ?? string.Empty;
             }
         }
 
         // Select output file location
         private void BrowseOutputButton_Click(object sender, RoutedEventArgs e)
         {
-            var folderBrowser = new OpenFileDialog
+            var saveFileDialog = new SaveFileDialog
             {
-                ValidateNames = false,
-                CheckFileExists = false,
+                RestoreDirectory = true,
+                Filter = "Excel files (*.xlsx)|*.xlsx|All files (*.*)|*.*",
+                FilterIndex = 1,
                 CheckPathExists = true,
-                FileName = "Select this folder"
+                FileName = menuSelection + "_output.xlsx"
             };
 
-            if (folderBrowser.ShowDialog() == true)
+            if (saveFileDialog.ShowDialog() == true)
             {
-                outputFilePath = Path.GetDirectoryName(folderBrowser.FileName);
-                OutputLocationTextBox.Text = outputFilePath;
+                outputFilePath = saveFileDialog.FileName;
+                OutputLocationTextBox.Text = Path.GetDirectoryName(saveFileDialog.FileName) ?? string.Empty;
+                OutputFileNameTextBox.Text = Path.GetFileName(saveFileDialog.FileName);
             }
         }
 
@@ -181,7 +186,6 @@ namespace ModernWPFcore.Pages
             navigationService?.Navigate(progressPage);
             var filePathList = fileNamesPaths.Select(file => file.Value).ToList();
             var options = GetOptions();
-            //ReadMultiQuantTextInput.ReadMultiQuantText(filePathList, options, progressPage);
             ProcessHandler.Run(menuSelection, filePathList, options, progressPage);
         }
     }
