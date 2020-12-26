@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Collections.Specialized;
+using System.Text.RegularExpressions;
 
 namespace ModernWPFcore
 {
@@ -40,9 +41,13 @@ namespace ModernWPFcore
                 Debug.WriteLine(sheet.Name);
                 var curMap = new OrderedDictionary();
 
-                curMap = options["SamplesIn"] == "rows"
-                    ? SamplesInRowsToMap(1, 1, excelPkg, sheet.Name)
-                    : SamplesInColumnsToMap(1, 1, excelPkg, sheet.Name);
+                try
+                {
+                    curMap = options["SamplesIn"] == "rows"
+                        ? SamplesInRowsToMap(1, 1, excelPkg, sheet.Name)
+                        : SamplesInColumnsToMap(1, 1, excelPkg, sheet.Name);
+                }
+                catch { }
 
                 Merge.MergeMaps(sheetsMap, curMap);
             }
@@ -94,6 +99,11 @@ namespace ModernWPFcore
                     // Sample name in specified column
                     var sample = worksheet.Cells[r, sampleColumn]?.Value?.ToString();
                     if (sample is null) continue;
+
+                    // Check if sample name already exists
+                    if (samplesMap.Contains(sample))
+                        sample = Merge.RenameDuplicate(samplesMap.Keys, sample);
+
                     var area = worksheet.Cells[r, c]?.Value?.ToString();
                     samplesMap.Add(sample, area);
                 }
@@ -148,6 +158,11 @@ namespace ModernWPFcore
                     // Sample name in specified row
                     var sample = worksheet.Cells[sampleRow, c]?.Value?.ToString();
                     if (sample is null) continue;
+
+                    // Check if sample name already exists
+                    if (samplesMap.Contains(sample)) 
+                        sample = Merge.RenameDuplicate(samplesMap.Keys, sample);
+
                     var area = worksheet.Cells[r, c]?.Value?.ToString();
                     samplesMap.Add(sample, area);
                 }

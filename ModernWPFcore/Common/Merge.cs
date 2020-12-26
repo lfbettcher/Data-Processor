@@ -37,8 +37,7 @@ namespace ModernWPFcore
                         {
                             // Don't overwrite duplicate sample name, instead rename
                             var allKeys = ((OrderedDictionary)destMap[compound]).Keys;
-                            var existingNames = allKeys.Cast<string>().ToList();
-                            sampleName = RenameDuplicate(existingNames, sampleName);
+                            sampleName = RenameDuplicate(allKeys, sampleName);
                         }
                     }
                     ((OrderedDictionary)destMap[compound]).Add(sampleName, sampleData.Value);
@@ -47,10 +46,11 @@ namespace ModernWPFcore
             return destMap;
         }
 
-        public static string RenameDuplicate(List<string> existingNames, string currentName)
+        public static string RenameDuplicate(ICollection allKeys, string currentName)
         {
-            while (existingNames.Contains(currentName))
-                currentName += ".";
+            List<string> allNamesList = allKeys.Cast<string>().ToList();
+            while (allNamesList.Contains(currentName))
+                currentName += "*";
 
             return currentName;
         }

@@ -173,8 +173,10 @@ namespace ModernWPFcore.Pages
                 { "SamplesIn", InputRows.IsChecked == true ? "rows" : "columns" },
                 { "SamplesOut", OutputRows.IsChecked == true ? "rows" : "columns" },
                 { "TemplatePath", templateFilePath },
-                { "OutputPath", outputFilePath },
-                { "OutputFileName", OutputFileNameTextBox.Text }
+                { "OutputFolder", Path.GetDirectoryName(outputFilePath) },
+                { "OutputFileName", OutputFileNameTextBox.Text },
+                { "TemplateTabName", TemplateTabName.Text },
+                { "StartInCell", StartInCell.Text }
             };
             return options;
         }
@@ -186,7 +188,8 @@ namespace ModernWPFcore.Pages
             navigationService?.Navigate(progressPage);
             var filePathList = fileNamesPaths.Select(file => file.Value).ToList();
             var options = GetOptions();
-            ProcessHandler.Run(menuSelection, filePathList, options, progressPage);
+            //ProcessHandler.Run(menuSelection, filePathList, options, progressPage);
+            ProcessHandler.Run(menuSelection, filePathList, options, progressPage, this);
         }
     }
 }

@@ -41,7 +41,7 @@ namespace ModernWPFcore
                 string[] lines = File.ReadAllLines(filePath);
 
                 /* If samples in columns (MultiQuant export "Transposed" checked),
-                     first line contains sample names with _POS or _NEG. */
+                     first line contains sample names with POS or NEG. */
                 /* If samples in rows (MultiQuant export "Transposed" not checked),
                      first line contains compound names. */
                 string[] names = lines[0].Split("\t");
@@ -49,25 +49,10 @@ namespace ModernWPFcore
                 foreach (var name in names)
                 {
                     // Write name to column
-                    // Remove _POS or _NEG if name is sample name
-                    if (options["SamplesIn"] == "columns")
-                    {
-                        if (name.ContainsIgnoreCase("POS_"))
-                            worksheet.Cells[namesRow, col++].Value = Regex.Split(name, "POS_", RegexOptions.IgnoreCase)[1];
-                        else if (name.ContainsIgnoreCase("POS_"))
-                            worksheet.Cells[namesRow, col++].Value = Regex.Split(name, "_POS", RegexOptions.IgnoreCase)[0];
-                        //if (name.Contains("_POS"))
-                        //    worksheet.Cells[namesRow, col++].Value = name.Split("_POS")[0];
-                        //if (name.Contains("POS_"))
-                        //    worksheet.Cells[namesRow, col++].Value = name.Split("_POS")[0];
-                        //else if (name.Contains("_NEG"))
-                        //    worksheet.Cells[namesRow, col++].Value = name.Split("_NEG")[0];
-                        else worksheet.Cells[namesRow, col++].Value = name;
-                    }
-                    else
-                    {
-                        worksheet.Cells[namesRow, col++].Value = name;
-                    }
+                    // If samples in columns, name is sample name, remove POS or NEG
+                    worksheet.Cells[namesRow, col++].Value = options["SamplesIn"] == "columns" 
+                        ? Regex.Replace(name, "^POS_|_POS$|^NEG_|_NEG$", "", RegexOptions.IgnoreCase) 
+                        : name;
                 }
 
                 // Done with first line, increment row and reset column
@@ -80,14 +65,9 @@ namespace ModernWPFcore
                     var line = lines[i];
                     string[] words = line.Split("\t");
 
-                    // If samples in rows, first word is sample ID, remove _POS or _NEG
+                    //// If samples in rows, first word is sample name, remove POS or NEG
                     if (options["SamplesIn"] == "rows")
-                    {
-                        if (words[0].Contains("_POS"))
-                            words[0] = words[0].Split("_POS")[0];
-                        else if (words[0].Contains("_NEG"))
-                            words[0] = words[0].Split("_NEG")[0];
-                    }
+                        words[0]= Regex.Replace(words[0], "^POS_|_POS$|^NEG_|_NEG$", "", RegexOptions.IgnoreCase);
 
                     // Write to cell, increment column after writing
                     foreach (var word in words)
@@ -111,31 +91,18 @@ namespace ModernWPFcore
                 dataMap = Merge.MergeMaps(dataMap, curMap);
 
                 /* At the end of each file, the next file's name row is the next row.
-                    This is important to make sure the dataMap isn't affected by
-                    mismatched sample order between the two files. */
+                    This is important to make sure the dataMap and curMap aren't 
+                    affected by mismatched sample order between the two files. */
                 namesRow = row;
             }
 
-            excelPkg.SaveAs(new FileInfo(options["OutputPath"] + "\\" + "import_" + options["OutputFileName"]));
+            excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + "import_" + options["OutputFileName"]));
 
             progressPage.ProgressTextBox.AppendText("All input files have been read.\n");
 
             return dataMap;
         }
 
-    }
-
-    public static class StringExtensions
-    {
-        public static bool Contains(this string source, string toCheck, StringComparison comp)
-        {
-            return source?.IndexOf(toCheck, comp) >= 0;
-        }
-
-        public static bool ContainsIgnoreCase(this string source, string toCheck, StringComparison comp = StringComparison.OrdinalIgnoreCase)
-        {
-            return source?.IndexOf(toCheck, comp) >= 0;
-        }
     }
 
 }

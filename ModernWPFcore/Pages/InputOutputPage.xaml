@@ -156,45 +156,79 @@
                                  MaxColumns="2" Margin="0,4" FontSize="16"
                                  Header="Samples in:">
                     <RadioButton x:Name="OutputRows" Content="Rows" />
-                    <RadioButton x:Name="OutputColumns" Content="Columns" Margin="4,0,0,0" />
+                    <RadioButton x:Name="OutputColumns" Content="Columns" Margin="4,0,0,0" IsChecked="True" />
                 </ui:RadioButtons>
                 <StackPanel>
-                    <CheckBox x:Name="FillInTemplate"
+                    <CheckBox x:Name="WriteDataInTemplate"
                               IsChecked="True"
-                              Content="Fill in template" />
-                    <StackPanel DataContext="{Binding ElementName=FillInTemplate}"
+                              Content="Write data in template" />
+                    <!-- Options for "Write data in template" appears when checked -->
+                    <StackPanel DataContext="{Binding ElementName=WriteDataInTemplate}"
                                 Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
                         <ItemsControl Style="{StaticResource GridLabelTextBox}">
                             <Label Grid.Column="0" VerticalAlignment="Center" 
                                    Content="Tab name: " />
-                            <TextBox Grid.Column="1" Grid.ColumnSpan="3"  Text="Data" />
+                            <TextBox x:Name="TemplateTabName"
+                                     Grid.Column="1" Grid.ColumnSpan="3"
+                                     Text="Relative Quant Data" />
                         </ItemsControl>
-                        <StackPanel DataContext="{Binding ElementName=OutputRows}"
-                                    Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
+
+                        <StackPanel>
+                            <!-- Sample names in row/column -->
                             <ItemsControl Style="{StaticResource GridLabelTextBox}">
                                 <Label Grid.Column="0" VerticalAlignment="Center" 
-                                       Content="Sample names in row: " />
-                                <TextBox Grid.Column="1" Grid.ColumnSpan="3"  Text="1" />
+                                       Content="Sample names in " />
+                                <Label Grid.Column="1" VerticalAlignment="Center" 
+                                       DataContext="{Binding ElementName=OutputRows}"
+                                       Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}"
+                                       Content="row: " />
+                                <Label Grid.Column="1" VerticalAlignment="Center" 
+                                       DataContext="{Binding ElementName=OutputColumns}"
+                                       Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}"
+                                       Content="column: " />
+                                <TextBox Grid.Column="2" Grid.ColumnSpan="2"
+                                         DataContext="{Binding ElementName=OutputColumns}"
+                                         Text="1">
+                                    <TextBox.ToolTip>
+                                        <ToolTip Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
+                                            Column can be named A, B, C or 1, 2, 3, etc.
+                                        </ToolTip>
+                                    </TextBox.ToolTip>
+                                </TextBox>
                             </ItemsControl>
+
+                            <!-- Compound names in row/column -->
                             <ItemsControl Style="{StaticResource GridLabelTextBox}">
                                 <Label Grid.Column="0" VerticalAlignment="Center" 
-                                       Content="Compound names in column: " />
-                                <TextBox Grid.Column="1" Grid.ColumnSpan="3"  Text="1" />
+                                       Content="Compound names in " />
+                                <Label Grid.Column="1" VerticalAlignment="Center" 
+                                       DataContext="{Binding ElementName=OutputColumns}"
+                                       Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}"
+                                       Content="row: " />
+                                <Label Grid.Column="1" VerticalAlignment="Center" 
+                                       DataContext="{Binding ElementName=OutputRows}"
+                                       Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}"
+                                       Content="column: " />
+                                <TextBox Grid.Column="2" Grid.ColumnSpan="2" 
+                                         DataContext="{Binding ElementName=OutputRows}"
+                                         Text="1">
+                                    <TextBox.ToolTip>
+                                        <ToolTip Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
+                                            Column can be named A, B, C or 1, 2, 3, etc.
+                                        </ToolTip>
+                                    </TextBox.ToolTip>
+                                </TextBox>
                             </ItemsControl>
                         </StackPanel>
-                        <StackPanel DataContext="{Binding ElementName=OutputColumns}"
-                                    Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
+
+                        <!-- Start writing in cell -->
                         <ItemsControl Style="{StaticResource GridLabelTextBox}">
                             <Label Grid.Column="0" VerticalAlignment="Center" 
-                                   Content="Sample names in column: " />
-                            <TextBox Grid.Column="1" Grid.ColumnSpan="3"  Text="1" />
+                                   Content="Start writing in cell: " />
+                            <TextBox x:Name="StartInCell"
+                                     Grid.Column="1" Grid.ColumnSpan="3"
+                                     Text="E2" />
                         </ItemsControl>
-                        <ItemsControl Style="{StaticResource GridLabelTextBox}">
-                            <Label Grid.Column="0" VerticalAlignment="Center" 
-                                   Content="Compound names in row: " />
-                            <TextBox Grid.Column="1" Grid.ColumnSpan="3"  Text="1" />
-                        </ItemsControl>
-                        </StackPanel>
                     </StackPanel>
                     <CheckBox x:Name="AbsoluteQuantitation"
                               IsChecked="True"
@@ -204,7 +238,9 @@
                         <ItemsControl Style="{StaticResource GridLabelTextBox}">
                             <Label Grid.Column="0" VerticalAlignment="Center" 
                                    Content="Tab name: " />
-                            <TextBox Grid.Column="1" Grid.ColumnSpan="3"  Text="AbsoluteQuantCalc" />
+                            <TextBox x:Name="AbsoluteQuantTabName"
+                                     Grid.Column="1" Grid.ColumnSpan="3"
+                                     Text="Absolute Quant Calc" />
                         </ItemsControl>
                     </StackPanel>
                 </StackPanel>
@@ -258,8 +294,23 @@
                                  Text="0" />
                     </ItemsControl>
                 </StackPanel>
-            </StackPanel>
+                
+                
+                <!-- Progress -->
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="80"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <TextBlock Grid.Row="1" Text="Progress" FontSize="24" Margin="0,10" />
+                    <TextBox x:Name="ProgressTextBox" Grid.Row="2" MinLines="9" IsReadOnly="True" />
+                </Grid>
 
+
+            </StackPanel>
 
 
             <!-- Submit Button -->
