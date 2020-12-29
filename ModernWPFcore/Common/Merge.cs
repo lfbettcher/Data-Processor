@@ -25,7 +25,7 @@ namespace ModernWPFcore
                 {
                     var sampleName = (string) sampleData.Key;
 
-                    // Check if sample name already exists
+                    // Check if sample name already exists for that compound
                     if (((OrderedDictionary) destMap[compound]).Contains(sampleName))
                     {
                         if (replace)

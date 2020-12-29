@@ -38,7 +38,6 @@ namespace ModernWPFcore
 
             foreach (var sheet in excelPkg.Workbook.Worksheets)
             {
-                Debug.WriteLine(sheet.Name);
                 var curMap = new OrderedDictionary();
 
                 try
@@ -124,7 +123,7 @@ namespace ModernWPFcore
         /// <param name="sheetName">Optional: Name of worksheet from which to read data.
         /// Uses first sheet if no name is provided.</param>
         /// <returns>dataMap is an OrderedDictionary with compound name as key and
-        ///   value is another Orderedictionary with sample names as key and data as value
+        ///   value is another OrderedDictionary with sample names as key and data as value
         ///   (compound, (sample name, data))</returns>
         public static OrderedDictionary SamplesInColumnsToMap(int sampleRow,
             int compoundColumn, ExcelPackage excelPkg, string sheetName = "_first")

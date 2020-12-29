@@ -27,10 +27,17 @@
                     <!--<Rectangle x:Name="HomeIcon" Height="20" Width="20" Fill="Blue"/>-->
                     <ListBoxItem x:Name="Home" Content="Home" />
                 </StackPanel>
+                <Label Content="Workflows" FontWeight="SemiBold" />
                 <ListBoxItem x:Name="Sciex6500" Content="Sciex 6500" />
                 <ListBoxItem x:Name="SciexLipidyzer" Content="Sciex Lipidyzer" />
                 <ListBoxItem Content="Waters" />
+                <ListBoxItem Content="Other" />
+                <Label />
+                <Label Content="Data Tools" FontWeight="SemiBold" />
+                <ListBoxItem x:Name="NormalizeToQC" Content="Normalize to QC" />
+                <ListBoxItem x:Name="FillTemplate" Content="Fill Data Template" />
             </ListBox>
+
         </DockPanel>
 
         <ui:Frame x:Name="RootFrame" Grid.Row="1" Grid.Column="1"/>

@@ -6,7 +6,7 @@
       xmlns:ui="http://schemas.modernwpf.com/2019"
       xmlns:local="clr-namespace:ModernWPFcore.Pages"
       mc:Ignorable="d" 
-      d:DesignHeight="580" d:DesignWidth="900"
+      d:DesignHeight="620" d:DesignWidth="940"
       Title="InputOutputPage">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
@@ -179,14 +179,15 @@
                                 <Label Grid.Column="0" VerticalAlignment="Center" 
                                        Content="Sample names in " />
                                 <Label Grid.Column="1" VerticalAlignment="Center" 
-                                       DataContext="{Binding ElementName=OutputRows}"
+                                       DataContext="{Binding ElementName=OutputColumns}"
                                        Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                        Content="row: " />
                                 <Label Grid.Column="1" VerticalAlignment="Center" 
-                                       DataContext="{Binding ElementName=OutputColumns}"
+                                       DataContext="{Binding ElementName=OutputRows}"
                                        Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                        Content="column: " />
-                                <TextBox Grid.Column="2" Grid.ColumnSpan="2"
+                                <TextBox x:Name="SampleLoc"
+                                         Grid.Column="2" Grid.ColumnSpan="2"
                                          DataContext="{Binding ElementName=OutputColumns}"
                                          Text="1">
                                     <TextBox.ToolTip>
@@ -202,14 +203,15 @@
                                 <Label Grid.Column="0" VerticalAlignment="Center" 
                                        Content="Compound names in " />
                                 <Label Grid.Column="1" VerticalAlignment="Center" 
-                                       DataContext="{Binding ElementName=OutputColumns}"
+                                       DataContext="{Binding ElementName=OutputRows}"
                                        Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                        Content="row: " />
                                 <Label Grid.Column="1" VerticalAlignment="Center" 
-                                       DataContext="{Binding ElementName=OutputRows}"
+                                       DataContext="{Binding ElementName=OutputColumns}"
                                        Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}"
                                        Content="column: " />
-                                <TextBox Grid.Column="2" Grid.ColumnSpan="2" 
+                                <TextBox x:Name="CompoundLoc"
+                                         Grid.Column="2" Grid.ColumnSpan="2" 
                                          DataContext="{Binding ElementName=OutputRows}"
                                          Text="1">
                                     <TextBox.ToolTip>

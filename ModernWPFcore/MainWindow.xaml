@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModernWPFcore"
-        xmlns:pages="clr-namespace:ModernWPFcore.Pages"
         mc:Ignorable="d"
         Title="MainWindow" Height="640" Width="1080"
         xmlns:ui="http://schemas.modernwpf.com/2019"

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -18,7 +19,7 @@ namespace ModernWPFcore
             // Read input - All data formats are read into one dataMap format for further processing
             progressPage.ProgressTextBox.AppendText("Processing inputs\n");
             var dataMap = ReadInputs(menuSelection, filePathList, options, progressPage);
-            MessageBox.Show(io.AbsoluteQuantTabName.Text);
+            
             // Perform data options
 
             // Write output
@@ -43,7 +44,6 @@ namespace ModernWPFcore
                 default:
                     break;
             }
-
             return dataMap;
         }
 
@@ -55,9 +55,22 @@ namespace ModernWPFcore
 
             // Write Raw Data tab
             if (options["SamplesOut"] == "columns")
-                MapToExcel.WriteSamplesInColumns(dataMap, options, excelPkg, "Raw Data", progressPage);
+                excelPkg = MapToExcel.WriteSamplesInColumns(dataMap, options, excelPkg, "Raw Data", progressPage);
             else
                 MapToExcel.WriteSamplesInRows(dataMap, options, excelPkg, "Raw Data", progressPage);
+
+            // Write to template if selected
+            progressPage.ProgressTextBox.AppendText("Writing data into template\n");
+            excelPkg = MapToExcel.WriteIntoTemplate(dataMap, excelPkg, options, options["TemplateTabName"]);
+
+            // Absolute Quant Calc
+            progressPage.ProgressTextBox.AppendText("Absolute Quantitation\n");
+            var compoundLoc = int.TryParse(options["CompoundLoc"], out var compoundLocNum)
+                ? compoundLocNum
+                : ExcelUtils.ColumnNameToNumber(options["CompoundLoc"]);
+
+            excelPkg = MapToExcel.WriteIntoTemplate(dataMap, excelPkg, options, options["AbsoluteQuantTabName"], false, 2, 3, 1, compoundLoc);
+            excelPkg = WriteSciex6500Output.AbsoluteQuantCalc(excelPkg, options, compoundLoc);
 
             switch (menuSelection)
             {

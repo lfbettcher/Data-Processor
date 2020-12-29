@@ -176,7 +176,10 @@ namespace ModernWPFcore.Pages
                 { "OutputFolder", Path.GetDirectoryName(outputFilePath) },
                 { "OutputFileName", OutputFileNameTextBox.Text },
                 { "TemplateTabName", TemplateTabName.Text },
-                { "StartInCell", StartInCell.Text }
+                { "SampleLoc", SampleLoc.Text },
+                { "CompoundLoc", CompoundLoc.Text },
+                { "StartInCell", StartInCell.Text },
+                { "AbsoluteQuantTabName", AbsoluteQuantTabName.Text }
             };
             return options;
         }

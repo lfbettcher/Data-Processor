@@ -33,7 +33,8 @@ namespace ModernWPFcore
             int row = 1, col = 1, namesRow = 1, fileCount = 1;
 
             // One file at a time. Descending order makes POS before NEG
-            foreach (var filePath in filePaths.OrderByDescending(i => i))
+            //                     Keep ascending so samples are in order for multiple files?
+            foreach (var filePath in filePaths) //.OrderByDescending(i => i))
             {
                 progressPage.ProgressTextBox.AppendText($"Reading file {fileCount++}\n");
 
@@ -87,6 +88,9 @@ namespace ModernWPFcore
                     ? ExcelToMap.SamplesInRowsToMap(namesRow, 1, excelPkg, "Import")
                     : ExcelToMap.SamplesInColumnsToMap(namesRow, 1, excelPkg, "Import");
 
+                // Remove "Sample Type" if that option was used. It is not a compound.
+                try { curMap.Remove("Sample Type"); } catch { }
+
                 // Merge current map with dataMap
                 dataMap = Merge.MergeMaps(dataMap, curMap);
 
@@ -99,7 +103,6 @@ namespace ModernWPFcore
             excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + "import_" + options["OutputFileName"]));
 
             progressPage.ProgressTextBox.AppendText("All input files have been read.\n");
-
             return dataMap;
         }
 

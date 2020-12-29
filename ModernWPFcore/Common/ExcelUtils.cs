@@ -43,52 +43,67 @@ namespace ModernWPFcore
         }
 
         // Returns the number of filled rows in a specified column
+        // Requires 2 consecutive empty cells to stop counting
         public static int RowsInColumn(ExcelWorksheet sheet, int col)
         {
             if (sheet.Dimension == null) return 0;
 
             var rows = 1;
             string cellText;
-            bool cellUsed;
+            bool cellEmpty;
+
             do
             { 
                 cellText = sheet.Cells[rows, col].Text;
-                cellUsed = !string.IsNullOrWhiteSpace(cellText);
-                if (cellUsed) rows++;
-            } while (cellUsed);
+                cellEmpty = string.IsNullOrWhiteSpace(cellText);
+                if (cellEmpty)
+                {
+                    bool nextCellEmpty = string.IsNullOrWhiteSpace(sheet.Cells[rows + 1, col].Text);
+                    if (nextCellEmpty) return rows;
+                    cellEmpty = false;
+                }
+                rows++;
+            } while (!cellEmpty);
 
             return rows;
         }
 
         // Returns the number of filled rows in a specified column
+        // Requires 2 consecutive empty cells to stop counting
         public static int ColumnsInRow(ExcelWorksheet sheet, int row)
         {
             if (sheet.Dimension == null) return 0;
 
             var cols = 1;
             string cellText;
-            bool cellUsed;
+            bool cellEmpty;
 
             do
             {
                 cellText = sheet.Cells[row, cols].Text;
-                cellUsed = !string.IsNullOrWhiteSpace(cellText);
-                if (cellUsed) cols++;
-            } while (cellUsed);
+                cellEmpty = string.IsNullOrWhiteSpace(cellText);
+                if (cellEmpty)
+                {
+                    bool nextCellEmpty = string.IsNullOrWhiteSpace(sheet.Cells[row, cols + 1].Text);
+                    if (nextCellEmpty) return cols;
+                    cellEmpty = false;
+                }
+                cols++;
+            } while (!cellEmpty);
 
             return cols;
         }
 
         // Returns row and column number from cell name
         // Cell name AQ389 would return row 389 and col 43
-        public static int[] GetRowCol(string cellName)
+        public static (int row, int col) GetRowCol(string cellName)
         {
             // Split letter and number portion into group 1 and group 2
             var match = Regex.Match(cellName, @"([A-Za-z]+)(\d+)");
             string colName = match.Groups[1].Value;
             int col = ColumnNameToNumber(colName);
             int.TryParse(match.Groups[2].Value, out var row);
-            return new[] {row, col};
+            return (row, col);
         }
     }
 }
