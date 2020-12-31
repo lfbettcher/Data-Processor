@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
-using System.IO;
 using System.Linq;
 using System.Windows.Navigation;
 using Path = System.IO.Path;
@@ -175,10 +172,12 @@ namespace ModernWPFcore.Pages
                 { "TemplatePath", templateFilePath },
                 { "OutputFolder", Path.GetDirectoryName(outputFilePath) },
                 { "OutputFileName", OutputFileNameTextBox.Text },
+                { "WriteDataInTemplate", WriteDataInTemplate.IsChecked.ToString() },
                 { "TemplateTabName", TemplateTabName.Text },
                 { "SampleLoc", SampleLoc.Text },
                 { "CompoundLoc", CompoundLoc.Text },
                 { "StartInCell", StartInCell.Text },
+                { "QCTabName", QCTabName.Text },
                 { "AbsoluteQuantTabName", AbsoluteQuantTabName.Text }
             };
             return options;

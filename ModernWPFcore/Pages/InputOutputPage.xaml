@@ -232,6 +232,19 @@
                                      Text="E2" />
                         </ItemsControl>
                     </StackPanel>
+                    <CheckBox x:Name="QualityControl"
+                              IsChecked="True"
+                              Content="Quality Control"/>
+                    <StackPanel DataContext="{Binding ElementName=QualityControl}"
+                                Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
+                        <ItemsControl Style="{StaticResource GridLabelTextBox}">
+                            <Label Grid.Column="0" VerticalAlignment="Center" 
+                                   Content="Tab name: " />
+                            <TextBox x:Name="QCTabName"
+                                     Grid.Column="1" Grid.ColumnSpan="3"
+                                     Text="Data Reproducibility" />
+                        </ItemsControl>
+                    </StackPanel>
                     <CheckBox x:Name="AbsoluteQuantitation"
                               IsChecked="True"
                               Content="Absolute Quantitation"/>

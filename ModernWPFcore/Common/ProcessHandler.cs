@@ -63,6 +63,10 @@ namespace ModernWPFcore
             progressPage.ProgressTextBox.AppendText("Writing data into template\n");
             excelPkg = MapToExcel.WriteIntoTemplate(dataMap, excelPkg, options, options["TemplateTabName"]);
 
+            // QC - Copy data tab, remove non-QC, calculate CV
+            progressPage.ProgressTextBox.AppendText("Calculating QC CV\n");
+            excelPkg = QualityControl.WriteQCTab(excelPkg, options);
+
             // Absolute Quant Calc
             progressPage.ProgressTextBox.AppendText("Absolute Quantitation\n");
             var compoundLoc = int.TryParse(options["CompoundLoc"], out var compoundLocNum)
@@ -70,7 +74,8 @@ namespace ModernWPFcore
                 : ExcelUtils.ColumnNameToNumber(options["CompoundLoc"]);
 
             excelPkg = MapToExcel.WriteIntoTemplate(dataMap, excelPkg, options, options["AbsoluteQuantTabName"], false, 2, 3, 1, compoundLoc);
-            excelPkg = WriteSciex6500Output.AbsoluteQuantCalc(excelPkg, options, compoundLoc);
+            excelPkg = AbsoluteQuant.Sciex6500Template(excelPkg, options, compoundLoc);
+            progressPage.ProgressTextBox.AppendText("Finished writing Absolute Quant Tab\n");
 
             switch (menuSelection)
             {

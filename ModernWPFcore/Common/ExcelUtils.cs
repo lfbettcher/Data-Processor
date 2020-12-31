@@ -1,14 +1,62 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using OfficeOpenXml;
 
 namespace ModernWPFcore
 {
-    class ExcelUtils
+    public static class ExcelUtils
     {
+        // Safely converts string row number to int. Defaults to 1 if unsuccessful.
+        // Row number input text box is a string.
+        public static int GetRowNum(string row)
+        {
+            return int.TryParse(row, out var rowNum) ? rowNum : 1;
+        }
+
+        /// <summary>
+        /// Safely converts string column letter or number to int.
+        /// Column number input text box is a string and can be either letters or numbers.
+        /// </summary>
+        /// <param name="col">Column can be a letter or number</param>
+        /// <returns>Column number as int, or 1 if input could not be converted
+        /// to a valid column number</returns>
+        public static int GetColNum(string col)
+        {
+            // Parse number or convert letter
+            return int.TryParse(col, out var colNum) ? colNum : ColumnNameToNumber(col);
+        }
+
+
+        public static string GetDimensions(ExcelWorksheet worksheet, string startCell = "none")
+        {
+            var startRow = 1;
+            var startCol = 1;
+            var endRow = 1;
+            var endCol = 1;
+
+            if ("none".Equals(startCell))
+            {
+                // Explore the first 5 columns and rows to find the maximum dimensions
+                for (var i = 1; i <= 5; ++i)
+                {
+                    endRow = Math.Max(endRow, RowsInColumn(worksheet, i));
+                    endCol = Math.Max(endCol, ColumnsInRow(worksheet, i));
+                }
+            }
+            else
+            {
+                (startRow, startCol) = GetRowCol(startCell);
+                endRow = RowsInColumn(worksheet, startCol);
+                endCol = ColumnsInRow(worksheet, startRow);
+            }
+
+            var startAddress = GetAddress(startRow, startCol);
+            var endAddress = GetAddress(endRow, endCol);
+
+            return startAddress + ":" + endAddress;
+        }
+
+
         // Converts column name, such as AZ, to a number
         // ref https://stackoverflow.com/a/667902
         public static int ColumnNameToNumber(string columnName)
@@ -59,13 +107,13 @@ namespace ModernWPFcore
                 if (cellEmpty)
                 {
                     bool nextCellEmpty = string.IsNullOrWhiteSpace(sheet.Cells[rows + 1, col].Text);
-                    if (nextCellEmpty) return rows;
+                    if (nextCellEmpty) return rows - 1;
                     cellEmpty = false;
                 }
                 rows++;
             } while (!cellEmpty);
 
-            return rows;
+            return rows - 1;
         }
 
         // Returns the number of filled rows in a specified column
@@ -85,25 +133,33 @@ namespace ModernWPFcore
                 if (cellEmpty)
                 {
                     bool nextCellEmpty = string.IsNullOrWhiteSpace(sheet.Cells[row, cols + 1].Text);
-                    if (nextCellEmpty) return cols;
+                    if (nextCellEmpty) return cols - 1;
                     cellEmpty = false;
                 }
                 cols++;
             } while (!cellEmpty);
 
-            return cols;
+            return cols - 1;
         }
 
-        // Returns row and column number from cell name
-        // Cell name AQ389 would return row 389 and col 43
-        public static (int row, int col) GetRowCol(string cellName)
+        // Returns row and column number from cell address
+        // Cell address AQ389 returns row 389, col 43
+        public static (int row, int col) GetRowCol(string cellAddress)
         {
             // Split letter and number portion into group 1 and group 2
-            var match = Regex.Match(cellName, @"([A-Za-z]+)(\d+)");
+            var match = Regex.Match(cellAddress, @"([A-Za-z]+)(\d+)");
             string colName = match.Groups[1].Value;
             int col = ColumnNameToNumber(colName);
             int.TryParse(match.Groups[2].Value, out var row);
             return (row, col);
+        }
+
+        // Returns cell address for row and column number
+        // Row 389, col 43 returns cell address AQ389
+        public static string GetAddress(int row, int col)
+        {
+            string colName = ColumnNumberToName(col);
+            return colName + row;
         }
     }
 }

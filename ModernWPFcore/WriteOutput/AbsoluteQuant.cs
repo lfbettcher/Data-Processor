@@ -1,17 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using ModernWPFcore.Pages;
 using OfficeOpenXml;
 
 namespace ModernWPFcore
 {
-    class WriteSciex6500Output
+    class AbsoluteQuant
     {
-        // Data Reproducibility
-        // Copy "Relative Quant Data" tab, remove all non-QC
-
-
-        // Absolute Quant Calc with template
-        public static ExcelPackage AbsoluteQuantCalc(
+        // Absolute Quant Calc with Sciex 6500 template
+        public static ExcelPackage Sciex6500Template(
             ExcelPackage excelPkg, Dictionary<string, string> options, int compoundLoc)
         {
             var calcSheet = excelPkg.Workbook.Worksheets[options["AbsoluteQuantTabName"]];
@@ -34,7 +31,7 @@ namespace ModernWPFcore
                     compound = calcSheet.Cells[row - 2, compoundLoc]?.Value?.ToString();
                     calcSheet.Cells[row, compoundLoc].Value = compound;
 
-                    if (!concMap.Contains(compound)) 
+                    if (!concMap.Contains(compound))
                         concMap.Add(compound, new OrderedDictionary());
 
                     // Copy formula into empty cells and calculate
@@ -52,31 +49,40 @@ namespace ModernWPFcore
                             if (sampleName is null || sampleName == "Compound") continue;
 
                             if (((OrderedDictionary) concMap[compound]).Contains(sampleName))
-                                sampleName = Merge.RenameDuplicate(((OrderedDictionary)concMap[compound]).Keys, sampleName);
+                                sampleName = Merge.RenameDuplicate(((OrderedDictionary) concMap[compound]).Keys,
+                                    sampleName);
 
                             var conc = calcSheet.Cells[row, col]?.Value?.ToString();
 
-                            ((OrderedDictionary)concMap[compound]).Add(sampleName, conc);
+                            ((OrderedDictionary) concMap[compound]).Add(sampleName, conc);
                         }
-                        catch { }
+                        catch
+                        {
+                        }
                     }
                 }
             }
+
             // Save calculations
-            //excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + options["OutputFileName"]));
             excelPkg.Save();
 
             // Write concentrations to "Absolute Quant Data" tab
             excelPkg = MapToExcel.WriteIntoTemplate(concMap, excelPkg, options, "Absolute Quant Data");
-            
+
             // Format to 3 decimal places
             var writeCols = ExcelUtils.ColumnsInRow(writeSheet, 1);
             writeSheet.Cells[1, 4, 31, writeCols].Style.Numberformat.Format = "0.000";
-            //calcSheet.Hidden = eWorkSheetHidden.Hidden;
-            //excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + options["OutputFileName"]));
             excelPkg.Save();
 
-            //progressPage.ProgressTextBox.AppendText("Finished writing into template\n");
+            // Insert CV columns for QC
+            excelPkg = QualityControl.InsertCVColumns(excelPkg, options, "Absolute Quant Data");
+            excelPkg.Save();
+
+            // Replace missing values with N/A
+            excelPkg = MissingValue.ReplaceMissing(excelPkg, "Absolute Quant Data", "N/A", options["StartInCell"]);
+            excelPkg.Save();
+
+            // Write "Absolute Concentration (mM or micromoles/Liter)" above samples
             return excelPkg;
         }
     }

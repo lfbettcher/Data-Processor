@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Drawing;
 using System.Linq;
-using System.Text;
+using OfficeOpenXml;
 
 namespace ModernWPFcore
 {
@@ -53,6 +53,24 @@ namespace ModernWPFcore
                 currentName += "*";
 
             return currentName;
+        }
+
+        public static ExcelPackage MergeCells(
+            ExcelPackage excelPkg, string tabName, string startCell, string endCell, string text = "")
+        {
+            var worksheet = excelPkg.Workbook.Worksheets[tabName];
+            worksheet.Cells[startCell].Value = text;
+            worksheet.Cells[$"{startCell}:{endCell}"].Merge = true;
+            return excelPkg;
+        }
+
+        public static ExcelPackage MergeCells(
+            ExcelPackage excelPkg, string tabName, int startRow, int startCol, int endRow, int endCol, string text = "")
+        {
+            var worksheet = excelPkg.Workbook.Worksheets[tabName];
+            worksheet.Cells[startRow, startCol].Value = text;
+            worksheet.Cells[startRow, startCol, endRow, endCol].Merge = true;
+            return excelPkg;
         }
     }
 }
