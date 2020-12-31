@@ -188,7 +188,7 @@
                                        Content="column: " />
                                 <TextBox x:Name="SampleLoc"
                                          Grid.Column="2" Grid.ColumnSpan="2"
-                                         DataContext="{Binding ElementName=OutputColumns}"
+                                         DataContext="{Binding ElementName=OutputRows}"
                                          Text="1">
                                     <TextBox.ToolTip>
                                         <ToolTip Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
@@ -212,7 +212,7 @@
                                        Content="column: " />
                                 <TextBox x:Name="CompoundLoc"
                                          Grid.Column="2" Grid.ColumnSpan="2" 
-                                         DataContext="{Binding ElementName=OutputRows}"
+                                         DataContext="{Binding ElementName=OutputColumns}"
                                          Text="1">
                                     <TextBox.ToolTip>
                                         <ToolTip Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
@@ -229,7 +229,13 @@
                                    Content="Start writing in cell: " />
                             <TextBox x:Name="StartInCell"
                                      Grid.Column="1" Grid.ColumnSpan="3"
-                                     Text="E2" />
+                                     Text="E2">
+                                <TextBox.ToolTip>
+                                    <ToolTip>
+                                        Enter cell address eg. A1
+                                    </ToolTip>
+                                </TextBox.ToolTip>
+                            </TextBox>
                         </ItemsControl>
                     </StackPanel>
                     <CheckBox x:Name="QualityControl"
