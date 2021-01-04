@@ -1,19 +1,19 @@
 ﻿using OfficeOpenXml;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Collections.Specialized;
-using System.Text.RegularExpressions;
 
 namespace ModernWPFcore
 {
     class ExcelToMap
     {
-        // Read multiple files
+        /// <summary>
+        /// Read multiple files. 
+        /// </summary>
+        /// <param name="pathsList"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static OrderedDictionary ReadAllFiles(List<string> pathsList, Dictionary<string, string> options)
         {
             // <compound, <sample name, data>>

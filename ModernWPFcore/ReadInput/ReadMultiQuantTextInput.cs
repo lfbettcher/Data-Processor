@@ -30,13 +30,13 @@ namespace ModernWPFcore
             var excelPkg = new ExcelPackage(templateFile);
             var worksheet = excelPkg.Workbook.Worksheets.Add("Import");
 
-            int row = 1, col = 1, namesRow = 1, fileCount = 1;
+            int row = 1, col = 1, namesRow = 1;
 
             // One file at a time. Descending order makes POS before NEG
             //                     Keep ascending so samples are in order for multiple files?
             foreach (var filePath in filePaths) //.OrderByDescending(i => i))
             {
-                progressPage.ProgressTextBox.AppendText($"Reading file {fileCount++}\n");
+                progressPage.ProgressTextBox.AppendText($"Reading file {Path.GetFileName(filePath)}\n");
 
                 // Read data from txt file to worksheet
                 string[] lines = File.ReadAllLines(filePath);

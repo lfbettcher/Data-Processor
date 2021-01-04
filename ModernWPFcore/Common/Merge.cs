@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Drawing;
 using System.Linq;
 using OfficeOpenXml;
 
@@ -9,6 +8,13 @@ namespace ModernWPFcore
 {
     class Merge
     {
+        /// <summary>
+        /// Merges two dataMaps into one.
+        /// </summary>
+        /// <param name="destMap"></param>
+        /// <param name="srcMap"></param>
+        /// <param name="replace"></param>
+        /// <returns>Merged dataMap</returns>
         public static OrderedDictionary MergeMaps(
             OrderedDictionary destMap, OrderedDictionary srcMap, bool replace = false)
         {
@@ -46,6 +52,13 @@ namespace ModernWPFcore
             return destMap;
         }
 
+        /// <summary>
+        /// Renames a sample if the sample name already exists in the dictionary.
+        /// An asterisk * is appended to the end of the sample name.
+        /// </summary>
+        /// <param name="allKeys"></param>
+        /// <param name="currentName"></param>
+        /// <returns>Renamed sample as a string</returns>
         public static string RenameDuplicate(ICollection allKeys, string currentName)
         {
             List<string> allNamesList = allKeys.Cast<string>().ToList();

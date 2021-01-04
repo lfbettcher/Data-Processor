@@ -3,6 +3,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using ModernWPFcore.Pages;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
@@ -11,9 +12,16 @@ namespace ModernWPFcore
 {
     class MapToExcel
     {
-
-        // Writes data into a new Excel tab with samples in rows (in column 1)
-        // and compounds in columns (in row 1)
+        /// <summary>
+        /// Writes data into a new Excel tab with samples in rows (in column 1)
+        /// and compounds in columns (in row 1)
+        /// </summary>
+        /// <param name="dataMap"></param>
+        /// <param name="options"></param>
+        /// <param name="excelPkg"></param>
+        /// <param name="tabName"></param>
+        /// <param name="progressPage"></param>
+        /// <returns></returns>
         public static ExcelPackage WriteSamplesInRows(
             OrderedDictionary dataMap, Dictionary<string, string> options, 
             ExcelPackage excelPkg, string tabName, ProgressPage progressPage)
@@ -49,9 +57,16 @@ namespace ModernWPFcore
             return excelPkg;
         }
 
-
-        // Writes data into a new Excel tab with samples in columns (in row 1)
-        // and compounds in rows (in column 1)
+        /// <summary>
+        /// Writes data into a new Excel tab with samples in columns (in row 1)
+        /// and compounds in rows (in column 1) 
+        /// </summary>
+        /// <param name="dataMap"></param>
+        /// <param name="options"></param>
+        /// <param name="excelPkg"></param>
+        /// <param name="tabName"></param>
+        /// <param name="progressPage"></param>
+        /// <returns></returns>
         public static ExcelPackage WriteSamplesInColumns(
             OrderedDictionary dataMap, Dictionary<string, string> options, 
             ExcelPackage excelPkg, string tabName, ProgressPage progressPage)

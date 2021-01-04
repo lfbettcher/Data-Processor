@@ -7,6 +7,12 @@ namespace ModernWPFcore
 {
     class QualityControl
     {
+        /// <summary>
+        /// Writes a tab with QC data, currently in the format used for Sciex 6500 assays.
+        /// </summary>
+        /// <param name="excelPkg"></param>
+        /// <param name="options"></param>
+        /// <returns></returns>
         public static ExcelPackage WriteQCTab(ExcelPackage excelPkg, Dictionary<string, string> options)
         {
             // Copy data tab
@@ -26,6 +32,13 @@ namespace ModernWPFcore
             return excelPkg;
         }
 
+        /// <summary>
+        /// Removes samples that do not contain "QC" in the name.
+        /// </summary>
+        /// <param name="excelPkg"></param>
+        /// <param name="options"></param>
+        /// <param name="tabName"></param>
+        /// <returns></returns>
         public static ExcelPackage RemoveNonQC(ExcelPackage excelPkg, Dictionary<string, string> options, string tabName)
         {
             var worksheet = excelPkg.Workbook.Worksheets[tabName];
@@ -64,6 +77,14 @@ namespace ModernWPFcore
             return excelPkg;
         }
 
+        /// <summary>
+        /// Inserts 3 columns after each group of QC: "CV", "Avg CV", and "Median CV",
+        /// and calculates the CV.
+        /// </summary>
+        /// <param name="excelPkg"></param>
+        /// <param name="options"></param>
+        /// <param name="tabName"></param>
+        /// <returns></returns>
         public static ExcelPackage InsertCVColumns(ExcelPackage excelPkg, Dictionary<string, string> options, string tabName)
         {
             var worksheet = excelPkg.Workbook.Worksheets[tabName];
@@ -187,6 +208,13 @@ namespace ModernWPFcore
             return excelPkg;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="excelPkg"></param>
+        /// <param name="options"></param>
+        /// <param name="tabName"></param>
+        /// <returns></returns>
         public static ExcelPackage InsertCVRows(ExcelPackage excelPkg, Dictionary<string, string> options, string tabName)
         {
             var worksheet = excelPkg.Workbook.Worksheets[tabName];
@@ -275,7 +303,14 @@ namespace ModernWPFcore
             return excelPkg;
         }
 
-        // Returns the location of sample names and starting data cell
+        /// <summary>
+        /// Returns the location of sample names and starting data cell.
+        /// </summary>
+        /// <param name="rowsOrColumns"></param>
+        /// <param name="writeDataInTemplate"></param>
+        /// <param name="sampleLoc"></param>
+        /// <param name="startInCell"></param>
+        /// <returns>(row, col) numbers as a Tuple</returns>
         public static (int, int) GetNameLocStartLoc(
             string rowsOrColumns, string writeDataInTemplate, string sampleLoc, string startInCell)
         {

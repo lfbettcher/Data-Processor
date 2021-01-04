@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Windows.Controls.Primitives;
-using OfficeOpenXml;
-using OfficeOpenXml.FormulaParsing;
+﻿using OfficeOpenXml;
 
 namespace ModernWPFcore
 {
@@ -14,6 +9,17 @@ namespace ModernWPFcore
             return excelPkg;
         }
 
+        /// <summary>
+        /// Replaces missing values with the specified replacement.
+        /// TODO - broaden criteria for what is "missing".
+        /// TODO Currently it looks for the "!" character which is in " #DIV/0!" and "#VALUE!"
+        /// </summary>
+        /// <param name="excelPkg"></param>
+        /// <param name="tabName"></param>
+        /// <param name="replacement"></param>
+        /// <param name="startCell"></param>
+        /// <param name="endCell"></param>
+        /// <returns></returns>
         public static ExcelPackage ReplaceMissing(ExcelPackage excelPkg, string tabName, 
             string replacement, string startCell = "A1", string endCell = "none")
         {

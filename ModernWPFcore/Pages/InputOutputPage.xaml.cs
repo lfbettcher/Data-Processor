@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Win32;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Navigation;
 using Path = System.IO.Path;
 
@@ -14,7 +20,7 @@ namespace ModernWPFcore.Pages
     /// </summary>
     public partial class InputOutputPage : Page
     {
-        
+
         string applicationPath = Environment.CurrentDirectory;
         private string menuSelection = "Home";
 
@@ -109,6 +115,39 @@ namespace ModernWPFcore.Pages
             }
         }
 
+        // Enables Drag and Drop files into Template and Output file boxes
+        private void File_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePath = (string[])e.Data.GetData(DataFormats.FileDrop);
+                
+                // In case filePath[0] doesn't exist
+                var path = string.Empty;
+                try
+                {
+                    path = filePath[0];
+                }
+                catch { }
+
+                // Send path to metadata element which the two text boxes are bound to
+                if (((TextBox) sender).Name.Contains("Template"))
+                {
+                    if (filePath != null) TemplatePath.Text = path;
+                }
+                else if (((TextBox)sender).Name.Contains("Output"))
+                {
+                    OutputPath.Text = path;
+                }
+            }
+        }
+
+        // Needed for Drag and Drop into TextBox
+        private void TextBox_PreviewDragOver(object sender, DragEventArgs e)
+        {
+            e.Handled = true;
+        }
+        
         // Removes files from list with Remove button
         private void RemoveFileButton_Click(object sender, RoutedEventArgs e)
         {
@@ -169,8 +208,8 @@ namespace ModernWPFcore.Pages
                 { "InputType", InputExcel.IsChecked == true ? "excel" : "text"},
                 { "SamplesIn", InputRows.IsChecked == true ? "rows" : "columns" },
                 { "SamplesOut", OutputRows.IsChecked == true ? "rows" : "columns" },
-                { "TemplatePath", templateFilePath },
-                { "OutputFolder", Path.GetDirectoryName(outputFilePath) },
+                { "TemplatePath", TemplateLocationTextBox.Text + "\\" + TemplateFileNameTextBox.Text },
+                { "OutputFolder", OutputLocationTextBox.Text },
                 { "OutputFileName", OutputFileNameTextBox.Text },
                 { "WriteDataInTemplate", WriteDataInTemplate.IsChecked.ToString() },
                 { "TemplateTabName", TemplateTabName.Text },
@@ -185,13 +224,15 @@ namespace ModernWPFcore.Pages
 
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
+            var filePathList = fileNamesPaths.Select(file => file.Value).ToList();
+            var options = GetOptions();
             var navigationService = NavigationService.GetNavigationService(this);
             var progressPage = new ProgressPage();
             navigationService?.Navigate(progressPage);
-            var filePathList = fileNamesPaths.Select(file => file.Value).ToList();
-            var options = GetOptions();
             //ProcessHandler.Run(menuSelection, filePathList, options, progressPage);
             ProcessHandler.Run(menuSelection, filePathList, options, progressPage, this);
         }
+
     }
+
 }

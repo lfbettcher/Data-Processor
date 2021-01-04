@@ -6,8 +6,12 @@ namespace ModernWPFcore
 {
     public static class ExcelUtils
     {
-        // Safely converts string row number to int. Defaults to 1 if unsuccessful.
-        // Row number input text box is a string.
+        /// <summary>
+        /// Safely converts string row number to int. Defaults to 1 if unsuccessful.
+        /// Row number input text box is a string.
+        /// </summary>
+        /// <param name="row"></param>
+        /// <returns></returns>
         public static int GetRowNum(string row)
         {
             return int.TryParse(row, out var rowNum) ? rowNum : 1;
@@ -26,7 +30,14 @@ namespace ModernWPFcore
             return int.TryParse(col, out var colNum) ? colNum : ColumnNameToNumber(col);
         }
 
-
+        /// <summary>
+        /// Gets the dimensions of a portion of the worksheet.
+        /// Dimensions are in the format "A1:E5". In that example, it would be
+        /// the 5x5 cell region from column A to E and row 1 to 5.
+        /// </summary>
+        /// <param name="worksheet"></param>
+        /// <param name="startCell"></param>
+        /// <returns></returns>
         public static string GetDimensions(ExcelWorksheet worksheet, string startCell = "none")
         {
             var startRow = 1;
@@ -56,9 +67,12 @@ namespace ModernWPFcore
             return startAddress + ":" + endAddress;
         }
 
-
-        // Converts column name, such as AZ, to a number
-        // ref https://stackoverflow.com/a/667902
+        /// <summary>
+        /// Converts column name, such as AZ, to a number.
+        /// ref https://stackoverflow.com/a/667902
+        /// </summary>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
         public static int ColumnNameToNumber(string columnName)
         {
             columnName = columnName.ToUpper();
@@ -73,8 +87,12 @@ namespace ModernWPFcore
             return sum;
         }
 
-        // Converts column number to name, such as AZ
-        // ref https://stackoverflow.com/a/182924
+        /// <summary>
+        /// Converts column number to name, such as AZ.
+        /// ref https://stackoverflow.com/a/182924
+        /// </summary>
+        /// <param name="columnNumber"></param>
+        /// <returns></returns>
         public static string ColumnNumberToName(int columnNumber)
         {
             var columnName = string.Empty;
@@ -90,8 +108,13 @@ namespace ModernWPFcore
             return columnName;
         }
 
-        // Returns the number of filled rows in a specified column
-        // Requires 2 consecutive empty cells to stop counting
+        /// <summary>
+        /// Returns the number of filled rows in a specified column.
+        /// Requires 2 consecutive empty cells to stop counting
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <param name="col"></param>
+        /// <returns></returns>
         public static int RowsInColumn(ExcelWorksheet sheet, int col)
         {
             if (sheet.Dimension == null) return 0;
@@ -116,8 +139,13 @@ namespace ModernWPFcore
             return rows - 1;
         }
 
-        // Returns the number of filled rows in a specified column
-        // Requires 2 consecutive empty cells to stop counting
+        /// <summary>
+        /// Returns the number of filled rows in a specified column
+        /// Requires 2 consecutive empty cells to stop counting
+        /// </summary>
+        /// <param name="sheet"></param>
+        /// <param name="row"></param>
+        /// <returns></returns>
         public static int ColumnsInRow(ExcelWorksheet sheet, int row)
         {
             if (sheet.Dimension == null) return 0;
@@ -142,8 +170,12 @@ namespace ModernWPFcore
             return cols - 1;
         }
 
-        // Returns row and column number from cell address
-        // Cell address AQ389 returns row 389, col 43
+        /// <summary>
+        /// Returns row and column number from cell address
+        /// Cell address AQ389 returns row 389, col 43
+        /// </summary>
+        /// <param name="cellAddress"></param>
+        /// <returns></returns>
         public static (int row, int col) GetRowCol(string cellAddress)
         {
             // Split letter and number portion into group 1 and group 2
@@ -154,8 +186,13 @@ namespace ModernWPFcore
             return (row, col);
         }
 
-        // Returns cell address for row and column number
-        // Row 389, col 43 returns cell address AQ389
+        /// <summary>
+        /// Returns cell address for row and column number
+        /// Row 389, col 43 returns cell address AQ389
+        /// </summary>
+        /// <param name="row"></param>
+        /// <param name="col"></param>
+        /// <returns></returns>
         public static string GetAddress(int row, int col)
         {
             string colName = ColumnNumberToName(col);

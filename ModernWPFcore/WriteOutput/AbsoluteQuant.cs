@@ -1,13 +1,18 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
-using ModernWPFcore.Pages;
 using OfficeOpenXml;
 
 namespace ModernWPFcore
 {
     class AbsoluteQuant
     {
-        // Absolute Quant Calc with Sciex 6500 template
+        /// <summary>
+        /// Absolute Quant Calc with Sciex 6500 template 
+        /// </summary>
+        /// <param name="excelPkg"></param>
+        /// <param name="options"></param>
+        /// <param name="compoundLoc"></param>
+        /// <returns></returns>
         public static ExcelPackage Sciex6500Template(
             ExcelPackage excelPkg, Dictionary<string, string> options, int compoundLoc)
         {

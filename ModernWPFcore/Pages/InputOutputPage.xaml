@@ -4,13 +4,14 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:ui="http://schemas.modernwpf.com/2019"
-      xmlns:local="clr-namespace:ModernWPFcore.Pages"
+      xmlns:local="clr-namespace:ModernWPFcore"
       mc:Ignorable="d" 
       d:DesignHeight="620" d:DesignWidth="940"
       Title="InputOutputPage">
     <Page.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibility" />
-
+        <local:PathToFileNameConverter x:Key="PathToFileName" />
+        <local:PathToDirectoryConverter x:Key="PathToDirectory" />
         <Style x:Key="GridLabelTextBox" TargetType="ItemsControl">
             <Setter Property="ItemsPanel">
                 <Setter.Value>
@@ -55,7 +56,7 @@
         <Grid Background="White">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="16" />
-                <ColumnDefinition Width="Auto" MaxWidth="280" />
+                <ColumnDefinition Width="Auto" /> <!--MaxWidth="280" />-->
                 <ColumnDefinition Width="*" MinWidth="20" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" MinWidth="20" />
@@ -131,22 +132,26 @@
             </StackPanel>
 
             <!-- Template location -->
-            <StackPanel Grid.Row="3" Grid.Column="1"  >
-                <TextBlock Text="Template file location:" FontSize="16" Margin="0,4"/>
-                <StackPanel>
-                    <ItemsControl Style="{StaticResource GridFileBrowse}">
-                        <Button Grid.Row="0" Grid.Column="0" 
-                                Content="Browse" 
-                                Click="BrowseTemplateButton_Click" />
-                        <TextBox x:Name="TemplateLocationTextBox"
-                                 Grid.Row="0" Grid.Column="2"
-                                 MaxWidth="195" TextWrapping="Wrap" />
-                        <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" 
-                               Content="File name:"/>
-                        <TextBox x:Name="TemplateFileNameTextBox"
-                                 Grid.Row="2" Grid.Column="2" />
-                    </ItemsControl>
-                </StackPanel>
+            <StackPanel Grid.Row="3" Grid.Column="1">
+                <TextBlock Text="Template file location:" FontSize="16" Margin="0,4" />
+                <ItemsControl Style="{StaticResource GridFileBrowse}">
+                    <Button Grid.Row="0" Grid.Column="0" 
+                            Content="Browse" 
+                            Click="BrowseTemplateButton_Click" />
+                    <TextBox x:Name="TemplateLocationTextBox"
+                             Grid.Row="0" Grid.Column="2"
+                             MaxWidth="195" TextWrapping="Wrap"
+                             AllowDrop="True" PreviewDragOver="TextBox_PreviewDragOver" Drop="File_Drop" 
+                             Text="{Binding ElementName=TemplatePath, Path=Text, Converter={StaticResource PathToDirectory}}" />
+                    <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" 
+                           Content="File name:"/>
+                    <TextBox x:Name="TemplateFileNameTextBox"
+                             Grid.Row="2" Grid.Column="2"
+                             AllowDrop="True" PreviewDragOver="TextBox_PreviewDragOver" Drop="File_Drop"
+                             Text="{Binding ElementName=TemplatePath, Path=Text, Converter={StaticResource PathToFileName}}">
+                    </TextBox>
+                    <TextBlock x:Name="TemplatePath" Visibility="Collapsed" />
+                </ItemsControl>
             </StackPanel>
             
             <!-- Output Column -->
@@ -277,11 +282,15 @@
                                 Click="BrowseOutputButton_Click" />
                         <TextBox x:Name="OutputLocationTextBox"
                                  Grid.Row="0" Grid.Column="2"
-                                 MaxWidth="195" TextWrapping="Wrap" />
+                                 MaxWidth="195" TextWrapping="Wrap" 
+                                 PreviewDragOver="TextBox_PreviewDragOver" Drop="File_Drop"
+                                 Text="{Binding ElementName=OutputPath, Path=Text, Converter={StaticResource PathToDirectory}}" />
                         <Label Grid.Row="2" Grid.Column="0" VerticalAlignment="Center" 
                                Content="File name:" />
                         <TextBox x:Name="OutputFileNameTextBox"
-                                 Grid.Row="2" Grid.Column="2" />
+                                 Grid.Row="2" Grid.Column="2" PreviewDragOver="TextBox_PreviewDragOver" Drop="File_Drop"
+                                 Text="{Binding ElementName=OutputPath, Path=Text, Converter={StaticResource PathToFileName}}" />
+                        <TextBlock x:Name="OutputPath" Visibility="Collapsed" />
                     </ItemsControl>
                 </StackPanel>
             </StackPanel>
@@ -325,11 +334,9 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    
                     <TextBlock Grid.Row="1" Text="Progress" FontSize="24" Margin="0,10" />
                     <TextBox x:Name="ProgressTextBox" Grid.Row="2" MinLines="9" IsReadOnly="True" />
                 </Grid>
-
 
             </StackPanel>
 
