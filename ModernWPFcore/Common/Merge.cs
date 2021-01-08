@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.IO;
 using System.Linq;
 using OfficeOpenXml;
 
@@ -66,6 +67,42 @@ namespace ModernWPFcore
                 currentName += "*";
 
             return currentName;
+        }
+
+        public static ExcelPackage MergeWorkbooks(ExcelPackage srcExcel, ExcelPackage destExcel, Dictionary<string, string> options)
+        {
+            var (startRow, startCol) = ExcelUtils.GetRowCol(options["StartInCell"]);
+
+            // Merge one sheet at a time
+            foreach (var srcSheet in srcExcel.Workbook.Worksheets)
+            {
+                var sheetName = srcSheet.Name;
+                var destSheet = destExcel.Workbook.Worksheets[sheetName];
+
+                // Read source sheet into map
+                if (options["SamplesIn"] == "rows")
+                {
+                    // Location of sample and compound names
+                    var compoundRow = ExcelUtils.GetRowNum(options["CompoundLoc"]);
+                    var sampleCol = ExcelUtils.GetColNum(options["SampleLoc"]);
+
+                    // Read source sheet data
+                    var srcMap = ExcelToMap.SamplesInRowsToMap(compoundRow, sampleCol, srcExcel, sheetName);
+
+                    // Row to start writing data in destination sheet
+                    var nextEmptyRow = ExcelUtils.RowsInColumn(destSheet, sampleCol) + 1;
+
+                    // Write into destination sheet
+                    // Write sample names
+                    destExcel = MapToExcel.WriteSamplesInRows(srcMap, destExcel, sheetName, sampleCol, nextEmptyRow);
+
+                    // Write data into template
+                    destExcel = MapToExcel.WriteIntoTemplate(srcMap, destExcel, options, sheetName, false, nextEmptyRow,
+                        startCol, sampleCol, compoundRow);
+                }
+
+            }
+            return destExcel;
         }
 
         public static ExcelPackage MergeCells(

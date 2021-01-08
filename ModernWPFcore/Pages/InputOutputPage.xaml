@@ -161,7 +161,7 @@
                                  MaxColumns="2" Margin="0,4" FontSize="16"
                                  Header="Samples in:">
                     <RadioButton x:Name="OutputRows" Content="Rows" />
-                    <RadioButton x:Name="OutputColumns" Content="Columns" Margin="4,0,0,0" IsChecked="True" />
+                    <RadioButton x:Name="OutputColumns" Content="Columns" Margin="4,0,0,0" />
                 </ui:RadioButtons>
                 <StackPanel>
                     <CheckBox x:Name="WriteDataInTemplate"
@@ -170,14 +170,14 @@
                     <!-- Options for "Write data in template" appears when checked -->
                     <StackPanel DataContext="{Binding ElementName=WriteDataInTemplate}"
                                 Visibility="{Binding RelativeSource={RelativeSource Self}, Path=DataContext.IsChecked, Converter={StaticResource BooleanToVisibility}}">
-                        <ItemsControl Style="{StaticResource GridLabelTextBox}">
+
+                        <ItemsControl x:Name="TemplateTabNameControl"
+                                      Style="{StaticResource GridLabelTextBox}">
                             <Label Grid.Column="0" VerticalAlignment="Center" 
                                    Content="Tab name: " />
                             <TextBox x:Name="TemplateTabName"
-                                     Grid.Column="1" Grid.ColumnSpan="3"
-                                     Text="Relative Quant Data" />
-                        </ItemsControl>
-
+                                     Grid.Column="1" Grid.ColumnSpan="3" />
+                            </ItemsControl>
                         <StackPanel>
                             <!-- Sample names in row/column -->
                             <ItemsControl Style="{StaticResource GridLabelTextBox}">
@@ -233,8 +233,7 @@
                             <Label Grid.Column="0" VerticalAlignment="Center" 
                                    Content="Start writing in cell: " />
                             <TextBox x:Name="StartInCell"
-                                     Grid.Column="1" Grid.ColumnSpan="3"
-                                     Text="E2">
+                                     Grid.Column="1" Grid.ColumnSpan="3">
                                 <TextBox.ToolTip>
                                     <ToolTip>
                                         Enter cell address eg. A1
@@ -243,6 +242,7 @@
                             </TextBox>
                         </ItemsControl>
                     </StackPanel>
+                    <StackPanel x:Name="QualityControlStackPanel">
                     <CheckBox x:Name="QualityControl"
                               IsChecked="True"
                               Content="Quality Control"/>
@@ -256,6 +256,8 @@
                                      Text="Data Reproducibility" />
                         </ItemsControl>
                     </StackPanel>
+                    </StackPanel>
+                    <StackPanel x:Name="AbsoluteQuantStackPanel">
                     <CheckBox x:Name="AbsoluteQuantitation"
                               IsChecked="True"
                               Content="Absolute Quantitation"/>
@@ -268,6 +270,7 @@
                                      Grid.Column="1" Grid.ColumnSpan="3"
                                      Text="Absolute Quant Calc" />
                         </ItemsControl>
+                    </StackPanel>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
@@ -297,7 +300,22 @@
 
             <!-- Data Options -->
             <StackPanel Grid.Column="5" Grid.Row="1">
-                <TextBlock Text="Data Options" FontSize="24" Margin="0,0,0,10"/>
+                <TextBlock Text="Data Options" FontSize="24" Margin="0,0,0,10" />
+                <!-- Remove samples containing eg. blank or buffer -->
+                <StackPanel>
+                    <ItemsControl Style="{StaticResource GridLabelTextBox}">
+                        <CheckBox x:Name="RemoveNamesCheckBox"
+                                  Grid.Column="0"
+                                  Content="Remove sample names "/>
+                        <TextBox Grid.Column="1" Grid.ColumnSpan="3"
+                                 x:Name="RemoveNames">
+                            <TextBox.ToolTip>
+                                Removes sample names containing the terms. Separate each term with a comma.
+                            </TextBox.ToolTip>
+                        </TextBox>
+                    </ItemsControl>
+                </StackPanel>
+
                 <!-- Remove % missing -->
                 <StackPanel>
                     <ItemsControl Style="{StaticResource GridLabelTextBox}">
@@ -317,15 +335,15 @@
                 <!-- Replace missing values -->
                 <StackPanel>
                     <ItemsControl Style="{StaticResource GridLabelTextBox}">
-                        <CheckBox Grid.Column="0"
+                        <CheckBox x:Name="ReplaceMissingCheckBox"
+                                  Grid.Column="0"
                                   Content="Replace missing values with " />
-                        <TextBox Grid.Column="1"
-                                 x:Name="MissingValueReplacement"
+                        <TextBox x:Name="ReplacementValue"
+                                 Grid.Column="1"
                                  Text="0" />
                     </ItemsControl>
                 </StackPanel>
-                
-                
+
                 <!-- Progress -->
                 <Grid>
                     <Grid.RowDefinitions>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
@@ -13,47 +14,77 @@ namespace ModernWPFcore
     class MapToExcel
     {
         /// <summary>
-        /// Writes data into a new Excel tab with samples in rows (in column 1)
-        /// and compounds in columns (in row 1)
+        /// Writes sample names into rows in a specified column.
+        /// </summary>
+        /// <param name="dataMap"></param>
+        /// <param name="excelPkg"></param>
+        /// <param name="tabName"></param>
+        /// <returns></returns>
+        public static ExcelPackage WriteSamplesInRows(
+            OrderedDictionary dataMap, ExcelPackage excelPkg, string tabName, 
+            int sampleCol = 1, int startRow = 2)
+        {
+            // Create new tab or write in existing tab
+            ExcelWorksheet worksheet;
+            try
+            {
+                worksheet = excelPkg.Workbook.Worksheets.Add(tabName);
+            }
+            catch
+            {
+                worksheet = excelPkg.Workbook.Worksheets[tabName];
+            }
+
+            // Header
+            if (startRow - 1 >= 1)
+            {
+                var header = worksheet.Cells[startRow - 1, sampleCol]?.Value?.ToString();
+                if (string.IsNullOrWhiteSpace(header))
+                    worksheet.Cells[startRow - 1, sampleCol].Value = "Sample";
+            }
+
+            // Write sample names in column, starting in startRow
+            var r = startRow;
+            foreach (string sampleName in ((OrderedDictionary) dataMap[0]).Keys)
+            {
+                worksheet.Cells[r++, sampleCol].Value = sampleName;
+            }
+
+            excelPkg.Save();
+            return excelPkg;
+        }
+
+        /// <summary>
+        /// Writes sample names into rows in a specified column.
         /// </summary>
         /// <param name="dataMap"></param>
         /// <param name="options"></param>
         /// <param name="excelPkg"></param>
         /// <param name="tabName"></param>
-        /// <param name="progressPage"></param>
         /// <returns></returns>
-        public static ExcelPackage WriteSamplesInRows(
-            OrderedDictionary dataMap, Dictionary<string, string> options, 
-            ExcelPackage excelPkg, string tabName, ProgressPage progressPage)
+        public static ExcelPackage WriteCompoundsInColumns(
+            OrderedDictionary dataMap, ExcelPackage excelPkg, string tabName, 
+            int compoundRow = 2, int startCol = 2)
         {
-            // Create new tab
-            var worksheet = excelPkg.Workbook.Worksheets.Add(tabName);
-
-            // First cell
-            worksheet.Cells[1, 1].Value = "Sample Name";
-
-            // Write sample names in column 1, starting in row 2
-            var r = 2;
-            foreach (string sampleName in ((OrderedDictionary) dataMap[0]).Keys)
+            // Create new tab or write in existing tab
+            ExcelWorksheet worksheet;
+            try
             {
-                worksheet.Cells[r++, 1].Value = sampleName;
+                worksheet = excelPkg.Workbook.Worksheets.Add(tabName);
+            }
+            catch
+            {
+                worksheet = excelPkg.Workbook.Worksheets[tabName];
             }
 
-            // Write compound names in row 1, starting in column 2
-            var c = 2;
+            // Write compound names in row, starting in column startCol
+            var c = startCol;
             foreach (string compoundName in dataMap.Keys)
             {
-                worksheet.Cells[1, c++].Value = compoundName;
+                worksheet.Cells[compoundRow, c++].Value = compoundName;
             }
 
-            // Write data into cells corresponding with sample and compound names
-            excelPkg = WriteIntoTemplate(dataMap, excelPkg, options, tabName, false, 2, 2);
-
-            // Save file
-            excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + options["OutputFileName"]));
-
-            // Progress text
-            progressPage.ProgressTextBox.AppendText("Finished writing data\n");
+            excelPkg.Save();
             return excelPkg;
         }
 
@@ -68,37 +99,45 @@ namespace ModernWPFcore
         /// <param name="progressPage"></param>
         /// <returns></returns>
         public static ExcelPackage WriteSamplesInColumns(
-            OrderedDictionary dataMap, Dictionary<string, string> options, 
-            ExcelPackage excelPkg, string tabName, ProgressPage progressPage)
+            OrderedDictionary dataMap, ExcelPackage excelPkg, string tabName,
+            Dictionary<string, string> options, int startRow = 2, int startCol = 2)
         {
-            // Create new tab
-            var worksheet = excelPkg.Workbook.Worksheets.Add(tabName);
+            // Create new tab or write in existing tab
+            ExcelWorksheet worksheet;
+            try
+            {
+                worksheet = excelPkg.Workbook.Worksheets.Add(tabName);
+            }
+            catch
+            {
+                worksheet = excelPkg.Workbook.Worksheets[tabName];
+            }
 
             // First cell
             worksheet.Cells[1, 1].Value = "Compound";
 
-            // Write compound names in column 1, starting in row 2
-            var r = 2;
+            // Write compound names in column, starting in startRow
+            var compoundCol = ExcelUtils.GetColNum(options["CompoundLoc"]);
+            var r = startRow;
             foreach (string compoundName in dataMap.Keys)
             {
-                worksheet.Cells[r++, 1].Value = compoundName;
+                worksheet.Cells[r++, compoundCol].Value = compoundName;
             }
 
             // Write sample names in row 1, starting in column 2
-            var c = 2;
+            var sampleRow = ExcelUtils.GetRowNum(options["SampleLoc"]);
+            var c = startCol;
             foreach (string sampleName in ((OrderedDictionary)dataMap[0]).Keys)
             {
-                worksheet.Cells[1, c++].Value = sampleName;
+                worksheet.Cells[sampleRow, c++].Value = sampleName;
             }
 
             // Write data into cells corresponding with sample and compound names
-            excelPkg = WriteIntoTemplate(dataMap, excelPkg, options, tabName, false, 2, 2);
+            excelPkg = WriteIntoTemplate(dataMap, excelPkg, options, tabName, false, startRow, startCol);
 
             // Save file
             excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + options["OutputFileName"]));
 
-            // Progress text
-            progressPage.ProgressTextBox.AppendText("Finished writing output file\n");
             return excelPkg;
         }
 
@@ -128,7 +167,7 @@ namespace ModernWPFcore
             catch
             {
                 MessageBox.Show($"No data to write in {templateTab}. " +
-                                $"Check if template and samples are in rows/columns.");
+                                $"Check if template and samples are in rows or columns.");
                 return excelPkg;
             }
 
@@ -230,13 +269,15 @@ namespace ModernWPFcore
                     }
                 }
             }
-
+            
             worksheet.Cells[startRow, startCol, endRow, endCol].Style.Numberformat.Format = "0";
             worksheet.Cells[startRow, startCol, endRow, endCol].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
-            excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + options["OutputFileName"]));
-            //progressPage.ProgressTextBox.AppendText("Finished writing into template\n");
+            // TODO - check that save as new name works
+            //excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + options["OutputFileName"]));
+            excelPkg.Save();
             return excelPkg;
         }
+
     }
 }

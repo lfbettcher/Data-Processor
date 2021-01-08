@@ -29,7 +29,7 @@
                 </StackPanel>
                 <Label Content="Workflows" FontWeight="SemiBold" />
                 <ListBoxItem x:Name="Sciex6500" Content="Sciex 6500" />
-                <ListBoxItem x:Name="SciexLipidyzer" Content="Sciex Lipidyzer" />
+                <ListBoxItem x:Name="Lipidyzer" Content="Sciex Lipidyzer" />
                 <ListBoxItem Content="Waters" />
                 <ListBoxItem Content="Other" />
                 <Label />

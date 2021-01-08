@@ -198,5 +198,18 @@ namespace ModernWPFcore
             string colName = ColumnNumberToName(col);
             return colName + row;
         }
+
+        public static ExcelPackage FormatCells(ExcelPackage excelPkg, string sheetName, string format,
+            string startCell = "B2", string endCell = "none")
+        {
+            var worksheet = excelPkg.Workbook.Worksheets[sheetName];
+
+            // TODO - use startCell and endCell
+
+            worksheet.Cells.Style.Numberformat.Format = format;
+            worksheet.Cells.AutoFitColumns();
+            excelPkg.Save();
+            return excelPkg;
+        }
     }
 }

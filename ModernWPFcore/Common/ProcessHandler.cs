@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
-using System.Windows;
 using ModernWPFcore.Pages;
+using ModernWPFcore.WriteOutput;
 using OfficeOpenXml;
 
 namespace ModernWPFcore
@@ -15,9 +14,14 @@ namespace ModernWPFcore
         
         public static void Run(string menuSelection, List<string> filePathList, Dictionary<string, string> options, ProgressPage progressPage, InputOutputPage io)
         {
-
             // Read input - All data formats are read into one dataMap format for further processing
             progressPage.ProgressTextBox.AppendText("Processing inputs\n");
+            if (menuSelection == "Lipidyzer")
+            {
+                Lipidyzer(filePathList, options);
+                return;
+            }
+
             var dataMap = ReadInputs(menuSelection, filePathList, options, progressPage);
             
             // Perform data options
@@ -39,7 +43,8 @@ namespace ModernWPFcore
                         ? ReadMultiQuantTextInput.ReadMultiQuantText(filePathList, options, progressPage)
                         : ExcelToMap.ReadAllFiles(filePathList, options);
                     break;
-                case "SciexLipidyzer":
+                case "Lipidyzer":
+                    // Read one book at a time, write into template
                     break;
                 default:
                     break;
@@ -50,15 +55,20 @@ namespace ModernWPFcore
         public static void WriteOutput(string menuSelection, OrderedDictionary dataMap, 
             Dictionary<string, string> options, ProgressPage progressPage)
         {
-            var templateFile = new FileInfo(options["TemplatePath"]);
-            var excelPkg = new ExcelPackage(templateFile);
+            // Get template and save as output file
+            var excelPkg = new ExcelPackage(new FileInfo(options["TemplatePath"]));
+            excelPkg.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + options["OutputFileName"]));
+
+            var (startRow, startCol) = ExcelUtils.GetRowCol(options["StartInCell"]);
 
             // Write Raw Data tab
             if (options["SamplesOut"] == "columns")
-                excelPkg = MapToExcel.WriteSamplesInColumns(dataMap, options, excelPkg, "Raw Data", progressPage);
+                excelPkg = MapToExcel.WriteSamplesInColumns(dataMap, excelPkg, "Raw Data", options);
             else
-                MapToExcel.WriteSamplesInRows(dataMap, options, excelPkg, "Raw Data", progressPage);
-
+                // TODO - fix this. Method was separated/changed
+                //MapToExcel.WriteSamplesInRows(dataMap, excelPkg, "Raw Data", options);
+                //MapToExcel.WriteCompoundsInColumns
+                
             // Write to template if selected
             progressPage.ProgressTextBox.AppendText("Writing data into template\n");
             excelPkg = MapToExcel.WriteIntoTemplate(dataMap, excelPkg, options, options["TemplateTabName"]);
@@ -81,11 +91,51 @@ namespace ModernWPFcore
             {
                 case "Sciex6500":
                     break;
-                case "SciexLipidyzer":
+                case "Lipidyzer":
                     break;
                 default:
                     break;
             }
         }
+
+        // Process Handler for Sciex Lipidyzer
+        public static void Lipidyzer(List<string> filePathList, Dictionary<string, string> options)
+        {
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial; // EPPlus license
+
+            // Get template and save as output file
+            var destExcel = new ExcelPackage(new FileInfo(options["TemplatePath"]));
+            destExcel.SaveAs(new FileInfo(options["OutputFolder"] + "\\" + options["OutputFileName"]));
+
+            filePathList.Sort();
+
+            // Merge each file into template
+            foreach (var file in filePathList)
+            {
+                var srcExcel = new ExcelPackage(new FileInfo(file));
+                destExcel = Merge.MergeWorkbooks(srcExcel, destExcel, options);
+            }
+
+            // Format and options for every sheet
+            foreach (var sheet in destExcel.Workbook.Worksheets)
+            {
+                // Do nothing on the "Key" tab
+                if (sheet.Name.Contains("Key", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                // Remove unwanted samples
+                destExcel = RemoveReplace.RemoveSamples(destExcel, sheet.Name, options);
+
+                // Replace missing values
+                destExcel = RemoveReplace.ReplaceMissing(destExcel, sheet.Name, options["Replacement"]);
+
+                // Format data to 4 decimal places
+                destExcel = ExcelUtils.FormatCells(destExcel, sheet.Name, "0.0000");
+
+            }
+
+            destExcel.Save();
+        }
+
     }
 }

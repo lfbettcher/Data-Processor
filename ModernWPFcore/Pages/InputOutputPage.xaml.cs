@@ -31,6 +31,7 @@ namespace ModernWPFcore.Pages
 
         // fileNames used for display in list view, filePaths used in program
         List<KeyValuePair<string, string>> fileNamesPaths = new List<KeyValuePair<string, string>>();
+        List<string> filePathList = new List<string>();
 
         public InputOutputPage()
         {
@@ -54,11 +55,20 @@ namespace ModernWPFcore.Pages
                     InputText.IsChecked = true;
                     InputColumns.IsChecked = true;
                     OutputColumns.IsChecked = true;
+                    TemplateTabName.Text = "Relative Quant Data";
+                    StartInCell.Text = "E2";
                     break;
-                case "SciexLipidyzer":
+                case "Lipidyzer":
                     InputExcel.IsChecked = true;
                     InputRows.IsChecked = true;
                     OutputRows.IsChecked = true;
+                    TemplateTabNameControl.Visibility = Visibility.Collapsed;
+                    AbsoluteQuantStackPanel.Visibility = Visibility.Collapsed;
+                    StartInCell.Text = "B2";
+                    RemoveNamesCheckBox.IsChecked = true;
+                    RemoveNames.Text = "blank, buffer";
+                    ReplaceMissingCheckBox.IsChecked = true;
+                    ReplacementValue.Text = ".";
                     break;
                 default:
                     break;
@@ -124,11 +134,7 @@ namespace ModernWPFcore.Pages
                 
                 // In case filePath[0] doesn't exist
                 var path = string.Empty;
-                try
-                {
-                    path = filePath[0];
-                }
-                catch { }
+                try { path = filePath[0]; } catch { }
 
                 // Send path to metadata element which the two text boxes are bound to
                 if (((TextBox) sender).Name.Contains("Template"))
@@ -217,14 +223,16 @@ namespace ModernWPFcore.Pages
                 { "CompoundLoc", CompoundLoc.Text },
                 { "StartInCell", StartInCell.Text },
                 { "QCTabName", QCTabName.Text },
-                { "AbsoluteQuantTabName", AbsoluteQuantTabName.Text }
+                { "AbsoluteQuantTabName", AbsoluteQuantTabName.Text },
+                { "RemoveNames", RemoveNames.Text },
+                { "Replacement", ReplacementValue.Text }
             };
             return options;
         }
 
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
-            var filePathList = fileNamesPaths.Select(file => file.Value).ToList();
+            filePathList = fileNamesPaths.Select(file => file.Value).ToList();
             var options = GetOptions();
             var navigationService = NavigationService.GetNavigationService(this);
             var progressPage = new ProgressPage();
