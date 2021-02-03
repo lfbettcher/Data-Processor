@@ -29,7 +29,8 @@ namespace ModernWPFcore.WriteOutput
 
                     foreach (var name in removeNames)
                     {
-                        if (sampleName.Contains(name, StringComparison.OrdinalIgnoreCase)) 
+                        if (sampleName.Contains(name, StringComparison.OrdinalIgnoreCase) &&
+                            !sampleName.Contains("prep", StringComparison.OrdinalIgnoreCase)) 
                             worksheet.DeleteRow(r--);
                     }
                 }
