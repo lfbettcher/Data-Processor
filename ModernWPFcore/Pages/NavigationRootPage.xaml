@@ -21,17 +21,17 @@
         <DockPanel Grid.Row="1" Grid.Column="0"
                    Background="{DynamicResource NavigationViewExpandedPaneBackground}">
             <ListBox x:Name="MenuList"
-                     SelectedIndex="0"
+                     SelectedIndex="3"
                      SelectionChanged="MenuList_SelectionChanged">
                 <StackPanel Orientation="Horizontal">
                     <!--<Rectangle x:Name="HomeIcon" Height="20" Width="20" Fill="Blue"/>-->
-                    <ListBoxItem x:Name="Home" Content="Home" />
+                    <ListBoxItem x:Name="Home" Content="Home" Visibility="Hidden"/>
                 </StackPanel>
                 <Label Content="Workflows" FontWeight="SemiBold" />
                 <ListBoxItem x:Name="Sciex6500" Content="Sciex 6500" />
                 <ListBoxItem x:Name="Lipidyzer" Content="Sciex Lipidyzer" />
-                <ListBoxItem Content="Waters" />
-                <ListBoxItem Content="Other" />
+                <ListBoxItem Content="Waters" Visibility="Hidden"/>
+                <ListBoxItem Content="Other" Visibility="Hidden" />
                 <Label />
                 <Label Content="Data Tools" FontWeight="SemiBold" />
                 <ListBoxItem x:Name="NormalizeToQC" Content="Normalize to QC" />

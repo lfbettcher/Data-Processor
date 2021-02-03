@@ -9,6 +9,6 @@
       Title="HomePage">
 
     <Grid>
-        <TextBlock Text="Home Page" />
+        <TextBlock Text="v0.01" />
     </Grid>
 </Page>

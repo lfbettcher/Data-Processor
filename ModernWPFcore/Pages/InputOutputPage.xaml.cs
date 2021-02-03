@@ -69,6 +69,8 @@ namespace ModernWPFcore.Pages
                     RemoveNames.Text = "blank, buffer";
                     ReplaceMissingCheckBox.IsChecked = true;
                     ReplacementValue.Text = ".";
+                    RemoveFeaturesPanel.Visibility = Visibility.Collapsed;
+                    QualityControlStackPanel.Visibility = Visibility.Collapsed;
                     break;
                 default:
                     break;
@@ -232,13 +234,14 @@ namespace ModernWPFcore.Pages
 
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
+            ProgressTextBox.Text = "In progress...";
             filePathList = fileNamesPaths.Select(file => file.Value).ToList();
             var options = GetOptions();
             var navigationService = NavigationService.GetNavigationService(this);
             var progressPage = new ProgressPage();
             navigationService?.Navigate(progressPage);
-            //ProcessHandler.Run(menuSelection, filePathList, options, progressPage);
-            ProcessHandler.Run(menuSelection, filePathList, options, progressPage, this);
+            ProcessHandler.Run(menuSelection, filePathList, options, progressPage);
+            //ProcessHandler.Run(menuSelection, filePathList, options, progressPage, this);
         }
 
     }

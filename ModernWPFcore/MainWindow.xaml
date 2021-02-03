@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ModernWPFcore"
         mc:Ignorable="d"
-        Title="MainWindow" Height="640" Width="1080"
+        Title="Data Processor" Height="640" Width="1080"
         xmlns:ui="http://schemas.modernwpf.com/2019"
         ui:WindowHelper.UseModernWindowStyle="True"
         WindowStartupLocation="CenterScreen">

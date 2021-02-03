@@ -12,13 +12,13 @@ namespace ModernWPFcore
     class ProcessHandler
     {
         
-        public static void Run(string menuSelection, List<string> filePathList, Dictionary<string, string> options, ProgressPage progressPage, InputOutputPage io)
+        public static void Run(string menuSelection, List<string> filePathList, Dictionary<string, string> options, ProgressPage progressPage)
         {
             // Read input - All data formats are read into one dataMap format for further processing
-            progressPage.ProgressTextBox.AppendText("Processing inputs\n");
             if (menuSelection == "Lipidyzer")
             {
                 Lipidyzer(filePathList, options);
+                progressPage.ProgressTextBox.AppendText("Done\n");
                 return;
             }
 
